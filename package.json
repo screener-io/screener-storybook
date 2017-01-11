@@ -40,7 +40,7 @@
     "prompt": "~1.0.0",
     "react-dom": "~15.4.1",
     "require-hijack": "~1.2.1",
-    "screener-runner": "*",
+    "screener-runner": "^0.1.1",
     "semver": "~5.3.0"
   },
   "devDependencies": {
