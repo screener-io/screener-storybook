@@ -1,0 +1,32 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directory
+node_modules
+
+# Code coverage output
+.nyc_output
+coverage
+
+# NPM
+.npm
+
+# eslint cache
+.eslintcache
+
+# Yarn
+.yarn-integrity
+yarn.lock
+yarn-error.log
+
+# Test files
+/setup.sh
+/conf.js
