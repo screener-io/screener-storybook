@@ -62,6 +62,17 @@ describe('screener-storybook/src/runner', function() {
         });
     });
 
+    it('should pass through includeRules and excludeRules', function() {
+      var testConfig = JSON.parse(JSON.stringify(configWithPort));
+      testConfig.includeRules = ['include', /^include/];
+      testConfig.excludeRules = ['exclude', /^exclude/];
+      return StorybookRunner.run(testConfig)
+        .then(function(runnerConfig) {
+          expect(runnerConfig.includeRules).to.deep.equal(['include', /^include/]);
+          expect(runnerConfig.excludeRules).to.deep.equal(['exclude', /^exclude/]);
+        });
+    });
+
     it('should transform config data to expected screener-runner format with screenerUrl set', function() {
       return StorybookRunner.run(configWithUrl)
         .then(function(runnerConfig) {
