@@ -1,5 +1,6 @@
 var validate = require('./validate');
 var Runner = require('screener-runner');
+var cloneDeep = require('lodash/cloneDeep');
 var omit = require('lodash/omit');
 var url = require('url');
 
@@ -27,7 +28,7 @@ var transformToStates = function(storybook, baseUrl) {
 
 exports.run = function(config) {
   // create copy of config
-  config = JSON.parse(JSON.stringify(config));
+  config = cloneDeep(config);
   return validate.storybookConfig(config)
     .then(function() {
       if (config.storybookPort) {

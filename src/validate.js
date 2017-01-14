@@ -21,6 +21,14 @@ exports.storybookConfig = function(value) {
     branch: Joi.string().max(100),
     resolution: Joi.string().regex(/^[0-9]{3,4}x[0-9]{3,4}$/, 'resolution'),
     ignore: Joi.string(),
+    includeRules: Joi.array().min(0).items(
+      Joi.string(),
+      Joi.object().type(RegExp)
+    ),
+    excludeRules: Joi.array().min(0).items(
+      Joi.string(),
+      Joi.object().type(RegExp)
+    ),
     diffOptions: Joi.object().keys({
       structure: Joi.boolean(),
       layout: Joi.boolean(),

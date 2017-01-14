@@ -67,9 +67,30 @@ describe('screener-storybook/src/validate', function() {
     });
 
     it('should allow adding optional fields', function() {
-      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookPort: 6006, storybook: [], build: 'build', branch: 'branch', resolution: '1280x1024', ignore: 'ignore', diffOptions: {}})
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookPort: 6006, storybook: [], build: 'build', branch: 'branch', resolution: '1280x1024', ignore: 'ignore', includeRules: [], excludeRules: [], diffOptions: {}})
         .catch(function() {
           throw new Error('Should not be here');
+        });
+    });
+
+    it('should allow include/exclude rules that are strings', function() {
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookPort: 6006, storybook: [], includeRules: ['string'], excludeRules: ['string']})
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
+    });
+
+    it('should allow include/exclude rules that are regex expressions', function() {
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookPort: 6006, storybook: [], includeRules: [/^string$/], excludeRules: [/^string$/]})
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
+    });
+
+    it('should throw error when include/exclude rules are not in array', function() {
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookPort: 6006, storybook: [], includeRules: 'string', excludeRules: 'string'})
+        .catch(function(err) {
+          expect(err.message).to.equal('child "includeRules" fails because ["includeRules" must be an array]');
         });
     });
 
