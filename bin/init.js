@@ -55,6 +55,12 @@ if (fs.existsSync(gitConfigPath)) {
   }
 }
 
+// instructions for prompt
+console.log('\nSetup screener-storybook');
+console.log('========================');
+console.log('Please complete prompts below.');
+console.log(colors.cyan('\nPress ENTER to use (default):\n'));
+
 // prompt for additional required info
 var promptSchema = {
   properties: {
@@ -92,7 +98,7 @@ var configFile = 'module.exports = {\n\
   }
   pjson.scripts['test-storybook'] = 'npm run build-storybook && screener-storybook --conf ' + configFileName;
   pjson.scripts['test-storybook-server'] = 'npm run build-storybook && screener-storybook --static-server-only';
-  fs.writeFileSync(packagePath, JSON.stringify(pjson, null, 2));
+  fs.writeFileSync(packagePath, JSON.stringify(pjson, null, 2) + '\n');
 
   console.log('\nGenerated ' + configFileName + ' and saved into project root:');
   console.log('  apiKey: ' + program.key);
