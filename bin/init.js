@@ -8,6 +8,7 @@ var colors = require('colors/safe');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
+var buildCmdOption = '';
 var gitParse = require('parse-git-config');
 var gitConfigPath = path.resolve(process.cwd(), '.git/config');
 var configFileName = 'screener.conf.js';
@@ -22,15 +23,21 @@ var handleError = function(err) {
 program
   .version(require('../package.json').version)
   .option('-k, --key <api-key>', 'Screener API Key')
+  .option('--build-cmd <build-cmd>', 'Set NPM Command for Building Storybook. Defaults to: build-storybook')
   .parse(process.argv);
 
 if (!program.key) {
   handleError('--key is a required argument. Type --help for more information.');
 }
+if (program.buildCmd) {
+  buildCmdOption = ' --build-cmd ' + program.buildCmd;
+} else {
+  program.buildCmd = 'build-storybook';
+}
 
 // check storybook exists/version
 try {
-  require('../src/storybook/check')();
+  require('../src/storybook/check')(program.buildCmd);
 } catch(ex) {
   handleError(ex);
 }
@@ -96,8 +103,8 @@ var configFile = 'module.exports = {\n\
   if (!pjson.scripts) {
     pjson.scripts = {};
   }
-  pjson.scripts['test-storybook'] = 'npm run build-storybook && screener-storybook --conf ' + configFileName;
-  pjson.scripts['test-storybook-server'] = 'npm run build-storybook && screener-storybook --static-server-only';
+  pjson.scripts['test-storybook'] = 'npm run ' + program.buildCmd + ' && screener-storybook --conf ' + configFileName + buildCmdOption;
+  pjson.scripts['test-storybook-server'] = 'npm run ' + program.buildCmd + ' && screener-storybook --static-server-only' + buildCmdOption;
   fs.writeFileSync(packagePath, JSON.stringify(pjson, null, 2) + '\n');
 
   console.log('\nGenerated ' + configFileName + ' and saved into project root:');

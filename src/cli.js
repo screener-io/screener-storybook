@@ -14,11 +14,12 @@ var handleError = function(err) {
 program
   .version(pjson.version)
   .option('-c, --conf <config-file>', 'Path to Configuration File')
+  .option('--build-cmd <build-cmd>', 'Set NPM Command for Building Storybook. Defaults to: build-storybook')
   .option('--static-server-only', 'Start Static Server only for testing purposes')
   .parse(process.argv);
 
 if (program.staticServerOnly) {
-  StorybookRunner.staticStorybook()
+  StorybookRunner.staticStorybook(program.buildCmd)
     .then(function(port) {
       if (port) {
         console.log('Static Storybook server started on http://localhost:' + port);
@@ -41,7 +42,7 @@ if (program.staticServerOnly) {
   var config = require(configPath);
 
   // start local storybook server
-  StorybookRunner.staticStorybook(config)
+  StorybookRunner.staticStorybook(program.buildCmd, config)
     .then(function(port) {
       if (port) {
         config.storybookPort = port;

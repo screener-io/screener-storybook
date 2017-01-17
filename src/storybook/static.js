@@ -5,7 +5,7 @@ var http = require('http');
 var connect = require('connect');
 var compression = require('compression');
 
-module.exports = function(config, callback) {
+module.exports = function(buildScriptName, config, callback) {
   if (typeof config === 'function') {
     callback = config;
     config = null;
@@ -17,7 +17,7 @@ module.exports = function(config, callback) {
   }
   // check storybook module and get/resolve static directory
   try {
-    staticPath = path.resolve(process.cwd(), storybookCheck());
+    staticPath = path.resolve(process.cwd(), storybookCheck(buildScriptName));
   } catch(ex) {
     return callback(ex);
   }
