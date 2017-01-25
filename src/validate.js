@@ -1,5 +1,6 @@
 var Joi = require('joi');
 var Promise = require('bluebird');
+var stepsSchema = require('screener-runner/src/validate').stepsSchema;
 
 exports.storybookConfig = function(value) {
   var schema = Joi.object().keys({
@@ -12,7 +13,8 @@ exports.storybookConfig = function(value) {
         kind: Joi.string().required(),
         stories: Joi.array().min(1).items(
           Joi.object().keys({
-            name: Joi.string().required()
+            name: Joi.string().required(),
+            steps: stepsSchema
           })
         ).required()
       })

@@ -20,6 +20,9 @@ var transformToStates = function(storybook, baseUrl) {
         url: iframeUrl,
         name: component.kind + ': ' + story.name
       };
+      if (story.steps && story.steps instanceof Array) {
+        state.steps = story.steps;
+      }
       states.push(state);
     });
   });

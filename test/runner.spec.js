@@ -31,6 +31,35 @@ var configWithUrl = {
   ]
 };
 
+var configWithSteps = {
+  apiKey: 'api-key',
+  projectRepo: 'repo',
+  storybookUrl: 'http://url.com/',
+  storybook: [
+    {
+      kind: 'Component 1',
+      stories: [
+        {
+          name: 'default',
+          steps: [
+            {
+              type: 'clickElement',
+              locator: {
+                type: 'css selector',
+                value: 'selector'
+              }
+            },
+            {
+              type: 'saveScreenshot',
+              name: 'name'
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
 var runnerMock = {
   run: function(runnerConfig) {
     return Promise.resolve(runnerConfig);
@@ -83,6 +112,35 @@ describe('screener-storybook/src/runner', function() {
               {
                 url: 'http://url.com/iframe.html?dataId=0&selectedKind=Component%201&selectedStory=default',
                 name: 'Component 1: default'
+              }
+            ]
+          });
+        });
+    });
+
+    it('should include steps when transforming to states', function() {
+      return StorybookRunner.run(configWithSteps)
+        .then(function(runnerConfig) {
+          expect(runnerConfig).to.deep.equal({
+            apiKey: 'api-key',
+            projectRepo: 'repo',
+            states: [
+              {
+                url: 'http://url.com/iframe.html?dataId=0&selectedKind=Component%201&selectedStory=default',
+                name: 'Component 1: default',
+                steps: [
+                  {
+                    type: 'clickElement',
+                    locator: {
+                      type: 'css selector',
+                      value: 'selector'
+                    }
+                  },
+                  {
+                    type: 'saveScreenshot',
+                    name: 'name'
+                  }
+                ]
               }
             ]
           });
