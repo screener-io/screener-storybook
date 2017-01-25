@@ -9,4 +9,6 @@ Screener.propTypes = {
   steps: React.PropTypes.array
 };
 
+Screener.Steps = require('screener-runner/src/steps');
+
 module.exports = Screener;

@@ -33,8 +33,4 @@ exports.getStorybook = function() {
   return storybook;
 };
 
-exports.Screener = require('./screener');
-
-exports.Steps = require('screener-runner').Steps;
-
 exports.run = require('./runner').run;

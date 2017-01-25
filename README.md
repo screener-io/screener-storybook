@@ -35,7 +35,7 @@ To add `steps` to a story, wrap your component within a `Screener` component, an
 Here is an example:
 
 ```
-import {Screener, Steps} from 'screener-storybook';
+import Screener, {Steps} from 'screener-storybook/src/screener';
 
 storiesOf('MyComponent', module)
   .add('default', () => {
@@ -44,7 +44,7 @@ storiesOf('MyComponent', module)
       .snapshot('name')
       .end();
     return (
-      <Screener steps={steps}/>
+      <Screener steps={steps}>
         <MyComponent />
       </Screener>
     );
