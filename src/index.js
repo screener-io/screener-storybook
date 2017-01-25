@@ -1,23 +1,40 @@
 var Promise = require('bluebird');
-var pick = require('lodash/pick');
 
 exports.staticStorybook = Promise.promisify(require('./storybook/static'));
 
 exports.getStorybook = function() {
   var storybook = require('./storybook');
-  // make copy and remove methods
-  storybook = JSON.parse(JSON.stringify(storybook));
   if (storybook instanceof Array) {
-    // remove any extra properties
+    // make copy and extract steps
     storybook = storybook.map(function(kind) {
-      var obj = pick(kind, ['kind', 'stories']);
-      obj.stories = obj.stories.map(function(story) {
-        return pick(story, ['name']);
-      });
-      return obj;
+      return {
+        kind: kind.kind,
+        stories: kind.stories.map(function(story) {
+          var obj = {
+            name: story.name
+          };
+          if (typeof story.render === 'function') {
+            try {
+              var result = story.render();
+              // check if <Screener> is top-most component
+              if (result && result.type && result.props && result.type.name === 'Screener') {
+                // get steps prop
+                obj.steps = result.props.steps;
+              }
+            } catch (ex) {
+              console.error(ex);
+            }
+          }
+          return obj;
+        })
+      };
     });
   }
   return storybook;
 };
+
+exports.Screener = require('./screener');
+
+exports.Steps = require('screener-runner').Steps;
 
 exports.run = require('./runner').run;
