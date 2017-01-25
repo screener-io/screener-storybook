@@ -26,6 +26,48 @@ $ node node_modules/screener-storybook/bin/init.js -k <SCREENER_API_KEY>
 $ npm run test-storybook
 ```
 
+### Testing Interactions
+
+To test interactions, you can add `steps` to your existing Storybook stories. Each `step` is an instruction to interact with the component. This is useful for clicking buttons, filling out forms, and getting your components into the proper visual state to test. This also keeps your stories and interaction test code in the same place.
+
+To add `steps` to a story, wrap your component within a `Screener` component, and pass it a `steps` prop. The `steps` can then be generated using our fluent API. Step methods with selectors have built-in waits to simplify test flow creation.
+
+Here is an example:
+
+```
+import {Screener, Steps} from 'screener-storybook';
+
+storiesOf('MyComponent', module)
+  .add('default', () => {
+    const steps = new Steps()
+      .click('.selector')
+      .snapshot('name')
+      .end();
+    return (
+      <Screener steps={steps}/>
+        <MyComponent />
+      </Screener>
+    );
+  });
+  ```
+
+The following step methods are currently available:
+
+- `click(selector)`: this will click on the first element matching the provided css selector.
+- `snapshot(name)`: this will capture a Screener snapshot.
+- `hover(selector)`: this will move the mouse over the first element matching the provided css selector.
+- `setValue(selector, value)`: this will set the value of the input field matching the provided css selector.
+- `executeScript(code)`: this executes custom JS code against the client browser the test is running in.
+- `ignore(selector)`: this ignores all elements matching the provided css selector(s).
+- `wait(ms)`: this will pause execution for the specified number of ms.
+- `wait(selector)`: this will wait until the element matching the provided css selector is present.
+- `end()`: this will return the steps to be run.
+
+**Note 1:** The `Screener` component **must** be the top-most component returned within a story.
+
+**Note 2:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
+
+
 ### Additional Configuration Options
 
 **Note:** Screener will automatically set `build` and `branch` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, Drone, Bitbucket Pipelines, Semaphore.
