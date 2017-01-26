@@ -34,7 +34,7 @@ To add `steps` to a story, wrap your component within a `Screener` component, an
 
 Here is an example:
 
-```
+```javascript
 import Screener, {Steps} from 'screener-storybook/src/screener';
 
 storiesOf('MyComponent', module)
@@ -49,7 +49,7 @@ storiesOf('MyComponent', module)
       </Screener>
     );
   });
-  ```
+```
 
 The following step methods are currently available:
 
@@ -78,7 +78,7 @@ The following step methods are currently available:
 - **ignore:** Comma-delimited string of CSS Selectors that represent areas to be ignored. Example: `.qa-ignore-date, .qa-ignore-ad`
 - **includeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
     - Example:
-    ```
+    ```javascript
     includeRules: [
       'State name',
       /^Component/
@@ -86,7 +86,7 @@ The following step methods are currently available:
     ```
 - **excludeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be removed.
     - Example:
-    ```
+    ```javascript
     excludeRules: [
       'State name',
       /^Component/
@@ -94,7 +94,7 @@ The following step methods are currently available:
     ```
 - **diffOptions:** Visual diff options to control validations.
     - Example:
-    ```
+    ```javascript
     diffOptions: {
       structure: true,
       layout: true,
