@@ -75,6 +75,15 @@ The following step methods are currently available:
 - **build:** Build number from your CI tool. Screener will auto-generate a Build number if not provided.
 - **branch:** Current branch name for your repo
 - **resolution:** Screen resolution to use. Defaults to `1024x768`
+    - Accepts a string in the format: `<width>x<height>`. Example: `1024x768`
+    - Or accepts an object for Device Emulation. Example:
+    ```javascript
+    {
+      deviceName: 'iPhone 6'
+    }
+    ```
+    - deviceName value can be one of: iPhone 4, iPhone 5, iPhone 6, iPhone 6 Plus, iPad, iPad Pro, Galaxy S5, Nexus 4, Nexus 5, Nexus 5X, Nexus 6P, Nexus 7, Nexus 10
+    - deviceOrientation option also available. Can be `portrait` or `landscape`. Defaults to `portrait`.
 - **ignore:** Comma-delimited string of CSS Selectors that represent areas to be ignored. Example: `.qa-ignore-date, .qa-ignore-ad`
 - **includeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
     - Example:
