@@ -1,6 +1,7 @@
 var Joi = require('joi');
 var Promise = require('bluebird');
 var stepsSchema = require('screener-runner/src/validate').stepsSchema;
+var resolutionSchema = require('screener-runner/src/validate').resolutionSchema;
 
 exports.storybookConfig = function(value) {
   var schema = Joi.object().keys({
@@ -21,7 +22,7 @@ exports.storybookConfig = function(value) {
     ).required(),
     build: Joi.string().max(40),
     branch: Joi.string().max(100),
-    resolution: Joi.string().regex(/^[0-9]{3,4}x[0-9]{3,4}$/, 'resolution'),
+    resolution: resolutionSchema,
     ignore: Joi.string(),
     includeRules: Joi.array().min(0).items(
       Joi.string(),
