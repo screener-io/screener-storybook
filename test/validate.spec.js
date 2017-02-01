@@ -97,7 +97,7 @@ describe('screener-storybook/src/validate', function() {
     it('should throw error when resolution in incorrect format', function() {
       return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookPort: 6006, storybook: [], resolution: 'resolution'})
         .catch(function(err) {
-          expect(err.message).to.equal('child "resolution" fails because ["resolution" with value "resolution" fails to match the resolution pattern]');
+          expect(err.message).to.equal('child "resolution" fails because ["resolution" with value "resolution" fails to match the resolution pattern, "resolution" must be an object, "resolution" must be an object]');
         });
     });
 
