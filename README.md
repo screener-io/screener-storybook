@@ -68,6 +68,38 @@ The following step methods are currently available:
 **Note 2:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
 
 
+### Testing Responsive Designs
+
+To test against multiple resolutions or devices, you can add `resolutions` to your screener configuration file, with an array of resolutions.
+
+Each resolution item in the array is either:
+
+- A string in the format: `<width>x<height>`. Example: `1024x768`
+- Or an object with Device details: `deviceName` and optional `deviceOrientation`
+
+`deviceName` value can be one of: iPhone 4, iPhone 5, iPhone 6, iPhone 6 Plus, iPad, iPad Pro, Galaxy S5, Nexus 4, Nexus 5, Nexus 5X, Nexus 6P, Nexus 7, Nexus 10
+
+
+Here is an example:
+
+```javascript
+module.exports = {
+  ...
+
+  resolutions: [
+    '1024x768',
+    {
+      deviceName: 'iPhone 6'
+    },
+    {
+      deviceName: 'iPhone 6 Plus',
+      deviceOrientation: 'landscape'
+    }
+  ]
+};
+```
+
+
 ### Additional Configuration Options
 
 **Note:** Screener will automatically set `build` and `branch` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, Drone, Bitbucket Pipelines, Semaphore.
@@ -78,12 +110,14 @@ The following step methods are currently available:
     - Accepts a string in the format: `<width>x<height>`. Example: `1024x768`
     - Or accepts an object for Device Emulation. Example:
     ```javascript
-    {
+    resolution: {
       deviceName: 'iPhone 6'
     }
     ```
-    - deviceName value can be one of: iPhone 4, iPhone 5, iPhone 6, iPhone 6 Plus, iPad, iPad Pro, Galaxy S5, Nexus 4, Nexus 5, Nexus 5X, Nexus 6P, Nexus 7, Nexus 10
     - deviceOrientation option also available. Can be `portrait` or `landscape`. Defaults to `portrait`.
+- **resolutions:** Array of resolutions for Responsive Design Testing. Each item in array is a `resolution`, either string or object format.
+    - See "Testing Responsive Designs" above for an example
+    - Note: `resolution` and `resolutions` are mutually exclusive. Only one can exist.
 - **ignore:** Comma-delimited string of CSS Selectors that represent areas to be ignored. Example: `.qa-ignore-date, .qa-ignore-ad`
 - **includeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
     - Example:
