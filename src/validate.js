@@ -23,6 +23,9 @@ exports.storybookConfig = function(value) {
     build: Joi.string().max(40),
     branch: Joi.string().max(100),
     resolution: resolutionSchema,
+    resolutions: Joi.array().min(1).items(
+      resolutionSchema
+    ),
     ignore: Joi.string(),
     includeRules: Joi.array().min(0).items(
       Joi.string(),
@@ -38,7 +41,7 @@ exports.storybookConfig = function(value) {
       style: Joi.boolean(),
       content: Joi.boolean()
     })
-  }).required().xor('storybookPort', 'storybookUrl');
+  }).without('resolutions', ['resolution']).required().xor('storybookPort', 'storybookUrl');
   var validator = Promise.promisify(Joi.validate);
   return validator(value, schema);
 };
