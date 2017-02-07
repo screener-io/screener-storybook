@@ -19,7 +19,7 @@ exports.getStorybook = function() {
         kind: kind.kind,
         stories: compact(kind.stories.map(function(story) {
           // check story format
-          if (typeof story !== 'object' || !story.name) {
+          if (typeof story !== 'object' || !story.name || typeof story.name !== 'string') {
             console.log(colors.yellow('WARNING: Invalid story format in \'' + kind.kind + '\'. Skipping story.'));
             console.log(kind);
             return null;
