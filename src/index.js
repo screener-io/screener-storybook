@@ -1,4 +1,6 @@
 var Promise = require('bluebird');
+var compact = require('lodash/compact');
+var colors = require('colors/safe');
 
 exports.staticStorybook = Promise.promisify(require('./storybook/static'));
 
@@ -6,10 +8,22 @@ exports.getStorybook = function() {
   var storybook = require('./storybook');
   if (storybook instanceof Array) {
     // make copy and extract steps
-    storybook = storybook.map(function(kind) {
+    storybook = compact(storybook.map(function(kind) {
+      // check kind format
+      if (typeof kind !== 'object' || !kind.kind || !kind.stories || !(kind.stories instanceof Array) || kind.stories.length === 0) {
+        console.log(colors.yellow('WARNING: Invalid kind format. Skipping.'));
+        console.log(kind);
+        return null;
+      }
       return {
         kind: kind.kind,
-        stories: kind.stories.map(function(story) {
+        stories: compact(kind.stories.map(function(story) {
+          // check story format
+          if (typeof story !== 'object' || !story.name) {
+            console.log(colors.yellow('WARNING: Invalid story format in \'' + kind.kind + '\'. Skipping story.'));
+            console.log(kind);
+            return null;
+          }
           var obj = {
             name: story.name
           };
@@ -26,9 +40,9 @@ exports.getStorybook = function() {
             }
           }
           return obj;
-        })
+        }))
       };
-    });
+    }));
   }
   return storybook;
 };

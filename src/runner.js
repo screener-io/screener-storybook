@@ -29,7 +29,7 @@ var transformToStates = function(storybook, baseUrl) {
   return states;
 };
 
-exports.run = function(config) {
+exports.run = function(config, options) {
   // create copy of config
   config = cloneDeep(config);
   return validate.storybookConfig(config)
@@ -46,6 +46,9 @@ exports.run = function(config) {
       config.states = transformToStates(config.storybook, config.storybookUrl);
       // remove storybook-specific fields
       config = omit(config, ['storybook', 'storybookPort', 'storybookUrl']);
+      if (options && options.debug) {
+        console.log('DEBUG: config', JSON.stringify(config, null, 2));
+      }
       // send storybook states to screener-runner
       return Runner.run(config);
     });
