@@ -16,7 +16,10 @@ program
   .option('-c, --conf <config-file>', 'Path to Configuration File')
   .option('--build-cmd <build-cmd>', 'Set NPM Command for Building Storybook. Defaults to: build-storybook')
   .option('--static-server-only', 'Start Static Server only for testing purposes')
+  .option('--debug', 'Enable debug mode')
   .parse(process.argv);
+
+console.log('\nscreener-storybook v' + pjson.version + '\n');
 
 if (program.staticServerOnly) {
   StorybookRunner.staticStorybook(program.buildCmd)
@@ -50,8 +53,11 @@ if (program.staticServerOnly) {
       }
       // get storybook object, and add to config
       config.storybook = StorybookRunner.getStorybook();
+      if (program.debug) {
+        console.log('DEBUG: config.storybook', JSON.stringify(config.storybook, null, 2));
+      }
       // run test against Screener
-      return StorybookRunner.run(config);
+      return StorybookRunner.run(config, program);
     })
     .then(function(response) {
       console.log(response);
