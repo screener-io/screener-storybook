@@ -2,6 +2,7 @@ var program = require('commander');
 var fs = require('fs');
 var path = require('path');
 var pjson = require('../package.json');
+var colors = require('colors/safe');
 var StorybookRunner = require('./index');
 var handleError = function(err) {
   console.error(err.message || err.toString());
@@ -19,7 +20,7 @@ program
   .option('--debug', 'Enable debug mode')
   .parse(process.argv);
 
-console.log('\nscreener-storybook v' + pjson.version + '\n');
+console.log(colors.bold('\nscreener-storybook v' + pjson.version + '\n'));
 
 if (program.staticServerOnly) {
   StorybookRunner.staticStorybook(program.buildCmd)
