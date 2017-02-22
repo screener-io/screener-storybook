@@ -32,7 +32,10 @@ module.exports = function(buildScriptName, config, callback) {
     // start static web server
     http.createServer(app).listen(port, function(err) {
       if (err) return callback(err);
-      callback(null, port);
+      callback(null, {
+        port: port,
+        staticPath: staticPath
+      });
     });
   });
 };
