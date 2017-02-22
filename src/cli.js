@@ -24,9 +24,9 @@ console.log(colors.bold('\nscreener-storybook v' + pjson.version + '\n'));
 
 if (program.staticServerOnly) {
   StorybookRunner.staticStorybook(program.buildCmd)
-    .then(function(port) {
-      if (port) {
-        console.log('Static Storybook server started on http://localhost:' + port);
+    .then(function(result) {
+      if (result && result.port) {
+        console.log('Static Storybook server started on http://localhost:' + result.port);
       } else {
         throw new Error('Static Storybook server could not be started.');
       }
@@ -47,13 +47,16 @@ if (program.staticServerOnly) {
 
   // start local storybook server
   StorybookRunner.staticStorybook(program.buildCmd, config)
-    .then(function(port) {
-      if (port) {
-        config.storybookPort = port;
-        console.log('Static Storybook server started on http://localhost:' + port);
+    .then(function(result) {
+      if (result && result.port) {
+        config.storybookPort = result.port;
+        console.log('Static Storybook server started on http://localhost:' + result.port);
       }
       // get storybook object, and add to config
-      config.storybook = StorybookRunner.getStorybook();
+      return StorybookRunner.getStorybook(result);
+    })
+    .then(function(storybook) {
+      config.storybook = storybook;
       if (program.debug) {
         console.log('DEBUG: config.storybook', JSON.stringify(config.storybook, null, 2));
       }
