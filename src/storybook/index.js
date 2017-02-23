@@ -73,7 +73,11 @@ module.exports = function(options, callback) {
       });
     }
     if (!previewPath) return callback(ex);
-    console.log(ex.message);
+    if (options.debug && ex.stack) {
+      console.log('DEBUG:', ex.stack);
+    } else {
+      console.log(ex.message || ex.toString());
+    }
     console.log('Retrying with static build...');
     // attempt to parse js file and retrieve window object
     jsdom.env({
