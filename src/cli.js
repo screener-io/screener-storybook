@@ -68,7 +68,6 @@ if (program.staticServerOnly) {
       if (program.debug) {
         console.log('DEBUG: config.storybook', JSON.stringify(config.storybook, null, 2));
       }
-      process.exit();
       // run test against Screener
       return StorybookRunner.run(config, program);
     })
