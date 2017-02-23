@@ -5,7 +5,11 @@ var pjson = require('../package.json');
 var colors = require('colors/safe');
 var StorybookRunner = require('./index');
 var handleError = function(err) {
-  console.error(err.message || err.toString());
+  if (program && program.debug && err.stack) {
+    console.error('DEBUG:', err.stack);
+  } else {
+    console.error(err.message || err.toString());
+  }
   console.error('---');
   console.error('Exiting Screener Storybook');
   console.error('Need help? Contact: support@screener.io');
@@ -53,13 +57,18 @@ if (program.staticServerOnly) {
         console.log('Static Storybook server started on http://localhost:' + result.port);
       }
       // get storybook object, and add to config
-      return StorybookRunner.getStorybook(result);
+      var options = {
+        staticPath: result && result.staticPath,
+        debug: program.debug
+      };
+      return StorybookRunner.getStorybook(options);
     })
     .then(function(storybook) {
       config.storybook = storybook;
       if (program.debug) {
         console.log('DEBUG: config.storybook', JSON.stringify(config.storybook, null, 2));
       }
+      process.exit();
       // run test against Screener
       return StorybookRunner.run(config, program);
     })
