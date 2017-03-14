@@ -79,7 +79,9 @@ describe('screener-storybook/src/runner', function() {
             apiKey: 'api-key',
             projectRepo: 'repo',
             tunnel: {
-              host: 'localhost:6006'
+              host: 'localhost:6006',
+              gzip: true,
+              cache: true
             },
             states: [
               {

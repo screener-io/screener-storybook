@@ -39,13 +39,15 @@ exports.run = function(config, options) {
         config.storybookUrl = 'http://' + host;
         // add tunnel details
         config.tunnel = {
-          host: host
+          host: host,
+          gzip: true,
+          cache: true
         };
       }
       // generate config format expected by screener-runner
       config.states = transformToStates(config.storybook, config.storybookUrl);
       // remove storybook-specific fields
-      config = omit(config, ['storybook', 'storybookPort', 'storybookUrl']);
+      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookPort', 'storybookUrl']);
       if (options && options.debug) {
         console.log('DEBUG: config', JSON.stringify(config, null, 2));
       }

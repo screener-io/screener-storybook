@@ -7,6 +7,8 @@ exports.storybookConfig = function(value) {
   var schema = Joi.object().keys({
     apiKey: Joi.string().required(),
     projectRepo: Joi.string().max(100).required(),
+    storybookConfigDir: Joi.string(),
+    storybookStaticDir: Joi.string(),
     storybookPort: Joi.number(),
     storybookUrl: Joi.string().uri(),
     storybook: Joi.array().min(0).items(

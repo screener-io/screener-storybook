@@ -57,49 +57,42 @@ module.exports = function(options, callback) {
     var storybook = require('@kadira/storybook').getStorybook();
     callback(null, storybook);
   } catch(ex) {
-    if (!options || !options.staticPath) return callback(ex);
+    if (!options || !options.port) return callback(ex);
     // Exception may be caused by global dependencies injected into browser's Window object.
     // We are not running through an actual browser, so try JSDom.
     var jsdom = require('jsdom');
-    var fs = require('fs');
-    var dirPath = path.resolve(options.staticPath, 'static');
-    var previewPath = null;
-    if (fs.existsSync(dirPath)) {
-      var files = fs.readdirSync(dirPath);
-      files.forEach(function(filename) {
-        if (/^preview\.[^\.]+\.bundle\.js$/.test(filename)) {
-          previewPath = path.resolve(dirPath, filename);
+    var request = require('request');
+    // try to retrieve preview bundle from local storybook server
+    request.get('http://localhost:' + options.port + '/static/preview.bundle.js', function(err, response, body) {
+      if (err || response.statusCode != 200 || !body) return callback(ex);
+      if (options.debug && ex.stack) {
+        console.log('DEBUG:', ex.stack);
+      } else {
+        console.log(ex.message || ex.toString());
+      }
+      console.log('Retrying...');
+      // attempt to parse js file and retrieve window object
+      jsdom.env({
+        html: '',
+        src: [body],
+        done: function (err, window) {
+          if (err) return callback(err);
+          global.window = window || {};
+          Object.keys(global.window).forEach(function(property) {
+            if (typeof global[property] === 'undefined') {
+              global[property] = window[property];
+            }
+          });
+          // retry
+          try {
+            runWithRequireContext(content, contextOpts);
+            var storybook = require('@kadira/storybook').getStorybook();
+            callback(null, storybook);
+          } catch(ex) {
+            callback(ex);
+          }
         }
       });
-    }
-    if (!previewPath) return callback(ex);
-    if (options.debug && ex.stack) {
-      console.log('DEBUG:', ex.stack);
-    } else {
-      console.log(ex.message || ex.toString());
-    }
-    console.log('Retrying with static build...');
-    // attempt to parse js file and retrieve window object
-    jsdom.env({
-      html: '',
-      src: [fs.readFileSync(previewPath, 'utf-8')],
-      done: function (err, window) {
-        if (err) return callback(err);
-        global.window = window || {};
-        Object.keys(global.window).forEach(function(property) {
-          if (typeof global[property] === 'undefined') {
-            global[property] = window[property];
-          }
-        });
-        // retry
-        try {
-          runWithRequireContext(content, contextOpts);
-          var storybook = require('@kadira/storybook').getStorybook();
-          callback(null, storybook);
-        } catch(ex) {
-          callback(ex);
-        }
-      }
     });
   }
 };
