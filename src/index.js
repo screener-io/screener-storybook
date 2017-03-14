@@ -2,7 +2,7 @@ var Promise = require('bluebird');
 var compact = require('lodash/compact');
 var colors = require('colors/safe');
 
-exports.staticStorybook = Promise.promisify(require('./storybook/static'));
+exports.startStorybook = Promise.promisify(require('./storybook/server'));
 
 exports.getStorybook = function(options) {
   var getStorybook = Promise.promisify(require('./storybook'));
