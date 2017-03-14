@@ -67,7 +67,7 @@ describe('screener-storybook/src/validate', function() {
     });
 
     it('should allow adding optional fields', function() {
-      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookPort: 6006, storybook: [], build: 'build', branch: 'branch', resolution: '1280x1024', ignore: 'ignore', includeRules: [], excludeRules: [], diffOptions: {}})
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookStaticDir: './public', storybookPort: 6006, storybook: [], build: 'build', branch: 'branch', resolution: '1280x1024', ignore: 'ignore', includeRules: [], excludeRules: [], diffOptions: {}})
         .catch(function() {
           throw new Error('Should not be here');
         });
