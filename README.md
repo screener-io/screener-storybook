@@ -6,27 +6,26 @@ Screener-Storybook will use your existing Storybook stories as visual test cases
 
 ### Installation
 
-**Note:** Your package.json file must contain a `build-storybook` script for exporting a static version of storybook. [More Info](https://getstorybook.io/docs/react-storybook/basics/exporting-storybook)
-
-In your project, install `screener-storybook`:
-
-```
-$ npm install --save-dev screener-storybook
-```
-
-Then run the following command in your project root to complete setup (replacing `<SCREENER_API_KEY>` with your actual API key):
-
-```
-$ node node_modules/screener-storybook/bin/init.js -k <SCREENER_API_KEY>
-```
+1. Go to <a href="https://screener.io/v2/new" target="_blank">https://screener.io/v2/new</a>
+2. Follow the steps in the wizard to setup a New Project
 
 ### Run
+
+When your project is setup, you can run a test with the following command:
 
 ```
 $ npm run test-storybook
 ```
 
-### Testing Interactions
+### Docs
+
+- [Testing Interactions](#testing-interactions)
+- [Testing Responsive Designs](#testing-responsive)
+- [Additional Configuration Options](#config-options)
+
+---
+
+### <a name="testing-interactions"></a>Testing Interactions
 
 To test interactions, you can add `steps` to your existing Storybook stories. Each `step` is an instruction to interact with the component. This is useful for clicking buttons, filling out forms, and getting your components into the proper visual state to test. This also keeps your stories and interaction test code in the same place.
 
@@ -68,7 +67,7 @@ The following step methods are currently available:
 **Note 2:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
 
 
-### Testing Responsive Designs
+### <a name="testing-responsive"></a>Testing Responsive Designs
 
 To test against multiple resolutions or devices, you can add `resolutions` to your screener configuration file, with an array of resolutions.
 
@@ -100,7 +99,7 @@ module.exports = {
 ```
 
 
-### Additional Configuration Options
+### <a name="config-options"></a>Additional Configuration Options
 
 **Note:** Screener will automatically set `build` and `branch` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, Drone, Bitbucket Pipelines, Semaphore.
 
