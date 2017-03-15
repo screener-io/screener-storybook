@@ -14,6 +14,13 @@
     "lint": "eslint .",
     "coverage": "nyc check-coverage --statements 90 --functions 90 --branches 80 --lines 90"
   },
+  "nyc": {
+    "include": [
+      "src/index.js",
+      "src/runner.js",
+      "src/validate.js"
+    ]
+  },
   "engines": {
     "node": ">= 4"
   },
@@ -23,9 +30,6 @@
     "react": "^0.14.7 || ^15.0.0"
   },
   "dependencies": {
-    "babel-polyfill": "~6.16.0",
-    "babel-register": "~6.14.0",
-    "babel-runtime": "~6.11.6",
     "bluebird": "~3.4.6",
     "colors": "~1.1.2",
     "commander": "~2.9.0",
@@ -36,7 +40,6 @@
     "react": "^15.0.0",
     "react-dom": "~15.4.1",
     "request": "~2.81.0",
-    "require-hijack": "~1.2.1",
     "screener-runner": "^0.5.0",
     "semver": "~5.3.0"
   },
