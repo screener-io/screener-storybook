@@ -6,21 +6,8 @@ var StorybookRunner = rewire('../src/runner');
 var configWithPort = {
   apiKey: 'api-key',
   projectRepo: 'repo',
+  storybookConfigDir: '.storybook',
   storybookPort: 6006,
-  storybook: [
-    {
-      kind: 'Component 1',
-      stories: [
-        {name: 'default'}
-      ]
-    }
-  ]
-};
-
-var configWithUrl = {
-  apiKey: 'api-key',
-  projectRepo: 'repo',
-  storybookUrl: 'http://url.com/',
   storybook: [
     {
       kind: 'Component 1',
@@ -34,7 +21,8 @@ var configWithUrl = {
 var configWithSteps = {
   apiKey: 'api-key',
   projectRepo: 'repo',
-  storybookUrl: 'http://url.com/',
+  storybookConfigDir: '.storybook',
+  storybookPort: 6006,
   storybook: [
     {
       kind: 'Component 1',
@@ -73,7 +61,7 @@ describe('screener-storybook/src/runner', function() {
 
   describe('StorybookRunner.run', function() {
     it('should transform config data to expected screener-runner format with screenerPort set', function() {
-      return StorybookRunner.run(configWithPort)
+      return StorybookRunner.run(configWithPort, {debug: true})
         .then(function(runnerConfig) {
           expect(runnerConfig).to.deep.equal({
             apiKey: 'api-key',
@@ -104,31 +92,20 @@ describe('screener-storybook/src/runner', function() {
         });
     });
 
-    it('should transform config data to expected screener-runner format with screenerUrl set', function() {
-      return StorybookRunner.run(configWithUrl)
-        .then(function(runnerConfig) {
-          expect(runnerConfig).to.deep.equal({
-            apiKey: 'api-key',
-            projectRepo: 'repo',
-            states: [
-              {
-                url: 'http://url.com/iframe.html?dataId=0&selectedKind=Component%201&selectedStory=default',
-                name: 'Component 1: default'
-              }
-            ]
-          });
-        });
-    });
-
     it('should include steps when transforming to states', function() {
       return StorybookRunner.run(configWithSteps)
         .then(function(runnerConfig) {
           expect(runnerConfig).to.deep.equal({
             apiKey: 'api-key',
             projectRepo: 'repo',
+            tunnel: {
+              host: 'localhost:6006',
+              gzip: true,
+              cache: true
+            },
             states: [
               {
-                url: 'http://url.com/iframe.html?dataId=0&selectedKind=Component%201&selectedStory=default',
+                url: 'http://localhost:6006/iframe.html?dataId=0&selectedKind=Component%201&selectedStory=default',
                 name: 'Component 1: default',
                 steps: [
                   {
