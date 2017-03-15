@@ -7,10 +7,9 @@ exports.storybookConfig = function(value) {
   var schema = Joi.object().keys({
     apiKey: Joi.string().required(),
     projectRepo: Joi.string().max(100).required(),
-    storybookConfigDir: Joi.string(),
+    storybookConfigDir: Joi.string().required(),
     storybookStaticDir: Joi.string(),
-    storybookPort: Joi.number(),
-    storybookUrl: Joi.string().uri(),
+    storybookPort: Joi.number().required(),
     storybook: Joi.array().min(0).items(
       Joi.object().keys({
         kind: Joi.string().required(),
@@ -43,7 +42,7 @@ exports.storybookConfig = function(value) {
       style: Joi.boolean(),
       content: Joi.boolean()
     })
-  }).without('resolutions', ['resolution']).required().xor('storybookPort', 'storybookUrl');
+  }).without('resolutions', ['resolution']).required();
   var validator = Promise.promisify(Joi.validate);
   return validator(value, schema);
 };

@@ -39,18 +39,14 @@ if (!fs.existsSync(configPath)) {
 var config = require(configPath);
 
 // start local storybook server
-StorybookRunner.startStorybook(config)
+StorybookRunner.startStorybook(config, program)
   .then(function(port) {
+    if (!port) throw new Error('Port not returned when starting Storybook server');
     if (program.serverOnly) {
       return new Promise(function() {});
     }
-    if (port) config.storybookPort = port;
-    // get storybook object, and add to config
-    var options = {
-      port: config.storybookPort,
-      debug: program.debug
-    };
-    return StorybookRunner.getStorybook(options);
+    config.storybookPort = port;
+    return StorybookRunner.getStorybook();
   })
   .then(function(storybook) {
     config.storybook = storybook;
