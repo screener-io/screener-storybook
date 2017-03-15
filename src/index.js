@@ -1,18 +1,19 @@
+var Storybook = require('./storybook');
 var Promise = require('bluebird');
 var compact = require('lodash/compact');
 var colors = require('colors/safe');
 
-exports.startStorybook = Promise.promisify(require('./storybook/server'));
+exports.startStorybook = Promise.promisify(Storybook.server);
 
-exports.getStorybook = function(options) {
-  var getStorybook = Promise.promisify(require('./storybook'));
-  return getStorybook(options)
+exports.getStorybook = function() {
+  var getStorybook = Promise.promisify(Storybook.get);
+  return getStorybook()
     .then(function(storybook) {
-      if (storybook instanceof Array) {
+      if (typeof storybook === 'object' && typeof storybook.map === 'function') {
         // make copy and extract steps
         storybook = compact(storybook.map(function(kind) {
           // check kind format
-          if (typeof kind !== 'object' || !kind.kind || !kind.stories || !(kind.stories instanceof Array) || kind.stories.length === 0) {
+          if (typeof kind !== 'object' || !kind.kind || !kind.stories || !(typeof kind.stories === 'object' && typeof kind.stories.map === 'function') || kind.stories.length === 0) {
             console.log(colors.yellow('WARNING: Invalid kind format. Skipping.'));
             console.log(kind);
             return null;
@@ -30,15 +31,11 @@ exports.getStorybook = function(options) {
                 name: story.name
               };
               if (typeof story.render === 'function') {
-                try {
-                  var result = story.render();
-                  // check if <Screener> is top-most component
-                  if (result && result.type && result.props && result.type.name === 'Screener') {
-                    // get steps prop
-                    obj.steps = result.props.steps;
-                  }
-                } catch (ex) {
-                  console.error(ex);
+                var result = story.render();
+                // check if <Screener> is top-most component
+                if (result && result.type && result.props && result.type.name === 'Screener') {
+                  // get steps prop
+                  obj.steps = result.props.steps;
                 }
               }
               return obj;

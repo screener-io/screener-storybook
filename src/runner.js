@@ -20,7 +20,7 @@ var transformToStates = function(storybook, baseUrl) {
         url: iframeUrl,
         name: component.kind + ': ' + story.name
       };
-      if (story.steps && story.steps instanceof Array) {
+      if (story.steps) {
         state.steps = story.steps;
       }
       states.push(state);
@@ -34,20 +34,18 @@ exports.run = function(config, options) {
   config = cloneDeep(config);
   return validate.storybookConfig(config)
     .then(function() {
-      if (config.storybookPort) {
-        var host = 'localhost:' + config.storybookPort;
-        config.storybookUrl = 'http://' + host;
-        // add tunnel details
-        config.tunnel = {
-          host: host,
-          gzip: true,
-          cache: true
-        };
-      }
+      var host = 'localhost:' + config.storybookPort;
+      var localUrl = 'http://' + host;
+      // add tunnel details
+      config.tunnel = {
+        host: host,
+        gzip: true,
+        cache: true
+      };
       // generate config format expected by screener-runner
-      config.states = transformToStates(config.storybook, config.storybookUrl);
+      config.states = transformToStates(config.storybook, localUrl);
       // remove storybook-specific fields
-      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookPort', 'storybookUrl']);
+      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookPort']);
       if (options && options.debug) {
         console.log('DEBUG: config', JSON.stringify(config, null, 2));
       }
