@@ -50,6 +50,30 @@ storiesOf('MyComponent', module)
   });
 ```
 
+Please note that the `Screener` component **must** be the top-most component returned within a story. If you use `addDecorator` in your stories, ensure the **last** decorator contains the `Screener` component and `steps`.
+
+Here is an example with `addDecorator`:
+
+```javascript
+import Screener, {Steps} from 'screener-storybook/src/screener';
+
+storiesOf('MyComponent', module)
+  .addDecorator(someOtherDecorator)
+  .addDecorator((story) => (
+    <Screener steps={new Steps()
+      .click('.selector')
+      .snapshot('name')
+      .end()
+    }>
+      {story()}
+    </Screener>
+  ))
+  .add('default', () => (
+    <MyComponent />
+  ));
+```
+
+#### Steps
 The following step methods are currently available:
 
 - `click(selector)`: this will click on the first element matching the provided css selector.
@@ -62,9 +86,7 @@ The following step methods are currently available:
 - `wait(selector)`: this will wait until the element matching the provided css selector is present.
 - `end()`: this will return the steps to be run.
 
-**Note 1:** The `Screener` component **must** be the top-most component returned within a story.
-
-**Note 2:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
+**Note:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
 
 
 ### <a name="testing-responsive"></a>Testing Responsive Designs
