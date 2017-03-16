@@ -45,8 +45,13 @@ exports.server = function(config, options, callback) {
     try {
       // save contents of config file
       configBody = fs.readFileSync(configPath, 'utf8');
-      // append code to config file
-      fs.appendFileSync(configPath, code, 'utf8');
+      if (configBody.indexOf(code) === -1) {
+        // append code to config file
+        fs.appendFileSync(configPath, code, 'utf8');
+      } else {
+        // code is already in config file
+        configBody = null;
+      }
     } catch(ex) {
       return callback(ex);
     }
@@ -60,7 +65,7 @@ exports.server = function(config, options, callback) {
     console.log('\nStarting Storybook server...');
     console.log('>', 'start-storybook', args.join(' '), '\n');
     var serverProcess = spawn(bin, args, {detached: true});
-    if (options && options.debug) {
+    if (options && (options.debug || options.serverOnly)) {
       serverProcess.stdout.on('data', function(data) { console.log(data.toString('utf8').trim()); });
       serverProcess.stderr.on('data', function(data) { console.error(data.toString('utf8').trim()); });
     }
@@ -82,7 +87,7 @@ exports.server = function(config, options, callback) {
         previewCode = body;
         try {
           // reset config file to original code
-          fs.writeFileSync(configPath, configBody, 'utf8');
+          if (configBody) fs.writeFileSync(configPath, configBody, 'utf8');
         } catch(ex) {
           return callback(ex);
         }
@@ -92,11 +97,11 @@ exports.server = function(config, options, callback) {
   });
 };
 
-exports.get = function(callback) {
-  // parse preview bundle js code and retrieve window object
-  jsdom.env({
+exports.get = function(options, callback) {
+  var setupCode = 'window.matchMedia = window.matchMedia || (() => { return { matches: false, addListener: () => {}, removeListener: () => {}, }; });';
+  var jsDomConfig = {
     html: '',
-    src: [previewCode],
+    src: [setupCode + previewCode],
     done: function (err, window) {
       if (err) return callback(err);
       if (!window || !window.__screener_storybook__) {
@@ -104,5 +109,10 @@ exports.get = function(callback) {
       }
       callback(null, window.__screener_storybook__);
     }
-  });
+  };
+  if (options && options.debug) {
+    jsDomConfig.virtualConsole = jsdom.createVirtualConsole().sendTo(console);
+  }
+  // parse preview bundle js code and retrieve window object
+  jsdom.env(jsDomConfig);
 };
