@@ -5,9 +5,9 @@ var colors = require('colors/safe');
 
 exports.startStorybook = Promise.promisify(Storybook.server);
 
-exports.getStorybook = function() {
+exports.getStorybook = function(options) {
   var getStorybook = Promise.promisify(Storybook.get);
-  return getStorybook()
+  return getStorybook(options)
     .then(function(storybook) {
       if (typeof storybook === 'object' && typeof storybook.map === 'function') {
         // make copy and extract steps
@@ -31,11 +31,18 @@ exports.getStorybook = function() {
                 name: story.name
               };
               if (typeof story.render === 'function') {
-                var result = story.render();
-                // check if <Screener> is top-most component
-                if (result && result.type && result.props && result.type.name === 'Screener') {
-                  // get steps prop
-                  obj.steps = result.props.steps;
+                try {
+                  var result = story.render(kind);
+                  // check if <Screener> is top-most component
+                  if (result && result.type && result.props && result.type.name === 'Screener') {
+                    // get steps prop
+                    obj.steps = result.props.steps;
+                  }
+                } catch(ex) {
+                  if (options && options.debug) {
+                    console.error(colors.red('Error processing render() method of:'), story);
+                    console.error(colors.red(ex.stack || ex.message || ex.toString()));
+                  }
                 }
               }
               return obj;

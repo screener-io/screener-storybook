@@ -13,6 +13,7 @@ var handleError = function(err) {
   }
   console.error('---');
   console.error('Exiting Screener Storybook');
+  console.error('Run with --debug flag to log additional information');
   console.error('Need help? Contact: support@screener.io');
   process.exit(1);
 };
@@ -46,7 +47,7 @@ StorybookRunner.startStorybook(config, program)
       return new Promise(function() {});
     }
     config.storybookPort = port;
-    return StorybookRunner.getStorybook();
+    return StorybookRunner.getStorybook(program);
   })
   .then(function(storybook) {
     config.storybook = storybook;
