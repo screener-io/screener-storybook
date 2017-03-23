@@ -5,6 +5,7 @@ var spawn = require('child_process').spawn;
 var request = require('request');
 var jsdom = require('jsdom');
 var semver = require('semver');
+var colors = require('colors/safe');
 
 var previewCode;
 
@@ -105,7 +106,13 @@ exports.get = function(options, callback) {
     done: function (err, window) {
       if (err) return callback(err);
       if (!window || !window.__screener_storybook__) {
-        return callback(new Error('\'window.__screener_storybook__\' not found'));
+        console.error(colors.red('Error getting Storybook object'));
+        if (options && options.debug) {
+          console.error(colors.red('Please send debug output to support@screener.io'));
+        } else {
+          console.error(colors.red('Please re-run with --debug flag, and send debug output to support@screener.io'));
+        }
+        return callback(new Error('Storybook object not found'));
       }
       callback(null, window.__screener_storybook__);
     }
