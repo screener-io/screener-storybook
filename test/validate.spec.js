@@ -100,5 +100,29 @@ describe('screener-storybook/src/validate', function() {
           expect(err.message).to.equal('"someKey" is not allowed');
         });
     });
+
+    describe('validate.browsers', function() {
+      it('should error when browsers is empty', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: []})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "browsers" fails because ["browsers" must contain at least 1 items]');
+          });
+      });
+
+      it('should error when browsers is set without sauce', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'chrome' }]})
+          .catch(function(err) {
+            expect(err.message).to.equal('"browsers" missing required peer "sauce"');
+          });
+      });
+
+      it('should allow browsers with sauce config', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key' }})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+    });
+
   });
 });
