@@ -33,10 +33,16 @@ exports.getStorybook = function(options) {
               if (typeof story.render === 'function') {
                 try {
                   var result = story.render(kind);
-                  // check if <Screener> is top-most component
-                  if (result && result.type && result.props && result.type.name === 'Screener') {
-                    // get steps prop
-                    obj.steps = result.props.steps;
+
+                  // check if <Screener> is a wrapping component
+                  if (result && result.props) {
+                    if (result.type && result.type.name === 'Screener') {
+                      // get steps
+                      obj.steps = result.props.steps;
+                    } else if (result.props.initialContent && result.props.initialContent.props && result.props.initialContent.props.children && result.props.initialContent.props.children.props && result.props.initialContent.props.children.type && result.props.initialContent.props.children.type.name === 'Screener') {
+                      // get steps
+                      obj.steps = result.props.initialContent.props.children.props.steps;
+                    }
                   }
                 } catch(ex) {
                   if (options && options.debug) {
