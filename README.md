@@ -169,6 +169,11 @@ module.exports = {
       content: true
     }
     ```
+- **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
+    - To NOT fail a CI build on Screener failure, set to 0. Example:
+    ```javascript
+    failureExitCode: 0
+    ```
 - **browsers:** Optional array of browsers for Cross Browser Testing. Each item in array is an object with `browserName` and `version` properties.
     - Note: `browsers` is dependent on `sauce` being added to configuration.
     - `browserName` and `version` *must* match one of the supported browsers/versions in the browser table below.
