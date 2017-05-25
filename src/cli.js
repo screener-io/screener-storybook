@@ -5,18 +5,6 @@ var pjson = require('../package.json');
 var colors = require('colors/safe');
 var StorybookRunner = require('./index');
 var Promise = require('bluebird');
-var handleError = function(err) {
-  if (program && program.debug && err.stack) {
-    console.error('DEBUG:', err.stack);
-  } else {
-    console.error(err.message || err.toString());
-  }
-  console.error('---');
-  console.error('Exiting Screener Storybook');
-  console.error('Run with --debug flag to log additional information');
-  console.error('Need help? Contact: support@screener.io');
-  process.exit(1);
-};
 
 program
   .version(pjson.version)
@@ -61,4 +49,19 @@ StorybookRunner.startStorybook(config, program)
     console.log(response);
     process.exit();
   })
-  .catch(handleError);
+  .catch(function(err) {
+    if (program && program.debug && err.stack) {
+      console.error('DEBUG:', err.stack);
+    } else {
+      console.error(err.message || err.toString());
+    }
+    console.error('---');
+    console.error('Exiting Screener Storybook');
+    console.error('Run with --debug flag to log additional information');
+    console.error('Need help? Contact: support@screener.io');
+    var exitCode = 1;
+    if (config && typeof config.failureExitCode === 'number') {
+      exitCode = config.failureExitCode;
+    }
+    process.exit(exitCode);
+  });
