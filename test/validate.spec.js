@@ -101,6 +101,22 @@ describe('screener-storybook/src/validate', function() {
         });
     });
 
+    describe('validate.failureExitCode', function() {
+      it('should allow setting to 0', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], failureExitCode: 0})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when setting above 255', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], failureExitCode: 256})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "failureExitCode" fails because ["failureExitCode" must be less than or equal to 255]');
+          });
+      });
+    });
+
     describe('validate.browsers', function() {
       it('should error when browsers is empty', function() {
         return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: []})
