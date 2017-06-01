@@ -38,41 +38,19 @@ Here is an example:
 import Screener, {Steps} from 'screener-storybook/src/screener';
 
 storiesOf('MyComponent', module)
-  .add('default', () => {
-    const steps = new Steps()
-      .click('.selector')
-      .snapshot('name')
-      .end();
-    return (
-      <Screener steps={steps}>
-        <MyComponent />
-      </Screener>
-    );
-  });
-```
-
-Please note that the `Screener` component **must** be the top-most component returned within a story. If you use `addDecorator` in your stories, ensure the **last** decorator contains the `Screener` component and `steps`.
-
-Here is an example with `addDecorator`:
-
-```javascript
-import Screener, {Steps} from 'screener-storybook/src/screener';
-
-storiesOf('MyComponent', module)
-  .addDecorator(someOtherDecorator)
-  .addDecorator((story) => (
-    <Screener steps={new Steps()
+  .add('default', () => (
+  	<Screener steps={new Steps()
       .click('.selector')
       .snapshot('name')
       .end()
     }>
-      {story()}
+      <MyComponent />
     </Screener>
-  ))
-  .add('default', () => (
-    <MyComponent />
   ));
 ```
+
+Please note that the `Screener` component **must** be the top-most component returned within a story. If you use `addDecorator` in your stories, ensure the **last** decorator contains the `Screener` component and `steps`.
+
 
 #### Steps
 The following step methods are currently available:
