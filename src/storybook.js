@@ -7,18 +7,27 @@ var jsdom = require('jsdom');
 var semver = require('semver');
 var colors = require('colors/safe');
 
+var storybookVersion;
 var previewCode;
 
 var storybookCheck = function() {
   var pjson = require(process.cwd() + '/package.json');
-  var storybookVersion = pjson.dependencies['@kadira/storybook'] || pjson.devDependencies['@kadira/storybook'];
+  var storybookRange = pjson.dependencies['@storybook/react'] || pjson.devDependencies['@storybook/react'];
+  if (storybookRange) {
+    storybookVersion = 3;
+  } else {
+    storybookRange = pjson.dependencies['@kadira/storybook'] || pjson.devDependencies['@kadira/storybook'];
+    if (storybookRange) {
+      storybookVersion = 2;
+    }
+  }
   // check if storybook exists
   if (!storybookVersion) {
     throw new Error('Storybook module not found in package.json');
   }
-  // check storybook version
-  if ((!semver.satisfies('2.17.0', storybookVersion) && !semver.ltr('2.17.0', storybookVersion)) || semver.satisfies('3.0.0', storybookVersion)) {
-    throw new Error('Storybook version must be >= 2.17.0 and < 3.x');
+  // check storybook version range
+  if ((!semver.satisfies('2.17.0', storybookRange) && !semver.ltr('2.17.0', storybookRange)) || !semver.gtr('4.0.0', storybookRange)) {
+    throw new Error('Storybook version must be >= 2.17.0 and < 4.x');
   }
 };
 
@@ -42,7 +51,11 @@ exports.server = function(config, options, callback) {
       return callback(new Error('Storybook config file not found: ' + configPath));
     }
     var configBody;
-    var code = '\nif (typeof window === \'object\') window.__screener_storybook__ = require(\'@kadira/storybook\').getStorybook();';
+    var packageName = '@storybook/react';
+    if (storybookVersion === 2) {
+      packageName = '@kadira/storybook';
+    }
+    var code = '\nif (typeof window === \'object\') window.__screener_storybook__ = require(\'' + packageName + '\').getStorybook();';
     try {
       // save contents of config file
       configBody = fs.readFileSync(configPath, 'utf8');
