@@ -102,7 +102,7 @@ module.exports = {
 
 ### <a name="config-options"></a>Additional Configuration Options
 
-**Note:** Screener will automatically set `build` and `branch` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, Drone, Bitbucket Pipelines, Semaphore.
+**Note:** Screener will automatically set `build` and `branch` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, GitLab CI, Drone, Bitbucket Pipelines, Semaphore.
 
 - **build:** Build number from your CI tool. Screener will auto-generate a Build number if not provided.
 - **branch:** Current branch name for your repo
