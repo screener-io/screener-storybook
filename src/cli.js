@@ -27,6 +27,11 @@ if (!fs.existsSync(configPath)) {
 }
 var config = require(configPath);
 
+if (config === false) {
+  console.log('Config is false. Exiting...');
+  process.exit();
+}
+
 // start local storybook server
 StorybookRunner.startStorybook(config, program)
   .then(function(port) {
