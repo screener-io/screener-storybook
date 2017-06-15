@@ -112,10 +112,14 @@ exports.server = function(config, options, callback) {
 };
 
 exports.get = function(options, callback) {
-  var setupCode = 'window.matchMedia = window.matchMedia || (() => { return { matches: false, addListener: () => {}, removeListener: () => {}, }; });';
+  var setupCode = [
+    fs.readFileSync(__dirname + '/polyfills/match-media.js', 'utf8'),
+    fs.readFileSync(__dirname + '/polyfills/local-storage.js', 'utf8'),
+    fs.readFileSync(__dirname + '/polyfills/event-source.js', 'utf8')
+  ];
   var jsDomConfig = {
     html: '',
-    src: [setupCode + previewCode],
+    src: setupCode.concat(previewCode),
     done: function (err, window) {
       if (err) return callback(err);
       if (!window || !window.__screener_storybook__) {
