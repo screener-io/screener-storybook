@@ -1,0 +1,14 @@
+var addons = require('@kadira/storybook-addons').default;
+var Channel = require('@kadira/storybook-channel').default;
+addons.setChannel(new Channel({
+  transport: {
+    setHandler: function() {},
+    send: function() {}
+  }
+}));
+
+${code}
+
+if (typeof window === 'object') {
+  window.__screener_storybook__ = require('@kadira/storybook').getStorybook();
+}

@@ -6,6 +6,7 @@ var request = require('request');
 var jsdom = require('jsdom');
 var semver = require('semver');
 var colors = require('colors/safe');
+var template = require('lodash/template');
 
 var storybookVersion;
 var previewCode;
@@ -44,31 +45,16 @@ exports.server = function(config, options, callback) {
   // find free port
   portfinder.getPort(function (err, port) {
     if (err) return callback(err);
-    // inject code into config file to get storybook and store in global variable
-    // FIXME: this is hacky; is there a better way of doing this?
+    // inject temp storybook config file to get storybook
     var configPath = path.resolve(process.cwd(), config.storybookConfigDir, 'config.js');
     if (!fs.existsSync(configPath)) {
       return callback(new Error('Storybook config file not found: ' + configPath));
     }
-    var configBody;
-    var packageName = '@storybook/react';
-    if (storybookVersion === 2) {
-      packageName = '@kadira/storybook';
-    }
-    var code = '\nif (typeof window === \'object\') window.__screener_storybook__ = require(\'' + packageName + '\').getStorybook();';
-    try {
-      // save contents of config file
-      configBody = fs.readFileSync(configPath, 'utf8');
-      if (configBody.indexOf(code) === -1) {
-        // append code to config file
-        fs.appendFileSync(configPath, code, 'utf8');
-      } else {
-        // code is already in config file
-        configBody = null;
-      }
-    } catch(ex) {
-      return callback(ex);
-    }
+    var configBody = fs.readFileSync(configPath, 'utf8');
+    var codeTemplate = fs.readFileSync(__dirname + '/templates/v' + storybookVersion + '.template', 'utf8');
+    var code = template(codeTemplate)({ code: configBody });
+    fs.writeFileSync(configPath, code, 'utf8');
+
     // start Storybook dev server
     var bin = path.resolve(process.cwd(), 'node_modules/.bin/start-storybook');
     var args = ['--port', port, '--config-dir', config.storybookConfigDir];
@@ -83,8 +69,12 @@ exports.server = function(config, options, callback) {
       serverProcess.stdout.on('data', function(data) { console.log(data.toString('utf8').trim()); });
       serverProcess.stderr.on('data', function(data) { console.error(data.toString('utf8').trim()); });
     }
+
     // clean-up all child processes when this process is terminated
     process.on('exit', function() {
+      if (fs.readFileSync(configPath, 'utf8') !== configBody) {
+        fs.writeFileSync(configPath, configBody, 'utf8');
+      }
       process.kill(-serverProcess.pid);
     });
     process.on('SIGINT', function () {
@@ -93,6 +83,7 @@ exports.server = function(config, options, callback) {
     process.on('uncaughtException', function() {
       process.exit(1);
     });
+
     // wait for storybook server to be ready
     setTimeout(function() {
       request.get('http://localhost:' + port + '/static/preview.bundle.js', function(err, response, body) {
@@ -101,7 +92,7 @@ exports.server = function(config, options, callback) {
         previewCode = body;
         try {
           // reset config file to original code
-          if (configBody) fs.writeFileSync(configPath, configBody, 'utf8');
+          fs.writeFileSync(configPath, configBody, 'utf8');
         } catch(ex) {
           return callback(ex);
         }
