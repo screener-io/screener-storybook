@@ -1,0 +1,14 @@
+var addons = require('@storybook/addons').default;
+var Channel = require('@storybook/channels').default;
+addons.setChannel(new Channel({
+  transport: {
+    setHandler: function() {},
+    send: function() {}
+  }
+}));
+
+${code}
+
+if (typeof window === 'object') {
+  window.__screener_storybook__ = require('@storybook/react').getStorybook();
+}
