@@ -144,7 +144,8 @@ module.exports = {
       structure: true,
       layout: true,
       style: true,
-      content: true
+      content: true,
+      minLayoutPosition: 10 // Threshold for Layout changes. Defaults to 10 pixels.
     }
     ```
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
