@@ -102,10 +102,11 @@ module.exports = {
 
 ### <a name="config-options"></a>Additional Configuration Options
 
-**Note:** Screener will automatically set `build` and `branch` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, GitLab CI, Drone, Bitbucket Pipelines, Semaphore, Buildkite.
+**Note:** Screener will automatically set `build`, `branch`, and `commit` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, GitLab CI, Drone, Bitbucket Pipelines, Semaphore, Buildkite.
 
-- **build:** Build number from your CI tool. Screener will auto-generate a Build number if not provided.
-- **branch:** Current branch name for your repo
+- **build:** Build number from your CI tool (see note above). Screener will auto-generate a Build number if not provided.
+- **branch:** Branch name being built (see note above).
+- **commit:** Commit hash of the build (see note above).
 - **resolution:** Screen resolution to use. Defaults to `1024x768`
     - Accepts a string in the format: `<width>x<height>`. Example: `1024x768`
     - Or accepts an object for Device Emulation. Example:

@@ -25,6 +25,7 @@ exports.storybookConfig = function(value) {
     ).required(),
     build: Joi.string().max(40),
     branch: Joi.string().max(100),
+    commit: Joi.string(),
     resolution: resolutionSchema,
     resolutions: Joi.array().min(1).items(
       resolutionSchema
