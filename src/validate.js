@@ -50,7 +50,8 @@ exports.storybookConfig = function(value) {
       minLayoutPosition: Joi.number().integer().min(0)
     }),
     sauce: sauceSchema,
-    failureExitCode: Joi.number().integer().min(0).max(255).default(1)
+    failureExitCode: Joi.number().integer().min(0).max(255).default(1),
+    nodeModulesPath: Joi.string()
   }).without('resolutions', ['resolution']).with('browsers', ['sauce']).required();
   var validator = Promise.promisify(Joi.validate);
   return validator(value, schema);
