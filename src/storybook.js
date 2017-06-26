@@ -56,7 +56,12 @@ exports.server = function(config, options, callback) {
     fs.writeFileSync(configPath, code, 'utf8');
 
     // start Storybook dev server
-    var bin = path.resolve(process.cwd(), 'node_modules/.bin/start-storybook');
+    var nodeModulesPath = process.cwd();
+    if (config.nodeModulesPath) {
+      nodeModulesPath = config.nodeModulesPath;
+      console.log('Use custom path to node_modules: ', config.nodeModulesPath);
+    }
+    var bin = path.resolve(nodeModulesPath, 'node_modules/.bin/start-storybook');
     var args = ['--port', port, '--config-dir', config.storybookConfigDir];
     if (config.storybookStaticDir) {
       args.push('--static-dir');
