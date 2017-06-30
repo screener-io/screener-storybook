@@ -117,6 +117,43 @@ describe('screener-storybook/src/validate', function() {
       });
     });
 
+    describe('validate.storybookBinPath', function() {
+      it('should error when storybookBinPath is set without storybookVersion', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookBinPath: '/path'})
+          .catch(function(err) {
+            expect(err.message).to.equal('"storybookBinPath" missing required peer "storybookVersion"');
+          });
+      });
+
+      it('should allow setting storybookVersion to 2 or 3', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookVersion: 2})
+          .then(function() {
+            return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookVersion: 3});
+          })
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when setting storybookVersion to any value not 2 or 3', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookVersion: 1})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "storybookVersion" fails because ["storybookVersion" must be one of [2, 3]]');
+            return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookVersion: 4})
+            .catch(function(err) {
+              expect(err.message).to.equal('child "storybookVersion" fails because ["storybookVersion" must be one of [2, 3]]');
+            });
+          });
+      });
+
+      it('should allow when both storybookBinPath and storybookVersion', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookVersion: 3, storybookBinPath: '/path'})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+    });
+
     describe('validate.browsers', function() {
       it('should error when browsers is empty', function() {
         return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: []})

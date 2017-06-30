@@ -92,6 +92,22 @@ describe('screener-storybook/src/runner', function() {
         });
     });
 
+    it('should remove storybook-specific props', function() {
+      var testConfig = JSON.parse(JSON.stringify(configWithPort));
+      testConfig.storybookStaticDir = '/static';
+      testConfig.storybookVersion = 3;
+      testConfig.storybookBinPath = '/path';
+      return StorybookRunner.run(testConfig)
+        .then(function(runnerConfig) {
+          expect(runnerConfig).to.not.have.property('storybook');
+          expect(runnerConfig).to.not.have.property('storybookConfigDir');
+          expect(runnerConfig).to.not.have.property('storybookStaticDir');
+          expect(runnerConfig).to.not.have.property('storybookPort');
+          expect(runnerConfig).to.not.have.property('storybookVersion');
+          expect(runnerConfig).to.not.have.property('storybookBinPath');
+        });
+    });
+
     it('should include steps when transforming to states', function() {
       return StorybookRunner.run(configWithSteps)
         .then(function(runnerConfig) {
