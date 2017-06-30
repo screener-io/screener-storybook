@@ -33,14 +33,18 @@ var storybookCheck = function() {
 };
 
 exports.server = function(config, options, callback) {
-  // check storybook module
-  try {
-    storybookCheck();
-  } catch(ex) {
-    return callback(ex);
-  }
   if (!config || !config.storybookConfigDir) {
     return callback(new Error('Error: \'storybookConfigDir\' not found in config file.'));
+  }
+  if ([2, 3].indexOf(config.storybookVersion) > -1) {
+    storybookVersion = config.storybookVersion;
+  } else {
+    // check storybook module
+    try {
+      storybookCheck();
+    } catch(ex) {
+      return callback(ex);
+    }
   }
   // find free port
   portfinder.getPort(function (err, port) {
@@ -56,12 +60,12 @@ exports.server = function(config, options, callback) {
     fs.writeFileSync(configPath, code, 'utf8');
 
     // start Storybook dev server
-    var nodeModulesPath = process.cwd();
-    if (config.nodeModulesPath) {
-      nodeModulesPath = config.nodeModulesPath;
-      console.log('Use custom path to node_modules: ', config.nodeModulesPath);
+    var binPath = path.resolve(process.cwd(), 'node_modules/.bin');
+    if (config.storybookBinPath) {
+      binPath = config.storybookBinPath;
+      console.log('Use custom storybook bin path: ' + binPath);
     }
-    var bin = path.resolve(nodeModulesPath, 'node_modules/.bin/start-storybook');
+    var bin = path.resolve(binPath, 'start-storybook');
     var args = ['--port', port, '--config-dir', config.storybookConfigDir];
     if (config.storybookStaticDir) {
       args.push('--static-dir');
