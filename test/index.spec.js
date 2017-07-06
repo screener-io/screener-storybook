@@ -63,7 +63,7 @@ describe('screener-storybook/src/index', function() {
         });
     });
 
-    it('should extract steps from storybook array', function() {
+    it('should extract steps from React storybook array', function() {
       ScreenerStorybook.__set__('Storybook', {
         server: function() {},
         get: function(options, callback) {
@@ -120,7 +120,7 @@ describe('screener-storybook/src/index', function() {
         });
     });
 
-    it('should extract nested steps from storybook array', function() {
+    it('should extract nested steps from React storybook array', function() {
       ScreenerStorybook.__set__('Storybook', {
         server: function() {},
         get: function(options, callback) {
@@ -153,6 +153,58 @@ describe('screener-storybook/src/index', function() {
                           }
                         }
                       }
+                    };
+                  }
+                }
+              ]
+            }
+          ];
+          callback(null, storybookData);
+        }
+      });
+      return ScreenerStorybook.getStorybook({})
+        .then(function(storybook) {
+          expect(storybook).to.deep.equal([
+            {
+              kind: 'Component1',
+              stories: [
+                {
+                  name: 'default',
+                  steps: [
+                    {
+                      type: 'clickElement'
+                    },
+                    {
+                      type: 'saveScreenshot',
+                    }
+                  ]
+                }
+              ]
+            }
+          ]);
+        });
+    });
+
+    it('should extract steps from Vue storybook array', function() {
+      ScreenerStorybook.__set__('Storybook', {
+        server: function() {},
+        get: function(options, callback) {
+          var storybookData = [
+            {
+              kind: 'Component1',
+              stories: [
+                {
+                  name: 'default',
+                  render: function() {
+                    return {
+                      steps: [
+                        {
+                          type: 'clickElement'
+                        },
+                        {
+                          type: 'saveScreenshot',
+                        }
+                      ]
                     };
                   }
                 }

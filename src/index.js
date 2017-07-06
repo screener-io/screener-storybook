@@ -34,14 +34,18 @@ exports.getStorybook = function(options) {
                 try {
                   var result = story.render(kind);
 
-                  // check if <Screener> is a wrapping component
-                  if (result && result.props) {
-                    if (result.type && result.type.name === 'Screener') {
-                      // get steps
-                      obj.steps = result.props.steps;
-                    } else if (result.props.initialContent && result.props.initialContent.props && result.props.initialContent.props.children && result.props.initialContent.props.children.props && result.props.initialContent.props.children.type && result.props.initialContent.props.children.type.name === 'Screener') {
-                      // get steps
-                      obj.steps = result.props.initialContent.props.children.props.steps;
+                  if (result) {
+                    if (typeof result.steps === 'object' && typeof result.steps.map === 'function' && result.steps.length > 0) {
+                      obj.steps = result.steps;
+                    } else if (result.props) {
+                      // check if <Screener> is a wrapping component
+                      if (result.type && result.type.name === 'Screener') {
+                        // get steps
+                        obj.steps = result.props.steps;
+                      } else if (result.props.initialContent && result.props.initialContent.props && result.props.initialContent.props.children && result.props.initialContent.props.children.props && result.props.initialContent.props.children.type && result.props.initialContent.props.children.type.name === 'Screener') {
+                        // get steps
+                        obj.steps = result.props.initialContent.props.children.props.steps;
+                      }
                     }
                   }
                 } catch(ex) {

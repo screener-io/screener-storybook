@@ -1,47 +1,33 @@
+var storybookCheck = require('./check');
 var path = require('path');
 var fs = require('fs');
 var portfinder = require('portfinder');
 var spawn = require('child_process').spawn;
 var request = require('request');
 var jsdom = require('jsdom');
-var semver = require('semver');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 
-var storybookVersion;
 var previewCode;
 
-var storybookCheck = function() {
-  var pjson = require(process.cwd() + '/package.json');
-  var storybookRange = pjson.dependencies['@storybook/react'] || pjson.devDependencies['@storybook/react'];
-  if (storybookRange) {
-    storybookVersion = 3;
-  } else {
-    storybookRange = pjson.dependencies['@kadira/storybook'] || pjson.devDependencies['@kadira/storybook'];
-    if (storybookRange) {
-      storybookVersion = 2;
-    }
-  }
-  // check if storybook exists
-  if (!storybookVersion) {
-    throw new Error('Storybook module not found in package.json');
-  }
-  // check storybook version range
-  if ((!semver.satisfies('2.17.0', storybookRange) && !semver.ltr('2.17.0', storybookRange)) || !semver.gtr('4.0.0', storybookRange)) {
-    throw new Error('Storybook version must be >= 2.17.0 and < 4.x');
-  }
-};
-
 exports.server = function(config, options, callback) {
+  var storybookApp;
+  var storybookVersion;
   if (!config || !config.storybookConfigDir) {
     return callback(new Error('Error: \'storybookConfigDir\' not found in config file.'));
   }
   if ([2, 3].indexOf(config.storybookVersion) > -1) {
+    storybookApp = 'react';
+    if (['react', 'vue'].indexOf(config.storybookApp) > -1) {
+      storybookApp = config.storybookApp;
+    }
     storybookVersion = config.storybookVersion;
   } else {
     // check storybook module
     try {
-      storybookCheck();
+      var pkg = storybookCheck(require(process.cwd() + '/package.json'));
+      storybookApp = pkg.app;
+      storybookVersion = pkg.version;
     } catch(ex) {
       return callback(ex);
     }
@@ -56,7 +42,7 @@ exports.server = function(config, options, callback) {
     }
     var configBody = fs.readFileSync(configPath, 'utf8');
     var codeTemplate = fs.readFileSync(__dirname + '/templates/v' + storybookVersion + '.template', 'utf8');
-    var code = template(codeTemplate)({ code: configBody });
+    var code = template(codeTemplate)({ code: configBody, app: storybookApp });
     fs.writeFileSync(configPath, code, 'utf8');
 
     // start Storybook dev server

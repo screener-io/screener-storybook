@@ -45,7 +45,7 @@ exports.run = function(config, options) {
       // generate config format expected by screener-runner
       config.states = transformToStates(config.storybook, localUrl);
       // remove storybook-specific fields
-      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookPort', 'storybookVersion', 'storybookBinPath']);
+      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookPort', 'storybookApp', 'storybookVersion', 'storybookBinPath']);
       if (options && options.debug) {
         console.log('DEBUG: config', JSON.stringify(config, null, 2));
       }
