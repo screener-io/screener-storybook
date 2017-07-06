@@ -146,6 +146,23 @@ describe('screener-storybook/src/validate', function() {
           });
       });
 
+      it('should allow setting storybookApp to react or vue', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookApp: 'react'})
+          .then(function() {
+            return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookApp: 'vue'});
+          })
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when setting storybookApp to any value not react or vue', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookApp: 'angular'})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "storybookApp" fails because ["storybookApp" must be one of [react, vue]]');
+          });
+      });
+
       it('should allow when both storybookBinPath and storybookVersion', function() {
         return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookVersion: 3, storybookBinPath: '/path'})
           .catch(function() {
