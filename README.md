@@ -1,8 +1,8 @@
 # Screener-Storybook [![Build Status](https://circleci.com/gh/screener-io/screener-storybook/tree/master.svg?style=shield)](https://circleci.com/gh/screener-io/screener-storybook)
 
-Automated Visual Testing for [React Storybook](https://storybook.js.org) using [Screener.io](https://screener.io).
+Automated Visual Testing for [Storybook](https://storybook.js.org) (React or Vue) using [Screener.io](https://screener.io).
 
-Screener-Storybook will use your existing Storybook stories as visual test cases, and run them against [Screener's](https://screener.io) automated visual testing service. Get visual regression tests across your React components with no additional coding!
+Screener-Storybook will use your existing Storybook stories as visual test cases, and run them against [Screener's](https://screener.io) automated visual testing service. Get visual regression tests across your React or Vue components with no additional coding!
 
 ### Installation
 
@@ -30,7 +30,9 @@ $ npm run test-storybook
 
 To test interactions, you can add `steps` to your existing Storybook stories. Each `step` is an instruction to interact with the component. This is useful for clicking buttons, filling out forms, and getting your components into the proper visual state to test. This also keeps your stories and interaction test code in the same place.
 
-To add `steps` to a story, wrap your component within a `Screener` component, and pass it a `steps` prop. The `steps` can then be generated using our fluent API. Step methods with selectors have built-in waits to simplify test flow creation.
+##### With React
+
+To add `steps` to a React story, wrap your component within a `Screener` component, and pass it a `steps` prop. The `steps` can then be generated using our fluent API below.
 
 Here is an example:
 
@@ -40,9 +42,9 @@ import Screener, {Steps} from 'screener-storybook/src/screener';
 storiesOf('MyComponent', module)
   .add('default', () => (
   	<Screener steps={new Steps()
-      .click('.selector')
-      .snapshot('name')
-      .end()
+    	.click('.selector')
+    	.snapshot('name')
+    	.end()
     }>
       <MyComponent />
     </Screener>
@@ -51,9 +53,28 @@ storiesOf('MyComponent', module)
 
 Please note that the `Screener` component **must** be the top-most component returned within a story. If you use `addDecorator` in your stories, ensure the **last** decorator contains the `Screener` component and `steps`.
 
+##### With Vue
+
+To add `steps` to a Vue story, add a `steps` prop to the story object being returned. The `steps` can then be generated using our fluent API below.
+
+Here is an example:
+
+```javascript
+import Steps from 'screener-runner/src/steps';
+
+storiesOf('MyComponent', module)
+  .add('default', () => ({
+  	render: h => h(MyComponent),
+    steps: new Steps()
+    	.click('.selector')
+        .snapshot('name')
+        .end()
+  }));
+```
+
 
 #### Steps
-The following step methods are currently available:
+The following step methods are currently available. Methods with selectors have built-in waits to simplify test flow creation:
 
 - `click(selector)`: this will click on the first element matching the provided css selector.
 - `snapshot(name)`: this will capture a Screener snapshot.
@@ -179,25 +200,27 @@ module.exports = {
 
 **Important Notes about Cross Browser Testing:**
 
-- **Performance Warning:** Cross Browser Testing with Sauce Labs will be slower than regular Screener visual regression tests, and so it is not recommended to run on every commit.
-- Cross Browser Testing, in most cases, does not need to be run continuously (unlike visual regression testing, which should be run continuously on commit). You may only want to run cross browser tests at certain times, such as when deploying to a staging environment.
-- Cross Browser Testing requires a valid Sauce Labs account, and access to enough concurrency in your Sauce account to run Screener tests. Each browser/resolution combination will use one concurrent machine.
-- Screener's auto-parallelization is disabled when Cross Browser Testing, to reduce the number of concurrent browsers required in your Sauce account.
+- Cross Browser Testing with Sauce Labs will be slower than regular Screener visual regression tests, and so it is not recommended to run on every commit.
+- You may want to limit cross browser testing to certain scenarios, such as only when merging into master (see example below).
+- Requirements: A valid Sauce Labs account, and access to enough concurrency in your Sauce account to run Screener tests. Each browser/resolution combination will use one concurrent machine.
+- Screener's auto-parallelization is disabled when Cross Browser Testing to reduce the number of concurrent browsers required in your Sauce account.
 
 **Overview**
 
-For cross browser testing, Screener integrates with [Sauce Labs](https://saucelabs.com/) to provide access to additional browsers. By default, Screener runs tests against Chrome browser, which does *not* require a Sauce account.
+For cross browser testing, Screener integrates with [Sauce Labs](https://saucelabs.com/) to provide access to additional browsers. By default, Screener runs tests against the Chrome browser, which does **not** require a Sauce account. Screener provides Chrome browsers and device emulation out-of-the-box.
 
-To test against multiple browsers, you can add the `browsers` and `sauce` properties to your screener configuration file. Browsers added *must* match one of the supported browsers/versions in the browser table below.
+To test against multiple browsers, add the `browsers` and `sauce` properties to your screener configuration file. Browsers added *must* match one of the supported browsers/versions in the browser table below.
 
 Here is a CircleCI example that only runs cross browser tests when committing into `master` branch:
 
 ```javascript
-var browsers;
+var config = {
+  // regular screener config
+};
 
 // only run cross browser tests when merging into ‘master’ branch
 if (process.env.CIRCLE_BRANCH === 'master') {
-  browsers = [
+  config.browsers = [
     {
       browserName: 'chrome'
     },
@@ -205,18 +228,14 @@ if (process.env.CIRCLE_BRANCH === 'master') {
       browserName: 'internet explorer',
       version: '11.103'
     }
-  ]
-}
-
-module.exports = {
-  ...
-
-  browsers: browsers,
-  sauce: {
+  ];
+  config.sauce = {
     username: 'sauce_user',
     accessKey: 'sauce_access_key'
-  }
-};
+  };
+}
+
+module.exports = config;
 ```
 
 **Supported Browsers**
@@ -224,10 +243,10 @@ module.exports = {
 | browserName  | version |
 | ------------- | ------------- |
 | chrome | *-do not set-* |
+| firefox | 54.0 |
 | firefox | 53.0 |
 | firefox | 52.0 |
 | firefox | 51.0 |
-| firefox | 50.0 |
 | internet explorer | 11.103 |
 | microsoftedge | 14.14393 |
 | safari | 10.0 |
