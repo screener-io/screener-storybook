@@ -16,6 +16,7 @@
   },
   "nyc": {
     "include": [
+      "src/check.js",
       "src/index.js",
       "src/runner.js",
       "src/validate.js"
@@ -25,9 +26,6 @@
     "node": ">= 4"
   },
   "license": "MIT",
-  "peerDependencies": {
-    "react": "^0.14.7 || ^15.0.0"
-  },
   "dependencies": {
     "bluebird": "~3.4.6",
     "colors": "~1.1.2",
