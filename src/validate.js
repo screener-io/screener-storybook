@@ -41,6 +41,7 @@ exports.storybookConfig = function(value) {
       Joi.string(),
       Joi.object().type(RegExp)
     ),
+    baseBranch: Joi.string().max(100),
     initialBaselineBranch: Joi.string().max(100),
     diffOptions: Joi.object().keys({
       structure: Joi.boolean(),
