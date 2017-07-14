@@ -37,7 +37,7 @@
     "react": "^15.0.0",
     "react-dom": "~15.4.1",
     "request": "~2.81.0",
-    "screener-runner": "^0.6.13",
+    "screener-runner": "^0.6.14",
     "semver": "~5.3.0"
   },
   "devDependencies": {
