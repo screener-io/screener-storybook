@@ -142,6 +142,7 @@ module.exports = {
     - Note: `resolution` and `resolutions` are mutually exclusive. Only one can exist.
 - **cssAnimations:** Screener disables CSS Animations by default to help ensure consistent results in your visual tests. If you do not want this, and would like to __enable__ CSS Animations, then set this option to `true`.
 - **ignore:** Comma-delimited string of CSS Selectors that represent areas to be ignored. Example: `.qa-ignore-date, .qa-ignore-ad`
+- **hide:** Comma-delimited string of CSS Selectors that represent areas to hide before capturing screenshots. Example: `.hide-addon-widget, .hide-ad`
 - **baseBranch:** Optional branch name of your project's base branch (e.g. master). Set this option when developing using feature branches to:
     - automatically compare and accept changes when merging a feature branch into the base branch, or when rebasing a feature branch.
     - automatically pull the initial baseline of UI states for a feature branch from this base branch.
