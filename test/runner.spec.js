@@ -92,6 +92,17 @@ describe('screener-storybook/src/runner', function() {
         });
     });
 
+    it('should pass through ignore and hide options', function() {
+      var testConfig = JSON.parse(JSON.stringify(configWithPort));
+      testConfig.ignore = 'ignore';
+      testConfig.hide = 'hide';
+      return StorybookRunner.run(testConfig)
+        .then(function(runnerConfig) {
+          expect(runnerConfig).to.have.property('ignore', 'ignore');
+          expect(runnerConfig).to.have.property('hide', 'hide');
+        });
+    });
+
     it('should remove storybook-specific props', function() {
       var testConfig = JSON.parse(JSON.stringify(configWithPort));
       testConfig.storybookStaticDir = '/static';
