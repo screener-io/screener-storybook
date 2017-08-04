@@ -92,14 +92,16 @@ describe('screener-storybook/src/runner', function() {
         });
     });
 
-    it('should pass through ignore and hide options', function() {
+    it('should pass through ignore, hide, beforeEachScript options', function() {
       var testConfig = JSON.parse(JSON.stringify(configWithPort));
       testConfig.ignore = 'ignore';
       testConfig.hide = 'hide';
+      testConfig.beforeEachScript = function() {};
       return StorybookRunner.run(testConfig)
         .then(function(runnerConfig) {
           expect(runnerConfig).to.have.property('ignore', 'ignore');
           expect(runnerConfig).to.have.property('hide', 'hide');
+          expect(runnerConfig).to.have.property('beforeEachScript', testConfig.beforeEachScript);
         });
     });
 
