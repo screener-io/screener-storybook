@@ -53,6 +53,7 @@ exports.storybookConfig = function(value) {
     }),
     sauce: sauceSchema,
     failureExitCode: Joi.number().integer().min(0).max(255).default(1),
+    beforeEachScript: [Joi.func(), Joi.string()],
     storybookBinPath: Joi.string(),
     storybookVersion: Joi.number().valid(2, 3),
     storybookApp: Joi.string().valid('react', 'vue')
