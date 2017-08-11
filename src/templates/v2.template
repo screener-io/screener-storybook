@@ -1,6 +1,6 @@
 if (typeof window === 'object' && window.navigator && (/node\.js/i).test(window.navigator.userAgent)) {
-  var addons = require('@kadira/storybook-addons').default;
-  var Channel = require('@kadira/storybook-channel').default;
+  let addons = require('@kadira/storybook-addons').default;
+  let Channel = require('@kadira/storybook-channel').default;
   addons.setChannel(new Channel({
     transport: {
       setHandler: function() {},
