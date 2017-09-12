@@ -1,7 +1,7 @@
 var storybookCheck = require('./check');
 var path = require('path');
 var fs = require('fs');
-var portfinder = require('portfinder');
+var getPort = require('get-port');
 var spawn = require('child_process').spawn;
 var request = require('request');
 var jsdom = require('jsdom');
@@ -33,8 +33,7 @@ exports.server = function(config, options, callback) {
     }
   }
   // find free port
-  portfinder.getPort(function (err, port) {
-    if (err) return callback(err);
+  getPort().then(function (port) {
     // inject temp storybook config file to get storybook
     var configPath = path.resolve(process.cwd(), config.storybookConfigDir, 'config.js');
     if (!fs.existsSync(configPath)) {
@@ -52,6 +51,11 @@ exports.server = function(config, options, callback) {
       console.log('Use custom storybook bin path: ' + binPath);
     }
     var bin = path.resolve(binPath, 'start-storybook');
+    var isWin = false;
+    if (/^win/.test(process.platform)) {
+      isWin = true;
+      bin += '.cmd';
+    }
     var args = ['--port', port, '--config-dir', config.storybookConfigDir];
     if (config.storybookStaticDir) {
       args.push('--static-dir');
@@ -59,7 +63,7 @@ exports.server = function(config, options, callback) {
     }
     console.log('\nStarting Storybook server...');
     console.log('>', 'start-storybook', args.join(' '), '\n');
-    var serverProcess = spawn(bin, args, {detached: true});
+    var serverProcess = spawn(bin, args, {detached: !isWin});
     if (options && (options.debug || options.serverOnly)) {
       serverProcess.stdout.on('data', function(data) { console.log(data.toString('utf8').trim()); });
       serverProcess.stderr.on('data', function(data) { console.error(data.toString('utf8').trim()); });
@@ -70,7 +74,9 @@ exports.server = function(config, options, callback) {
       if (fs.readFileSync(configPath, 'utf8') !== configBody) {
         fs.writeFileSync(configPath, configBody, 'utf8');
       }
-      process.kill(-serverProcess.pid);
+      if (!isWin) {
+        process.kill(-serverProcess.pid);
+      }
     });
     process.on('SIGINT', function () {
       process.exit();
@@ -83,7 +89,9 @@ exports.server = function(config, options, callback) {
     setTimeout(function() {
       request.get('http://localhost:' + port + '/static/preview.bundle.js', function(err, response, body) {
         if (err) return callback(err);
-        if (response.statusCode != 200 || !body) return callback(new Error('Error fetching preview bundle from storybook server'));
+        if (response.statusCode != 200 || !body) {
+          return callback(new Error('Error fetching preview bundle from storybook server'));
+        }
         previewCode = body;
         try {
           // reset config file to original code
@@ -94,7 +102,7 @@ exports.server = function(config, options, callback) {
         callback(null, port);
       });
     }, 3*1000);
-  });
+  }).catch(callback);
 };
 
 exports.get = function(options, callback) {
