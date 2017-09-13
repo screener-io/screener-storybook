@@ -125,6 +125,8 @@ exports.get = function(options, callback) {
         }
         return callback(new Error('Storybook object not found'));
       }
+      // jsdom window no longer needed. close it
+      try { window.close(); } catch (ex) { /**/ }
       callback(null, window.__screener_storybook__);
     }
   };
