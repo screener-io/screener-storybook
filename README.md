@@ -77,7 +77,11 @@ storiesOf('MyComponent', module)
 The following step methods are currently available. Methods with selectors have built-in waits to simplify test flow creation:
 
 - `click(selector)`: this will click on the first element matching the provided css selector.
-- `snapshot(name)`: this will capture a Screener snapshot.
+- `snapshot(name, [options])`: this will capture a visual snapshot.
+     - Optional `options` param can contain a `cropTo` field:
+     ```javascript
+     .snapshot('open', {cropTo: '.selector'})
+     ```
 - `hover(selector)`: this will move the mouse over the first element matching the provided css selector.
 - `mouseDown(selector)`: this will press and hold the mouse button over the first element matching the provided css selector.
 - `mouseUp(selector)`: this will release the mouse button. `selector` is optional.
