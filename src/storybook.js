@@ -25,7 +25,7 @@ exports.server = function(config, options, callback) {
   } else {
     // check storybook module
     try {
-      var pkg = storybookCheck(require(process.cwd() + '/package.json'));
+      var pkg = storybookCheck();
       storybookApp = pkg.app;
       storybookVersion = pkg.version;
     } catch(ex) {
