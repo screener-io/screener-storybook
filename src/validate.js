@@ -4,6 +4,7 @@ var stepsSchema = require('screener-runner/src/validate').stepsSchema;
 var resolutionSchema = require('screener-runner/src/validate').resolutionSchema;
 var browsersSchema = require('screener-runner/src/validate').browsersSchema;
 var sauceSchema = require('screener-runner/src/validate').sauceSchema;
+var vstsSchema = require('screener-runner/src/validate').vstsSchema;
 
 exports.storybookConfig = function(value) {
   var schema = Joi.object().keys({
@@ -26,6 +27,7 @@ exports.storybookConfig = function(value) {
     build: Joi.string().max(40),
     branch: Joi.string().max(100),
     commit: Joi.string(),
+    pullRequest: Joi.string(),
     resolution: resolutionSchema,
     resolutions: Joi.array().min(1).items(
       resolutionSchema
@@ -53,6 +55,7 @@ exports.storybookConfig = function(value) {
       minLayoutDimension: Joi.number().integer().min(0)
     }),
     sauce: sauceSchema,
+    vsts: vstsSchema,
     failureExitCode: Joi.number().integer().min(0).max(255).default(1),
     beforeEachScript: [Joi.func(), Joi.string()],
     storybookBinPath: Joi.string(),
