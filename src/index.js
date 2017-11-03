@@ -38,13 +38,36 @@ exports.getStorybook = function(options) {
                     if (typeof result.steps === 'object' && typeof result.steps.map === 'function' && result.steps.length > 0) {
                       obj.steps = result.steps;
                     } else if (result.props) {
-                      // check if <Screener> is a wrapping component
-                      if (result.type && result.type.name === 'Screener') {
-                        // get steps
-                        obj.steps = result.props.steps;
-                      } else if (result.props.initialContent && result.props.initialContent.props && result.props.initialContent.props.children && result.props.initialContent.props.children.props && result.props.initialContent.props.children.type && result.props.initialContent.props.children.type.name === 'Screener') {
-                        // get steps
-                        obj.steps = result.props.initialContent.props.children.props.steps;
+                      // recursively find screener steps
+                      var findScreenerSteps = function(current) {
+                        if (current.props) {
+                          if (current.props.isScreenerComponent === true) {
+                            return current.props.steps;
+                          } else {
+                            var steps = null;
+                            if (current.props.initialContent) {
+                              steps = findScreenerSteps(current.props.initialContent);
+                            }
+                            if (!steps && current.props.children) {
+                              var children = current.props.children;
+                              // handle array of children
+                              if (typeof children === 'object' && typeof children.map === 'function' && children.length > 0) {
+                                for (var i = 0, len = children.length; i < len; i++) {
+                                  steps = findScreenerSteps(children[i]);
+                                  if (steps) break;
+                                }
+                              } else {
+                                steps = findScreenerSteps(children);
+                              }
+                            }
+                            return steps;
+                          }
+                        }
+                      };
+                      // get steps
+                      var steps = findScreenerSteps(result);
+                      if (steps) {
+                        obj.steps = steps;
                       }
                     }
                   }
