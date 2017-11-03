@@ -1,4 +1,5 @@
 var React = require('react');
+var PropTypes = require('prop-types');
 var extend = require('lodash/extend');
 
 function Screener(p) {
@@ -6,8 +7,13 @@ function Screener(p) {
 }
 
 Screener.propTypes = {
-  children: React.PropTypes.any,
-  steps: React.PropTypes.array
+  children: PropTypes.any,
+  steps: PropTypes.array,
+  isScreenerComponent: PropTypes.bool
+};
+
+Screener.defaultProps = {
+  isScreenerComponent: true
 };
 
 exports.default = Screener;
