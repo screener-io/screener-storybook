@@ -51,8 +51,6 @@ storiesOf('MyComponent', module)
   ));
 ```
 
-Please note that the `Screener` component **must** be the top-most component returned within a story. If you use `addDecorator` in your stories, ensure the **last** decorator contains the `Screener` component and `steps`.
-
 ##### With Vue
 
 To add `steps` to a Vue story, add a `steps` prop to the story object being returned. The `steps` can then be generated using our fluent API below.
