@@ -259,10 +259,9 @@ module.exports = config;
 | browserName  | version |
 | ------------- | ------------- |
 | chrome | *-do not set-* |
+| firefox | 55.0 |
 | firefox | 54.0 |
 | firefox | 53.0 |
-| firefox | 52.0 |
-| firefox | 51.0 |
 | internet explorer | 11.103 |
-| microsoftedge | 14.14393 |
-| safari | 10.0 |
+| microsoftedge | 15.15063 |
+| safari | 11.0 |
