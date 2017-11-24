@@ -38,7 +38,7 @@
     "react": "^15.0.0",
     "react-dom": "~15.4.1",
     "request": "~2.81.0",
-    "screener-runner": "^0.7.6"
+    "screener-runner": "^0.7.7"
   },
   "devDependencies": {
     "chai": "~3.5.0",

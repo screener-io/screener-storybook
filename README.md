@@ -201,7 +201,8 @@ module.exports = {
     ```javascript
     sauce: {
       username: 'sauce_user',
-      accessKey: 'sauce_access_key'
+      accessKey: 'sauce_access_key',
+      maxConcurrent: 10 // optional available concurrency you have from Sauce Labs
     }
     ```
 - **vsts:** Optional configuration for integrating with Visual Studio Team Services.
@@ -247,7 +248,8 @@ if (process.env.CIRCLE_BRANCH === 'master') {
   ];
   config.sauce = {
     username: 'sauce_user',
-    accessKey: 'sauce_access_key'
+    accessKey: 'sauce_access_key',
+    maxConcurrent: 10
   };
 }
 
