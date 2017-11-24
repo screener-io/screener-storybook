@@ -187,7 +187,7 @@ describe('screener-storybook/src/validate', function() {
       });
 
       it('should allow browsers with sauce config', function() {
-        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key' }})
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key', maxConcurrent: 10 }})
           .catch(function() {
             throw new Error('Should not be here');
           });
