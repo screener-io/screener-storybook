@@ -2,6 +2,7 @@ var expect = require('chai').expect;
 var rewire = require('rewire');
 var Promise = require('bluebird');
 var StorybookRunner = rewire('../src/runner');
+var pkg = require('../package.json');
 
 var configWithPort = {
   apiKey: 'api-key',
@@ -76,7 +77,10 @@ describe('screener-storybook/src/runner', function() {
                 url: 'http://localhost:6006/iframe.html?dataId=0&selectedKind=Component%201&selectedStory=default',
                 name: 'Component 1: default'
               }
-            ]
+            ],
+            meta: {
+              'screener-storybook': pkg.version
+            }
           });
         });
     });
@@ -152,7 +156,10 @@ describe('screener-storybook/src/runner', function() {
                   }
                 ]
               }
-            ]
+            ],
+            meta: {
+              'screener-storybook': pkg.version
+            }
           });
         });
     });
