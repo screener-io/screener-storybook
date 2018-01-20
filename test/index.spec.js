@@ -368,7 +368,7 @@ describe('screener-storybook/src/index', function() {
         });
     });
 
-    it('should extract steps from Vue storybook array', function() {
+    it('should extract steps from Vue or Angular storybook array', function() {
       ScreenerStorybook.__set__('Storybook', {
         server: function() {},
         get: function(options, callback) {
