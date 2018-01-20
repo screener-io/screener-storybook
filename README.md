@@ -1,8 +1,8 @@
 # Screener-Storybook [![Build Status](https://circleci.com/gh/screener-io/screener-storybook/tree/master.svg?style=shield)](https://circleci.com/gh/screener-io/screener-storybook)
 
-Automated Visual Testing for [Storybook](https://storybook.js.org) (React or Vue) using [Screener.io](https://screener.io).
+Automated Visual Testing for [Storybook](https://storybook.js.org) (React, Vue or Angular) using [Screener.io](https://screener.io).
 
-Screener-Storybook will use your existing Storybook stories as visual test cases, and run them against [Screener's](https://screener.io) automated visual testing service. Get visual regression tests across your React or Vue components with no additional coding!
+Screener-Storybook will use your existing Storybook stories as visual test cases, and run them against [Screener's](https://screener.io) automated visual testing service. Get visual regression tests across your React, Vue or Angular components with no additional coding!
 
 ### Installation
 
@@ -63,6 +63,26 @@ import Steps from 'screener-runner/src/steps';
 storiesOf('MyComponent', module)
   .add('default', () => ({
   	render: h => h(MyComponent),
+    steps: new Steps()
+    	.click('.selector')
+        .snapshot('name')
+        .end()
+  }));
+```
+
+##### With Angular
+
+To add `steps` to an Angular story, add a `steps` prop to the story object being returned. The `steps` can then be generated using our fluent API below.
+
+Here is an example:
+
+```javascript
+import Steps from 'screener-runner/src/steps';
+
+storiesOf('MyComponent', module)
+  .add('default', () => ({
+    component: MyComponent,
+    props: {},
     steps: new Steps()
     	.click('.selector')
         .snapshot('name')
