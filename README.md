@@ -77,7 +77,7 @@ To add `steps` to an Angular story, add a `steps` prop to the story object being
 Here is an example:
 
 ```javascript
-import Steps from 'screener-runner/src/steps';
+import * as Steps from 'screener-runner/src/steps';
 
 storiesOf('MyComponent', module)
   .add('default', () => ({
