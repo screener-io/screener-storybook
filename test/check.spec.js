@@ -34,6 +34,21 @@ describe('screener-storybook/src/check', function() {
     });
   });
 
+  it('should return angular storybook v3', function() {
+    storybookCheck.__set__('require', {
+      resolve: function(path) {
+        if (path === '@storybook/angular') {
+          return true;
+        }
+      }
+    });
+    var result = storybookCheck();
+    expect(result).to.deep.equal({
+      app: 'angular',
+      version: 3
+    });
+  });
+
   it('should return react storybook v2', function() {
     storybookCheck.__set__('require', {
       resolve: function(path) {

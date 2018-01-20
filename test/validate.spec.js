@@ -146,10 +146,13 @@ describe('screener-storybook/src/validate', function() {
           });
       });
 
-      it('should allow setting storybookApp to react or vue', function() {
+      it('should allow setting storybookApp to react or vue or angular', function() {
         return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookApp: 'react'})
           .then(function() {
             return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookApp: 'vue'});
+          })
+          .then(function() {
+            return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], storybookApp: 'angular'});
           })
           .catch(function() {
             throw new Error('Should not be here');
