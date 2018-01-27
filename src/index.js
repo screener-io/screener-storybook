@@ -40,12 +40,15 @@ exports.getStorybook = function(options) {
                     } else if (result.props) {
                       // recursively find screener steps
                       var findScreenerSteps = function(current) {
-                        if (current.props) {
+                        if (current && current.props) {
                           if (current.props.isScreenerComponent === true) {
                             return current.props.steps;
                           } else {
                             var steps = null;
-                            if (current.props.initialContent) {
+                            if (typeof current.props.story === 'function') {
+                              steps = findScreenerSteps(current.props.story());
+                            }
+                            if (!steps && current.props.initialContent) {
                               steps = findScreenerSteps(current.props.initialContent);
                             }
                             if (!steps && current.props.children) {
