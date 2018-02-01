@@ -11,6 +11,7 @@ var storybookCheck = function() {
   var deps = [
     resolveModule('@storybook/react'),
     resolveModule('@storybook/vue'),
+    resolveModule('@storybook/angular'),
     resolveModule('@kadira/storybook')
   ];
   var result = {};
@@ -25,6 +26,11 @@ var storybookCheck = function() {
       version: 3
     };
   } else if (deps[2]) {
+    result = {
+      app: 'angular',
+      version: 3
+    };
+  } else if (deps[3]) {
     result = {
       app: 'react',
       version: 2

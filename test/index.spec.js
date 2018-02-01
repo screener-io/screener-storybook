@@ -118,6 +118,67 @@ describe('screener-storybook/src/index', function() {
         });
     });
 
+    it('should extract steps from React props with story function', function() {
+      ScreenerStorybook.__set__('Storybook', {
+        server: function() {},
+        get: function(options, callback) {
+          var storybookData = [
+            {
+              kind: 'Component1',
+              stories: [
+                {
+                  name: 'default',
+                  render: function() {
+                    return {
+                      props: {
+                        story: function() {
+                          return {
+                            props: {
+                              isScreenerComponent: true,
+                              steps: [
+                                {
+                                  type: 'clickElement'
+                                },
+                                {
+                                  type: 'saveScreenshot'
+                                }
+                              ]
+                            }
+                          };
+                        }
+                      }
+                    };
+                  }
+                }
+              ]
+            }
+          ];
+          callback(null, storybookData);
+        }
+      });
+      return ScreenerStorybook.getStorybook({})
+        .then(function(storybook) {
+          expect(storybook).to.deep.equal([
+            {
+              kind: 'Component1',
+              stories: [
+                {
+                  name: 'default',
+                  steps: [
+                    {
+                      type: 'clickElement'
+                    },
+                    {
+                      type: 'saveScreenshot',
+                    }
+                  ]
+                }
+              ]
+            }
+          ]);
+        });
+    });
+
     it('should extract nested initialContent steps from React storybook array', function() {
       ScreenerStorybook.__set__('Storybook', {
         server: function() {},
@@ -368,7 +429,7 @@ describe('screener-storybook/src/index', function() {
         });
     });
 
-    it('should extract steps from Vue storybook array', function() {
+    it('should extract steps from Vue or Angular storybook array', function() {
       ScreenerStorybook.__set__('Storybook', {
         server: function() {},
         get: function(options, callback) {
