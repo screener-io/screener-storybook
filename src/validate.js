@@ -61,7 +61,7 @@ exports.storybookConfig = function(value) {
     storybookBinPath: Joi.string(),
     storybookVersion: Joi.number().valid(2, 3),
     storybookApp: Joi.string().valid('react', 'vue', 'angular')
-  }).without('resolutions', ['resolution']).with('browsers', ['sauce']).with('storybookBinPath', ['storybookVersion']).required();
+  }).without('resolutions', ['resolution']).with('storybookBinPath', ['storybookVersion']).required();
   var validator = Promise.promisify(Joi.validate);
   return validator(value, schema);
 };

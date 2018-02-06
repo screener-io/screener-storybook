@@ -182,15 +182,8 @@ describe('screener-storybook/src/validate', function() {
           });
       });
 
-      it('should error when browsers is set without sauce', function() {
-        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'chrome' }]})
-          .catch(function(err) {
-            expect(err.message).to.equal('"browsers" missing required peer "sauce"');
-          });
-      });
-
       it('should allow browsers with sauce config', function() {
-        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key', maxConcurrent: 10 }})
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key', maxConcurrent: 10 }})
           .catch(function() {
             throw new Error('Should not be here');
           });
