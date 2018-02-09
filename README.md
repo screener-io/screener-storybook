@@ -104,7 +104,7 @@ The following step methods are currently available. Methods with selectors have 
 - `mouseDown(selector)`: this will press and hold the mouse button over the first element matching the provided css selector.
 - `mouseUp(selector)`: this will release the mouse button. `selector` is optional.
 - `setValue(selector, value)`: this will set the value of the input field matching the provided css selector.
-- `executeScript(code)`: this executes custom JS code against the client browser the test is running in.
+- `executeScript(code)`: this executes custom JS code against the client browser the test is running in.  The `code` parameter is a **string**.
 - `ignore(selector)`: this ignores all elements matching the provided css selector(s).
 - `wait(ms)`: this will pause execution for the specified number of ms.
 - `wait(selector)`: this will wait until the element matching the provided css selector is present.
