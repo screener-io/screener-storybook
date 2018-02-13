@@ -62,7 +62,7 @@ exports.server = function(config, options, callback) {
       args.push(config.storybookStaticDir);
     }
     console.log('\nStarting Storybook server...');
-    console.log('>', 'start-storybook', args.join(' '), '\n');
+    console.log('>', 'start-storybook', args.join(' '), '\n\nPlease wait. Starting Storybook may take a minute...\n');
     var serverProcess = spawn(bin, args, {detached: !isWin});
     if (options && (options.debug || options.serverOnly)) {
       serverProcess.stdout.on('data', function(data) { console.log(data.toString('utf8').trim()); });
