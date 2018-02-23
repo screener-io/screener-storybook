@@ -56,6 +56,7 @@ exports.storybookConfig = function(value) {
     }),
     sauce: sauceSchema,
     vsts: vstsSchema,
+    failOnNewStates: Joi.boolean(),
     failureExitCode: Joi.number().integer().min(0).max(255).default(1),
     beforeEachScript: [Joi.func(), Joi.string()],
     storybookBinPath: Joi.string(),

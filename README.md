@@ -259,6 +259,7 @@ module.exports = config;
       minLayoutDimension: 10 // Threshold for Layout changes. Defaults to 10 pixels.
     }
     ```
+- **failOnNewStates:** Option to set build to failure when `new` states are found.
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
     - To NOT fail a CI build on Screener failure, set to 0. Example:
     ```javascript
