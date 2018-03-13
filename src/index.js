@@ -72,6 +72,29 @@ exports.getStorybook = function(options) {
                       if (steps) {
                         obj.steps = steps;
                       }
+                    } else if (typeof result.render === 'function') {
+                      // recursively find screener steps in render function
+                      var findScreenerStepsInRender = function(current) {
+                        if (typeof current.steps === 'object' && typeof current.steps.map === 'function' && current.steps.length > 0) {
+                          return current.steps;
+                        }
+                        var steps = null;
+                        if (typeof current.render === 'function') {
+                          try {
+                            steps = findScreenerStepsInRender(current.render(function(fn) {
+                              return fn;
+                            }));
+                          } catch (ex) {
+                            steps = null;
+                          }
+                        }
+                        return steps;
+                      };
+                      // get steps
+                      var stepsInRender = findScreenerStepsInRender(result);
+                      if (stepsInRender) {
+                        obj.steps = stepsInRender;
+                      }
                     }
                   }
                 } catch(ex) {
