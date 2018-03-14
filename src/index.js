@@ -72,7 +72,7 @@ exports.getStorybook = function(options) {
                       if (steps) {
                         obj.steps = steps;
                       }
-                    } else if (typeof result.render === 'function') {
+                    } else if (typeof result.render === 'function' || (typeof result.components === 'object' && typeof result.components.story === 'object')) {
                       // recursively find screener steps in render function
                       var findScreenerStepsInRender = function(current) {
                         if (typeof current.steps === 'object' && typeof current.steps.map === 'function' && current.steps.length > 0) {
@@ -84,6 +84,15 @@ exports.getStorybook = function(options) {
                             steps = findScreenerStepsInRender(current.render(function(fn) {
                               return fn;
                             }));
+                          } catch (ex) {
+                            steps = null;
+                          }
+                        }
+                        if (typeof current.components === 'object' && typeof current.components.story === 'object' && typeof current.components.story.render === 'function') {
+                          try {
+                            steps = findScreenerStepsInRender(current.components.story.render(function(fn) {
+                              return fn;
+                            }, {}));
                           } catch (ex) {
                             steps = null;
                           }
