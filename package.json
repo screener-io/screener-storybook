@@ -23,7 +23,7 @@
     ]
   },
   "engines": {
-    "node": ">= 4"
+    "node": ">= 6"
   },
   "license": "MIT",
   "dependencies": {
@@ -32,7 +32,7 @@
     "commander": "~2.9.0",
     "get-port": "~3.2.0",
     "joi": "~10.0.2",
-    "jsdom": "~9.8.3",
+    "jsdom": "~11.7.0",
     "lodash": "~4.17.2",
     "prop-types": "^15.6.0",
     "react": "^15.0.0",

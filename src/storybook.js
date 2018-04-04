@@ -4,7 +4,7 @@ var fs = require('fs');
 var getPort = require('get-port');
 var spawn = require('child_process').spawn;
 var request = require('requestretry');
-var jsdom = require('jsdom');
+var jsdom = require('jsdom/lib/old-api.js');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 
@@ -81,7 +81,8 @@ exports.server = function(config, options, callback) {
     process.on('SIGINT', function () {
       process.exit();
     });
-    process.on('uncaughtException', function() {
+    process.on('uncaughtException', function(err) {
+      console.error(err);
       process.exit(1);
     });
 
