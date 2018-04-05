@@ -149,22 +149,26 @@ module.exports = {
 
 **Overview**
 
-For Cross Browser Testing, Screener provides access to Chrome and Firefox browsers and device emulation out-of-the-box. To test against additional browsers, Screener integrates with [Sauce Labs](https://saucelabs.com/) to provide access to IE, Safari and Edge browsers. By default, Screener runs tests against the Chrome browser, which does **not** require a Sauce account.
+For Cross Browser Testing, Screener provides cloud browsers and device emulators. The following browsers are available:
 
-To test against multiple browsers, add the `browsers` option to your `screener.config.js` file.
+- Chrome
+- Firefox
+- Internet Explorer 11
 
-To test IE, Safari or Edge browsers, a Sauce Labs account is required, and your Sauce credentials need to be added via the `sauce` option in your `screener.config.js` file. Browsers added *must* match one of the supported browsers/versions in the browser table below.
+To test against additional browsers, Screener integrates with [Sauce Labs](https://saucelabs.com/) to provide access to Safari and Edge browsers. For more information, view the [Sauce Labs Integration](https://screener.io/v2/docs/sauce) documentation.
 
-Here is a CircleCI example that only runs cross browser tests when committing into `master` branch:
+Cross Browser Testing is available through Screener's Perform plan. By default, Screener runs tests against the Chrome browser.
+
+**Adding Browsers**
+
+To test against multiple browsers, add the `browsers` option to your `screener.config.js` file:
 
 ```javascript
-var config = {
-  // regular screener config
-};
+// screener.config.js
+module.exports = {
+  ...
 
-// only run cross browser tests when merging into ‘master’ branch
-if (process.env.CIRCLE_BRANCH === 'master') {
-  config.browsers = [
+  browsers: [
     {
       browserName: 'chrome'
     },
@@ -173,17 +177,11 @@ if (process.env.CIRCLE_BRANCH === 'master') {
     },
     {
       browserName: 'internet explorer',
-      version: '11.103'
+      version: '11'
     }
-  ];
-  config.sauce = {
-    username: 'sauce_user',
-    accessKey: 'sauce_access_key',
-    maxConcurrent: 10
-  };
+  ]
 }
 
-module.exports = config;
 ```
 
 **Supported Browsers**
@@ -192,17 +190,10 @@ module.exports = config;
 | ------------- | ------------- | ------------- |
 | chrome | *-do not set-* | |
 | firefox | *-do not set-* | |
-| internet explorer | 11.103 | _requires Sauce Account_ |
-| microsoftedge | 16.16299 | _requires Sauce Account_ |
-| safari | 11.0 | _requires Sauce Account_ |
+| internet explorer | 11 | |
+| microsoftedge | 16.16299 | requires [Sauce Labs Integration](https://screener.io/v2/docs/sauce) |
+| safari | 11.0 | requires [Sauce Labs Integration](https://screener.io/v2/docs/sauce) |
 
-
-**Important Notes about Cross Browser Testing with Sauce Labs:**
-
-- Cross Browser Testing with Sauce Labs will be slower than regular Screener visual regression tests, and so it is not recommended to run on every commit.
-- You may want to limit cross browser testing to certain scenarios, such as only when merging into master (see example above).
-- Requirements: A valid Sauce Labs account, and access to enough concurrency in your Sauce account to run Screener tests. Each browser/resolution combination will use one concurrent machine.
-- Screener's auto-parallelization is disabled when using Sauce Labs browsers to reduce the number of concurrent browsers required in your Sauce account, unless `sauce.maxConcurrent` is set.
 
 
 
