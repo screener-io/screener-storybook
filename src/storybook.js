@@ -106,6 +106,28 @@ exports.server = function(config, options, callback) {
   }).catch(callback);
 };
 
+var getStorybook = function(window, tries, callback) {
+  var storybookObj = null;
+  var _storybook = window && window.__screener_storybook__;
+  if (typeof _storybook === 'function') {
+    var maxTries = 5;
+    try {
+      storybookObj = _storybook();
+    } catch (ex) {
+      return callback(ex);
+    }
+    if (tries < maxTries && (!storybookObj || (typeof storybookObj === 'object' && storybookObj.length === 0))) {
+      setTimeout(function() {
+        getStorybook(window, tries + 1, callback);
+      }, 2*1000);
+    } else {
+      callback(null, storybookObj);
+    }
+  } else if (typeof _storybook === 'object') {
+    callback(null, _storybook);
+  }
+};
+
 exports.get = function(options, callback) {
   var setupCode = [
     fs.readFileSync(__dirname + '/polyfills/match-media.js', 'utf8'),
@@ -117,18 +139,21 @@ exports.get = function(options, callback) {
     src: setupCode.concat(previewCode),
     done: function (err, window) {
       if (err) return callback(err);
-      if (!window || !window.__screener_storybook__) {
-        console.error(colors.red('Error getting Storybook object'));
-        if (options && options.debug) {
-          console.error(colors.red('Please send debug output to support@screener.io'));
-        } else {
-          console.error(colors.red('Please re-run with --debug flag, and send debug output to support@screener.io'));
+      getStorybook(window, 0, function (err, storybookObj) {
+        if (err) return callback(err);
+        if (!storybookObj) {
+          console.error(colors.red('Error getting Storybook object'));
+          if (options && options.debug) {
+            console.error(colors.red('Please send debug output to support@screener.io'));
+          } else {
+            console.error(colors.red('Please re-run with --debug flag, and send debug output to support@screener.io'));
+          }
+          return callback(new Error('Storybook object not found'));
         }
-        return callback(new Error('Storybook object not found'));
-      }
-      // jsdom window no longer needed. close it
-      try { window.close(); } catch (ex) { /**/ }
-      callback(null, window.__screener_storybook__);
+        // jsdom window no longer needed. close it
+        try { window.close(); } catch (ex) { /**/ }
+        callback(null, storybookObj);
+      });
     }
   };
   if (options && options.debug) {
