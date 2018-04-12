@@ -8,6 +8,7 @@ var jsdom = require('jsdom/lib/old-api.js');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 
+var baseUrl;
 var previewCode;
 
 exports.server = function(config, options, callback) {
@@ -88,7 +89,8 @@ exports.server = function(config, options, callback) {
 
     // wait for storybook server to be ready
     setTimeout(function() {
-      request.get('http://localhost:' + port + '/static/preview.bundle.js', function(err, response, body) {
+      baseUrl = 'http://localhost:' + port;
+      request.get(baseUrl + '/static/preview.bundle.js', function(err, response, body) {
         if (err) return callback(err);
         if (response.statusCode != 200 || !body) {
           return callback(new Error('Error fetching preview bundle from storybook server'));
@@ -137,6 +139,22 @@ exports.get = function(options, callback) {
   var jsDomConfig = {
     html: '',
     src: setupCode.concat(previewCode),
+    resourceLoader: function (resource, cb) {
+      var pathname = resource.url.pathname;
+      // fetch additional js files from storybook server
+      if (/\.js$/.test(pathname)) {
+        request.get(baseUrl + pathname, function(err, response, body) {
+          if (err) return cb(err);
+          if (response.statusCode === 200 && body) {
+            cb(null, body);
+          } else {
+            resource.defaultFetch(cb);
+          }
+        });
+      } else {
+        resource.defaultFetch(cb);
+      }
+    },
     done: function (err, window) {
       if (err) return callback(err);
       getStorybook(window, 0, function (err, storybookObj) {
