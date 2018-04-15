@@ -5,6 +5,7 @@ var resolutionSchema = require('screener-runner/src/validate').resolutionSchema;
 var browsersSchema = require('screener-runner/src/validate').browsersSchema;
 var sauceSchema = require('screener-runner/src/validate').sauceSchema;
 var vstsSchema = require('screener-runner/src/validate').vstsSchema;
+var browserStackSchema = require('screener-runner/src/validate').browserStackSchema;
 
 exports.storybookConfig = function(value) {
   var schema = Joi.object().keys({
@@ -56,13 +57,18 @@ exports.storybookConfig = function(value) {
     }),
     sauce: sauceSchema,
     vsts: vstsSchema,
+    browserStack: browserStackSchema,
     failOnNewStates: Joi.boolean(),
     failureExitCode: Joi.number().integer().min(0).max(255).default(1),
     beforeEachScript: [Joi.func(), Joi.string()],
     storybookBinPath: Joi.string(),
     storybookVersion: Joi.number().valid(2, 3),
     storybookApp: Joi.string().valid('react', 'vue', 'angular')
-  }).without('resolutions', ['resolution']).with('storybookBinPath', ['storybookVersion']).required();
+  })
+  .without('resolutions', ['resolution'])
+  .without('sauce', ['browserStack'])
+  .with('storybookBinPath', ['storybookVersion'])
+  .required();
   var validator = Promise.promisify(Joi.validate);
   return validator(value, schema);
 };

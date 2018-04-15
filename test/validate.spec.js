@@ -188,6 +188,20 @@ describe('screener-storybook/src/validate', function() {
             throw new Error('Should not be here');
           });
       });
+
+      it('should allow browsers with browserStack config', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'safari', version: '11.0' }], browserStack: { username: 'user', accessKey: 'key', maxConcurrent: 10 }})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when both sauce and browserStack options are present', function() {
+        return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybook: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }, browserStack: { username: 'user', accessKey: 'key' }})
+          .catch(function(err) {
+            expect(err.message).to.equal('"sauce" conflict with forbidden peer "browserStack"');
+          });
+      });
     });
 
   });
