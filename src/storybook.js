@@ -139,6 +139,7 @@ exports.get = function(options, callback) {
   var jsDomConfig = {
     html: '',
     src: setupCode.concat(previewCode),
+    pretendToBeVisual: true,
     resourceLoader: function (resource, cb) {
       var pathname = resource.url.pathname;
       // fetch additional js files from storybook server
