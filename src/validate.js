@@ -61,6 +61,7 @@ exports.storybookConfig = function(value) {
     failOnNewStates: Joi.boolean(),
     failureExitCode: Joi.number().integer().min(0).max(255).default(1),
     beforeEachScript: [Joi.func(), Joi.string()],
+    ieNativeEvents: Joi.boolean(),
     storybookBinPath: Joi.string(),
     storybookVersion: Joi.number().valid(2, 3),
     storybookApp: Joi.string().valid('react', 'vue', 'angular')
