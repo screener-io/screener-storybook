@@ -11,6 +11,7 @@ program
   .option('-c, --conf <config-file>', 'Path to Configuration File')
   .option('--server-only', 'Start Storybook Server only for testing purposes')
   .option('--debug', 'Enable debug mode')
+  .option('-b, --branch <branch-name>', 'Name of current git branch')
   .parse(process.argv);
 
 console.log(colors.bold('\nscreener-storybook v' + pjson.version + '\n'));
@@ -46,6 +47,9 @@ StorybookRunner.startStorybook(config, program)
     config.storybook = storybook;
     if (program.debug) {
       console.log('DEBUG: config.storybook', JSON.stringify(config.storybook, null, 2));
+    }
+    if (program.branch) {
+      config.branch = program.branch
     }
     // run test against Screener
     return StorybookRunner.run(config, program);
