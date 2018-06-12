@@ -191,7 +191,7 @@ module.exports = {
 | chrome | *-do not set-* | |
 | firefox | *-do not set-* | |
 | internet explorer | 11 | |
-| microsoftedge | 16.16299 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) or [BrowserStack](https://screener.io/v2/docs/browserstack) Integration |
+| microsoftedge | 17.17134 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) or [BrowserStack](https://screener.io/v2/docs/browserstack) Integration |
 | safari | 11.0 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) or [BrowserStack](https://screener.io/v2/docs/browserstack) Integration |
 
 
