@@ -53,7 +53,8 @@ exports.storybookConfig = function(value) {
       style: Joi.boolean(),
       content: Joi.boolean(),
       minLayoutPosition: Joi.number().integer().min(0),
-      minLayoutDimension: Joi.number().integer().min(0)
+      minLayoutDimension: Joi.number().integer().min(0),
+      compareSVGDOM: Joi.boolean()
     }),
     sauce: sauceSchema,
     vsts: vstsSchema,
