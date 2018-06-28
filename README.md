@@ -247,7 +247,8 @@ module.exports = {
       style: true,
       content: true,
       minLayoutPosition: 4, // Threshold for Layout changes. Defaults to 4 pixels.
-      minLayoutDimension: 10 // Threshold for Layout changes. Defaults to 10 pixels.
+      minLayoutDimension: 10, // Threshold for Layout changes. Defaults to 10 pixels.
+      compareSVGDOM: false // Pass if SVG DOM is the same. Defaults to false.
     }
     ```
 - **failOnNewStates:** Option to set build to failure when `new` states are found.
