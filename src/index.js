@@ -9,6 +9,9 @@ exports.getStorybook = function(options) {
   var getStorybook = Promise.promisify(Storybook.get);
   return getStorybook(options)
     .then(function(storybook) {
+      if (options && options.debug) {
+        console.log('DEBUG: getStorybook', JSON.stringify(storybook, null, 2));
+      }
       if (typeof storybook === 'object' && typeof storybook.map === 'function') {
         // make copy and extract steps
         storybook = compact(storybook.map(function(kind) {
