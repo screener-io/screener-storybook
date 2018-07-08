@@ -40,6 +40,9 @@ StorybookRunner.startStorybook(config, program)
       return new Promise(function() {});
     }
     config.storybookPort = port;
+    if (program.debug) {
+      console.log('DEBUG: config.storybookPort', port);
+    }
     return StorybookRunner.getStorybook(program);
   })
   .then(function(storybook) {
