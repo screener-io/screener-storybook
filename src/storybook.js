@@ -102,7 +102,13 @@ exports.server = function(config, options, callback) {
         } catch(ex) {
           return callback(ex);
         }
-        callback(null, port);
+        // handle webpack runtime chunks
+        request({url: baseUrl + '/static/runtime~preview.bundle.js', maxAttempts: 1, timeout: 5000}, function(err, response, body) {
+          if (!err && response.statusCode === 200 && body) {
+            previewCode += '\n' + body;
+          }
+          callback(null, port);
+        });
       });
     }, 3*1000);
   }).catch(callback);
@@ -125,7 +131,7 @@ var getStorybook = function(window, tries, callback) {
     } else {
       callback(null, storybookObj);
     }
-  } else if (typeof _storybook === 'object') {
+  } else {
     callback(null, _storybook);
   }
 };
