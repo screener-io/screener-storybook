@@ -3,13 +3,36 @@ var path = require('path');
 var fs = require('fs');
 var getPort = require('get-port');
 var spawn = require('child_process').spawn;
-var request = require('requestretry');
+var request = require('request');
+var requestRetry = require('requestretry');
 var jsdom = require('jsdom/lib/old-api.js');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 
 var baseUrl;
 var previewCode;
+
+var resourceLoader = function(prefix, callback) {
+  return function(resource, cb) {
+    var pathname = resource.url.pathname;
+    // fetch additional js files from storybook server
+    if (/\.js$/.test(pathname)) {
+      request.get(prefix + pathname, function(err, response, body) {
+        if (err) return cb(err);
+        if (response.statusCode === 200 && body) {
+          if (callback) {
+            callback(null, body);
+          }
+          cb(null, body);
+        } else {
+          resource.defaultFetch(cb);
+        }
+      });
+    } else {
+      resource.defaultFetch(cb);
+    }
+  };
+};
 
 exports.server = function(config, options, callback) {
   var storybookApp;
@@ -34,7 +57,7 @@ exports.server = function(config, options, callback) {
     }
   }
   // find free port
-  getPort().then(function (port) {
+  getPort().then(function(port) {
     // inject temp storybook config file to get storybook
     var configPath = path.resolve(process.cwd(), config.storybookConfigDir, 'config.js');
     if (!fs.existsSync(configPath)) {
@@ -79,7 +102,7 @@ exports.server = function(config, options, callback) {
         process.kill(-serverProcess.pid);
       }
     });
-    process.on('SIGINT', function () {
+    process.on('SIGINT', function() {
       process.exit();
     });
     process.on('uncaughtException', function(err) {
@@ -90,25 +113,39 @@ exports.server = function(config, options, callback) {
     // wait for storybook server to be ready
     setTimeout(function() {
       baseUrl = 'http://localhost:' + port;
-      request.get(baseUrl + '/static/preview.bundle.js', function(err, response, body) {
+      requestRetry.get(baseUrl + '/iframe.html', function(err, response, body) {
         if (err) return callback(err);
         if (response.statusCode != 200 || !body) {
-          return callback(new Error('Error fetching preview bundle from storybook server'));
+          return callback(new Error('Error loading Storybook'));
         }
-        previewCode = body;
-        try {
-          // reset config file to original code
-          fs.writeFileSync(configPath, configBody, 'utf8');
-        } catch(ex) {
-          return callback(ex);
-        }
-        // handle webpack runtime chunks
-        request({url: baseUrl + '/static/runtime~preview.bundle.js', maxAttempts: 1, timeout: 5000}, function(err, response, body) {
-          if (!err && response.statusCode === 200 && body) {
-            previewCode += '\n' + body;
+        var scripts = [];
+        var jsDomConfig = {
+          url: baseUrl + '/iframe.html',
+          pretendToBeVisual: true,
+          resourceLoader: resourceLoader(baseUrl, function(err, script) {
+            if (script) scripts.push(script);
+          }),
+          features: {
+            FetchExternalResources: ['script']
+          },
+          done: function(err, window) {
+            if (err) return callback(err);
+            // jsdom window no longer needed. close it
+            try { window.close(); } catch (ex) { /**/ }
+            previewCode = scripts.join('\n');
+            try {
+              // reset config file to original code
+              fs.writeFileSync(configPath, configBody, 'utf8');
+            } catch(ex) {
+              return callback(ex);
+            }
+            callback(null, port);
           }
-          callback(null, port);
-        });
+        };
+        if (options && options.debug) {
+          jsDomConfig.virtualConsole = jsdom.createVirtualConsole().sendTo(console);
+        }
+        jsdom.env(jsDomConfig);
       });
     }, 3*1000);
   }).catch(callback);
@@ -146,25 +183,10 @@ exports.get = function(options, callback) {
     html: '',
     src: setupCode.concat(previewCode),
     pretendToBeVisual: true,
-    resourceLoader: function (resource, cb) {
-      var pathname = resource.url.pathname;
-      // fetch additional js files from storybook server
-      if (/\.js$/.test(pathname)) {
-        request.get(baseUrl + pathname, function(err, response, body) {
-          if (err) return cb(err);
-          if (response.statusCode === 200 && body) {
-            cb(null, body);
-          } else {
-            resource.defaultFetch(cb);
-          }
-        });
-      } else {
-        resource.defaultFetch(cb);
-      }
-    },
-    done: function (err, window) {
+    resourceLoader: resourceLoader(baseUrl),
+    done: function(err, window) {
       if (err) return callback(err);
-      getStorybook(window, 0, function (err, storybookObj) {
+      getStorybook(window, 0, function(err, storybookObj) {
         if (err) return callback(err);
         if (!storybookObj) {
           console.error(colors.red('Error getting Storybook object'));
