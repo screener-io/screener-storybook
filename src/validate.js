@@ -64,7 +64,7 @@ exports.storybookConfig = function(value) {
     beforeEachScript: [Joi.func(), Joi.string()],
     ieNativeEvents: Joi.boolean(),
     storybookBinPath: Joi.string(),
-    storybookVersion: Joi.number().valid(2, 3),
+    storybookVersion: Joi.number().valid(2, 3, 4),
     storybookApp: Joi.string().valid('react', 'vue', 'angular')
   })
   .without('resolutions', ['resolution'])
