@@ -35,11 +35,11 @@
     "jsdom": "~11.7.0",
     "lodash": "~4.17.2",
     "prop-types": "^15.6.0",
-    "react": "^15.0.0",
-    "react-dom": "~15.4.1",
+    "react": "^16.0.0",
+    "react-dom": "~16.4.1",
     "request": "~2.81.0",
     "requestretry": "~1.12.2",
-    "screener-runner": "^0.10.2"
+    "screener-runner": "^0.10.4"
   },
   "devDependencies": {
     "chai": "~3.5.0",
