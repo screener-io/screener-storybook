@@ -40,7 +40,7 @@ exports.server = function(config, options, callback) {
   if (!config || !config.storybookConfigDir) {
     return callback(new Error('Error: \'storybookConfigDir\' not found in config file.'));
   }
-  if ([2, 3].indexOf(config.storybookVersion) > -1) {
+  if ([2, 3, 4].indexOf(config.storybookVersion) > -1) {
     storybookApp = 'react';
     if (['react', 'vue', 'angular'].indexOf(config.storybookApp) > -1) {
       storybookApp = config.storybookApp;
@@ -64,7 +64,11 @@ exports.server = function(config, options, callback) {
       return callback(new Error('Storybook config file not found: ' + configPath));
     }
     var configBody = fs.readFileSync(configPath, 'utf8');
-    var codeTemplate = fs.readFileSync(__dirname + '/templates/v' + storybookVersion + '.template', 'utf8');
+    var templateType = 'default';
+    if (storybookVersion === 2) {
+      templateType = 'v2';
+    }
+    var codeTemplate = fs.readFileSync(__dirname + '/templates/' + templateType + '.template', 'utf8');
     var code = template(codeTemplate)({ code: configBody, app: storybookApp });
     fs.writeFileSync(configPath, code, 'utf8');
 
