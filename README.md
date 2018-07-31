@@ -246,8 +246,9 @@ module.exports = {
       layout: true,
       style: true,
       content: true,
-      minLayoutPosition: 4, // Threshold for Layout changes. Defaults to 4 pixels.
-      minLayoutDimension: 10, // Threshold for Layout changes. Defaults to 10 pixels.
+      minLayoutPosition: 4, // Optional threshold for Layout changes. Defaults to 4 pixels.
+      minLayoutDimension: 10, // Optional threshold for Layout changes. Defaults to 10 pixels.
+      minShiftGraphic: 2, // Optional threshold for pixel shifts in graphics.
       compareSVGDOM: false // Pass if SVG DOM is the same. Defaults to false.
     }
     ```
