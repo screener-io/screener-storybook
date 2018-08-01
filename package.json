@@ -1,6 +1,6 @@
 {
   "name": "screener-storybook",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "description": "Automated Visual Testing for React Storybook using Screener.io",
   "repository": {
     "type": "git",
