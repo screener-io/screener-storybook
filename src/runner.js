@@ -6,7 +6,7 @@ var url = require('url');
 var pkg = require('../package.json');
 
 // transform storybook object into screener states
-var transformToStates = function(storybook, baseUrl) {
+var transformToStates = function(storybook, baseUrl, previewRoute) {
   // clean baseUrl. remove query/hash/trailing-slash
   var urlObj = url.parse(baseUrl);
   urlObj = omit(urlObj, 'hash', 'search', 'query');
@@ -16,9 +16,9 @@ var transformToStates = function(storybook, baseUrl) {
   var states = [];
   storybook.forEach(function(component) {
     component.stories.forEach(function(story) {
-      var iframeUrl = baseUrl + '/iframe.html?dataId=0&selectedKind=' + encodeURIComponent(component.kind) + '&selectedStory=' + encodeURIComponent(story.name);
+      var previewUrl = baseUrl + previewRoute + '?dataId=0&selectedKind=' + encodeURIComponent(component.kind) + '&selectedStory=' + encodeURIComponent(story.name);
       var state = {
-        url: iframeUrl,
+        url: previewUrl,
         name: component.kind + ': ' + story.name
       };
       if (story.steps) {
@@ -48,9 +48,9 @@ exports.run = function(config, options) {
         cache: true
       };
       // generate config format expected by screener-runner
-      config.states = transformToStates(config.storybook, localUrl);
+      config.states = transformToStates(config.storybook, localUrl, config.storybookPreview);
       // remove storybook-specific fields
-      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookPort', 'storybookApp', 'storybookVersion', 'storybookBinPath']);
+      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookPort', 'storybookApp', 'storybookVersion', 'storybookBinPath', 'storybookPreview']);
       if (options && options.debug) {
         console.log('DEBUG: config', JSON.stringify(config, null, 2));
       }

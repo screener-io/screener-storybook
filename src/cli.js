@@ -34,14 +34,15 @@ if (config === false) {
 
 // start local storybook server
 StorybookRunner.startStorybook(config, program)
-  .then(function(port) {
-    if (!port) throw new Error('Port not returned when starting Storybook server');
+  .then(function(server) {
+    if (!server || !server.port) throw new Error('Port not returned when starting Storybook server');
     if (program.serverOnly) {
       return new Promise(function() {});
     }
-    config.storybookPort = port;
+    config.storybookPort = server.port;
+    config.storybookPreview = server.preview;
     if (program.debug) {
-      console.log('DEBUG: config.storybookPort', port);
+      console.log('DEBUG: config.storybookPort', server.port);
     }
     return StorybookRunner.getStorybook(program);
   })
