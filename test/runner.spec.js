@@ -9,6 +9,7 @@ var configWithPort = {
   projectRepo: 'repo',
   storybookConfigDir: '.storybook',
   storybookPort: 6006,
+  storybookPreview: '/preview.html',
   storybook: [
     {
       kind: 'Component 1',
@@ -24,6 +25,7 @@ var configWithSteps = {
   projectRepo: 'repo',
   storybookConfigDir: '.storybook',
   storybookPort: 6006,
+  storybookPreview: '/preview.html',
   storybook: [
     {
       kind: 'Component 1',
@@ -74,7 +76,7 @@ describe('screener-storybook/src/runner', function() {
             },
             states: [
               {
-                url: 'http://localhost:6006/iframe.html?dataId=0&selectedKind=Component%201&selectedStory=default',
+                url: 'http://localhost:6006/preview.html?dataId=0&selectedKind=Component%201&selectedStory=default',
                 name: 'Component 1: default'
               }
             ],
@@ -140,7 +142,7 @@ describe('screener-storybook/src/runner', function() {
             },
             states: [
               {
-                url: 'http://localhost:6006/iframe.html?dataId=0&selectedKind=Component%201&selectedStory=default',
+                url: 'http://localhost:6006/preview.html?dataId=0&selectedKind=Component%201&selectedStory=default',
                 name: 'Component 1: default',
                 steps: [
                   {

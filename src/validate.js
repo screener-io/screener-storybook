@@ -14,6 +14,7 @@ exports.storybookConfig = function(value) {
     storybookConfigDir: Joi.string().required(),
     storybookStaticDir: Joi.string(),
     storybookPort: Joi.number().required(),
+    storybookPreview: Joi.string().required(),
     storybook: Joi.array().min(0).items(
       Joi.object().keys({
         kind: Joi.string().required(),

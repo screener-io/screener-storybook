@@ -117,39 +117,47 @@ exports.server = function(config, options, callback) {
     // wait for storybook server to be ready
     setTimeout(function() {
       baseUrl = 'http://localhost:' + port;
-      requestRetry.get(baseUrl + '/iframe.html', function(err, response, body) {
+      requestRetry.get(baseUrl + '/index.html', function(err, response, body) {
         if (err) return callback(err);
         if (response.statusCode != 200 || !body) {
           return callback(new Error('Error loading Storybook'));
         }
-        var scripts = [];
-        var jsDomConfig = {
-          url: baseUrl + '/iframe.html',
-          pretendToBeVisual: true,
-          resourceLoader: resourceLoader(baseUrl, function(err, script) {
-            if (script) scripts.push(script);
-          }),
-          features: {
-            FetchExternalResources: ['script']
-          },
-          done: function(err, window) {
-            if (err) return callback(err);
-            // jsdom window no longer needed. close it
-            try { window.close(); } catch (ex) { /**/ }
-            previewCode = scripts.join('\n');
-            try {
-              // reset config file to original code
-              fs.writeFileSync(configPath, configBody, 'utf8');
-            } catch(ex) {
-              return callback(ex);
-            }
-            callback(null, port);
+        var previewRoute = '/preview.html';
+        // confirm existence of preview.html, or fallback to iframe.html
+        request.get(baseUrl + previewRoute, function(err, response) {
+          if (err) return callback(err);
+          if (response.statusCode != 200) {
+            previewRoute = '/iframe.html';
           }
-        };
-        if (options && options.debug) {
-          jsDomConfig.virtualConsole = jsdom.createVirtualConsole().sendTo(console);
-        }
-        jsdom.env(jsDomConfig);
+          var scripts = [];
+          var jsDomConfig = {
+            url: baseUrl + previewRoute,
+            pretendToBeVisual: true,
+            resourceLoader: resourceLoader(baseUrl, function(err, script) {
+              if (script) scripts.push(script);
+            }),
+            features: {
+              FetchExternalResources: ['script']
+            },
+            done: function(err, window) {
+              if (err) return callback(err);
+              // jsdom window no longer needed. close it
+              try { window.close(); } catch (ex) { /**/ }
+              previewCode = scripts.join('\n');
+              try {
+                // reset config file to original code
+                fs.writeFileSync(configPath, configBody, 'utf8');
+              } catch(ex) {
+                return callback(ex);
+              }
+              callback(null, {port: port, preview: previewRoute});
+            }
+          };
+          if (options && options.debug) {
+            jsDomConfig.virtualConsole = jsdom.createVirtualConsole().sendTo(console);
+          }
+          jsdom.env(jsDomConfig);
+        });
       });
     }, 3*1000);
   }).catch(callback);
