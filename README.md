@@ -122,9 +122,6 @@ Each resolution item in the array is either:
 - A string in the format: `<width>x<height>`. Example: `1024x768`
 - Or an object with Device details: `deviceName` and optional `deviceOrientation`
 
-`deviceName` value can be one of: iPhone 4, iPhone 5, iPhone 6, iPhone 6 Plus, iPad, iPad Pro, Galaxy S5, Nexus 4, Nexus 5, Nexus 5X, Nexus 6P, Nexus 7, Nexus 10
-
-
 Here is an example:
 
 ```javascript
@@ -143,6 +140,22 @@ module.exports = {
   ]
 };
 ```
+
+**Available Devices**
+
+`deviceName` can be one of the following values:
+
+|   |  |  |  |
+| ------------- | ------------- | ------------- | ------------- |
+| iPad     | iPhone 4      | Galaxy S6 | Nexus 4  |
+| iPad Pro | iPhone 5      | Galaxy S7 | Nexus 5  |
+|          | iPhone 6      | Galaxy S8 | Nexus 5X |
+|          | iPhone 6 Plus |           | Nexus 6P |
+|          | iPhone 7      |           | Nexus 7  |
+|          | iPhone 7 Plus |           | Nexus 10 |
+|          | iPhone 8      |           |
+|          | iPhone 8 Plus |           |
+|          | iPhone X      |           |
 
 
 ### <a name="cross-browser-testing"></a>Cross Browser Testing
