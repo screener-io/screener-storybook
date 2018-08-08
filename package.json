@@ -33,13 +33,13 @@
     "get-port": "~3.2.0",
     "joi": "~10.0.2",
     "jsdom": "~11.7.0",
-    "lodash": "~4.17.2",
+    "lodash": "~4.17.5",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "~16.4.1",
     "request": "~2.81.0",
     "requestretry": "~1.12.2",
-    "screener-runner": "^0.10.5"
+    "screener-runner": "^0.10.7"
   },
   "devDependencies": {
     "chai": "~3.5.0",
