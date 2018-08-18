@@ -48,6 +48,7 @@ exports.storybookConfig = function(value) {
     ),
     baseBranch: Joi.string().max(100),
     initialBaselineBranch: Joi.string().max(100),
+    useNewerBaseBranch: Joi.string().valid(['accepted', 'latest']),
     diffOptions: Joi.object().keys({
       structure: Joi.boolean(),
       layout: Joi.boolean(),
@@ -72,6 +73,7 @@ exports.storybookConfig = function(value) {
   .without('resolutions', ['resolution'])
   .without('sauce', ['browserStack'])
   .with('storybookBinPath', ['storybookVersion'])
+  .with('useNewerBaseBranch', ['baseBranch'])
   .required();
   var validator = Promise.promisify(Joi.validate);
   return validator(value, schema);
