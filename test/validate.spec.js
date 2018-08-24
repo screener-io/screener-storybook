@@ -67,7 +67,7 @@ describe('screener-storybook/src/validate', function() {
     });
 
     it('should allow adding optional fields', function() {
-      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookStaticDir: './public', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], build: 'build', branch: 'branch', commit: 'commit', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', hide: 'hide', includeRules: [], excludeRules: [], initialBaselineBranch: 'master', baseBranch: 'master', useNewerBaseBranch: 'latest', diffOptions: {compareSVGDOM: true, minShiftGraphic: 5}, failOnNewStates: true, beforeEachScript: function() {}, ieNativeEvents: true})
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookStaticDir: './public', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], build: 'build', branch: 'branch', commit: 'commit', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', hide: 'hide', includeRules: [], excludeRules: [], initialBaselineBranch: 'master', baseBranch: 'master', alwaysAcceptBaseBranch: true, diffOptions: {compareSVGDOM: true, minShiftGraphic: 5}, failOnNewStates: true, beforeEachScript: function() {}, ieNativeEvents: true})
         .catch(function() {
           throw new Error('Should not be here');
         });
@@ -119,6 +119,20 @@ describe('screener-storybook/src/validate', function() {
       return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], useNewerBaseBranch: 'latest'})
         .catch(function(err) {
           expect(err.message).to.equal('"useNewerBaseBranch" missing required peer "baseBranch"');
+        });
+    });
+
+    it('should allow alwaysAcceptBaseBranch option when baseBranch is set', function() {
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], alwaysAcceptBaseBranch: true, baseBranch: 'master'})
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
+    });
+
+    it('should not allow alwaysAcceptBaseBranch option when baseBranch is not set', function() {
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], alwaysAcceptBaseBranch: true})
+        .catch(function(err) {
+          expect(err.message).to.equal('"alwaysAcceptBaseBranch" missing required peer "baseBranch"');
         });
     });
 

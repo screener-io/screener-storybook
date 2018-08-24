@@ -63,6 +63,7 @@ exports.storybookConfig = function(value) {
     vsts: vstsSchema,
     browserStack: browserStackSchema,
     failOnNewStates: Joi.boolean(),
+    alwaysAcceptBaseBranch: Joi.boolean(),
     failureExitCode: Joi.number().integer().min(0).max(255).default(1),
     beforeEachScript: [Joi.func(), Joi.string()],
     ieNativeEvents: Joi.boolean(),
@@ -74,6 +75,7 @@ exports.storybookConfig = function(value) {
   .without('sauce', ['browserStack'])
   .with('storybookBinPath', ['storybookVersion'])
   .with('useNewerBaseBranch', ['baseBranch'])
+  .with('alwaysAcceptBaseBranch', ['baseBranch'])
   .required();
   var validator = Promise.promisify(Joi.validate);
   return validator(value, schema);
