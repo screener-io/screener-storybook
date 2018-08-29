@@ -265,7 +265,7 @@ module.exports = {
       compareSVGDOM: false // Pass if SVG DOM is the same. Defaults to false.
     }
     ```
-- **failOnNewStates:** Option to set build to failure when `new` states are found, and to disable using `new` states as a baseline.
+- **failOnNewStates:** Option to set build to failure when `new` states are found, and to disable using `new` states as a baseline. Defaults to true.
 - **alwaysAcceptBaseBranch:** Option to automatically accept `new` and `changed` states in base branch. Assumes base branch should always be correct.
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
     - To NOT fail a CI build on Screener failure, set to 0. Example:
