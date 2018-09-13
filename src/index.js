@@ -51,6 +51,9 @@ exports.getStorybook = function(options) {
                             if (typeof current.props.story === 'function') {
                               steps = findScreenerSteps(current.props.story());
                             }
+                            if (!steps && typeof current.props.storyFn === 'function') {
+                              steps = findScreenerSteps(current.props.storyFn());
+                            }
                             if (!steps && current.props.initialContent) {
                               steps = findScreenerSteps(current.props.initialContent);
                             }
