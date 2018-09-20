@@ -36,7 +36,7 @@
     "lodash": "~4.17.5",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
-    "react-dom": "~16.4.1",
+    "react-dom": "^16.0.0",
     "request": "^2.87.0",
     "requestretry": "~1.12.2",
     "screener-runner": "^0.10.12"
