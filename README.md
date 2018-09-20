@@ -108,6 +108,8 @@ The following step methods are currently available. Methods with selectors have 
 - `ignore(selector)`: this ignores all elements matching the provided css selector(s).
 - `wait(ms)`: this will pause execution for the specified number of ms.
 - `wait(selector)`: this will wait until the element matching the provided css selector is present.
+- `rtl()`: this will set the current UI state to right-to-left direction.
+- `ltr()`: this will set the current UI state to left-to-right direction.
 - `end()`: this will return the steps to be run.
 
 **Note:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
