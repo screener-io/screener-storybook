@@ -39,7 +39,7 @@
     "react-dom": "^16.0.0",
     "request": "^2.87.0",
     "requestretry": "~1.12.2",
-    "screener-runner": "^0.10.14"
+    "screener-runner": "^0.10.15"
   },
   "devDependencies": {
     "chai": "~3.5.0",
