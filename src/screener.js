@@ -18,5 +18,6 @@ Screener.defaultProps = {
 
 exports.default = Screener;
 exports.Steps = require('screener-runner/src/steps');
+exports.Keys = require('screener-runner/src/keys');
 
 module.exports = extend(exports.default, exports);
