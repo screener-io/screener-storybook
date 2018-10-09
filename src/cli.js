@@ -61,6 +61,10 @@ StorybookRunner.startStorybook(config, program)
   .catch(function(err) {
     if (program && program.debug && err.stack) {
       console.error('DEBUG:', err.stack);
+      if (typeof err.annotate === 'function') {
+        console.error('Annotated Error Details:');
+        console.error(err.annotate());
+      }
     } else {
       console.error(err.message || err.toString());
     }
