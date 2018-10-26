@@ -240,19 +240,17 @@ module.exports = {
 - **baseBranch:** Optional branch name of your project's base branch (e.g. master). Set this option when developing using feature branches to:
     - automatically compare and accept changes when merging a feature branch into the base branch, or when rebasing a feature branch.
     - automatically pull the initial baseline of UI states for a feature branch from this base branch.
-- **includeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
+- **includeRules:** Optional array of RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
     - Example:
     ```javascript
     includeRules: [
-      'State name',
       /^Component/
     ]
     ```
-- **excludeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be removed.
+- **excludeRules:** Optional array of RegExp expressions to filter states by. Rules are matched against state name. All matching states will be removed.
     - Example:
     ```javascript
     excludeRules: [
-      'State name',
       /^Component/
     ]
     ```
