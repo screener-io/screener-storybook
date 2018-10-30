@@ -163,6 +163,13 @@ module.exports = {
 |          | iPhone X      |           |
 
 
+**Note:** In Storybook v4.x, you need to add the `viewport` meta tag for the browser to scale the UI correctly. You can do this by creating a file called `preview-head.html` inside the Storybook config directory and adding the following:
+
+```
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+
+
 ### <a name="cross-browser-testing"></a>Cross Browser Testing
 
 **Overview**
