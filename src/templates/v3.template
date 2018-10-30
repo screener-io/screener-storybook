@@ -1,8 +1,13 @@
 
 if (typeof window === 'object' && window.navigator && (/node\.js/i).test(window.navigator.userAgent)) {
   let addons = require('@storybook/addons').default;
-  let mockChannel = require('@storybook/addons').mockChannel;
-  addons.setChannel(mockChannel());
+  let Channel = require('@storybook/channels').default;
+  addons.setChannel(new Channel({
+    transport: {
+      setHandler: function() {},
+      send: function() {}
+    }
+  }));
 }
 
 ${code}

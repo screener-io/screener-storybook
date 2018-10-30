@@ -65,8 +65,8 @@ exports.server = function(config, options, callback) {
     }
     var configBody = fs.readFileSync(configPath, 'utf8');
     var templateType = 'default';
-    if (storybookVersion === 2) {
-      templateType = 'v2';
+    if (storybookVersion === 2 || storybookVersion === 3) {
+      templateType = 'v' + storybookVersion;
     }
     var codeTemplate = fs.readFileSync(__dirname + '/templates/' + templateType + '.template', 'utf8');
     var code = template(codeTemplate)({ code: configBody, app: storybookApp });
@@ -88,6 +88,9 @@ exports.server = function(config, options, callback) {
     if (config.storybookStaticDir) {
       args.push('--static-dir');
       args.push(config.storybookStaticDir);
+    }
+    if (storybookVersion === 4) {
+      args.push('--ci');
     }
     console.log('\nStarting Storybook server...');
     console.log('>', 'start-storybook', args.join(' '), '\n\nPlease wait. Starting Storybook may take a minute...\n');

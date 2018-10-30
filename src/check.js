@@ -1,41 +1,36 @@
-var resolveModule = function(path) {
-  var modulePath = null;
+var semver = require('semver');
+
+var checkApp = function(app) {
   try {
-    modulePath = require.resolve(path);
-  } catch(ex) { /* module not found */ }
-  return modulePath;
+    var packagePath = require.resolve(app.path + '/package.json');
+    var packageVersion = semver.major(require(packagePath).version);
+    return {
+      app: app.name,
+      version: app.version || packageVersion
+    };
+  } catch(ex) {
+    // module not found
+    return null;
+  }
 };
 
 var storybookCheck = function() {
   // look for Storybook module
-  var deps = [
-    resolveModule('@storybook/react'),
-    resolveModule('@storybook/vue'),
-    resolveModule('@storybook/angular'),
-    resolveModule('@kadira/storybook')
+  var apps = [
+    { path: '@storybook/react', name: 'react' },
+    { path: '@storybook/vue', name: 'vue' },
+    { path: '@storybook/angular', name: 'angular' },
+    { path: '@kadira/storybook', name: 'react', version: 2 }
   ];
-  var result = {};
-  if (deps[0]) {
-    result = {
-      app: 'react',
-      version: 3
-    };
-  } else if (deps[1]) {
-    result = {
-      app: 'vue',
-      version: 3
-    };
-  } else if (deps[2]) {
-    result = {
-      app: 'angular',
-      version: 3
-    };
-  } else if (deps[3]) {
-    result = {
-      app: 'react',
-      version: 2
-    };
-  } else {
+  var result = null;
+  for (var i = 0, len = apps.length; i < len; i++) {
+    var app = checkApp(apps[i]);
+    if (app) {
+      result = app;
+      break;
+    }
+  }
+  if (!result) {
     throw new Error('Storybook module not found');
   }
   return result;
