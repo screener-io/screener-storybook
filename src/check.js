@@ -4,9 +4,12 @@ var checkApp = function(app) {
   try {
     var packagePath = require.resolve(app.path + '/package.json');
     var packageVersion = semver.major(require(packagePath).version);
+    var packagePreRelease = semver.prerelease(require(packagePath).version);
+
     return {
       app: app.name,
-      version: app.version || packageVersion
+      version: app.version || packageVersion,
+      isPreRelease: Array.isArray(packagePreRelease)
     };
   } catch(ex) {
     // module not found

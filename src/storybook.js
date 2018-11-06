@@ -37,6 +37,7 @@ var resourceLoader = function(prefix, callback) {
 exports.server = function(config, options, callback) {
   var storybookApp;
   var storybookVersion;
+  var isPreRelease;
   if (!config || !config.storybookConfigDir) {
     return callback(new Error('Error: \'storybookConfigDir\' not found in config file.'));
   }
@@ -52,6 +53,7 @@ exports.server = function(config, options, callback) {
       var pkg = storybookCheck();
       storybookApp = pkg.app;
       storybookVersion = pkg.version;
+      isPreRelease = pkg.isPreRelease;
     } catch(ex) {
       return callback(ex);
     }
@@ -89,7 +91,7 @@ exports.server = function(config, options, callback) {
       args.push('--static-dir');
       args.push(config.storybookStaticDir);
     }
-    if (storybookVersion === 4) {
+    if (storybookVersion === 4 && !isPreRelease) {
       args.push('--ci');
     }
     console.log('\nStarting Storybook server...');
