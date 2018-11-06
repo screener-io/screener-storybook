@@ -18,7 +18,31 @@ describe('screener-storybook/src/check', function() {
     var result = storybookCheck();
     expect(result).to.deep.equal({
       app: 'react',
-      version: 4
+      version: {
+        major: 4,
+        full: '4.0.0'
+      }
+    });
+  });
+
+  it('should return react storybook v4 alpha version', function() {
+    var tmpRequire = function() {
+      return {version: '4.0.0-alpha.3'};
+    };
+    tmpRequire.resolve = function(path) {
+      if (path === '@storybook/react/package.json') {
+        return 'package.json';
+      }
+      throw new Error();
+    };
+    storybookCheck.__set__('require', tmpRequire);
+    var result = storybookCheck();
+    expect(result).to.deep.equal({
+      app: 'react',
+      version: {
+        major: 4,
+        full: '4.0.0-alpha.3'
+      }
     });
   });
 
@@ -36,7 +60,10 @@ describe('screener-storybook/src/check', function() {
     var result = storybookCheck();
     expect(result).to.deep.equal({
       app: 'react',
-      version: 3
+      version: {
+        major: 3,
+        full: '3.3.0'
+      }
     });
   });
 
@@ -54,7 +81,10 @@ describe('screener-storybook/src/check', function() {
     var result = storybookCheck();
     expect(result).to.deep.equal({
       app: 'vue',
-      version: 4
+      version: {
+        major: 4,
+        full: '4.0.0'
+      }
     });
   });
 
@@ -72,7 +102,10 @@ describe('screener-storybook/src/check', function() {
     var result = storybookCheck();
     expect(result).to.deep.equal({
       app: 'angular',
-      version: 4
+      version: {
+        major: 4,
+        full: '4.0.0'
+      }
     });
   });
 
@@ -90,7 +123,10 @@ describe('screener-storybook/src/check', function() {
     var result = storybookCheck();
     expect(result).to.deep.equal({
       app: 'react',
-      version: 2
+      version: {
+        major: 2,
+        full: '2.0.0'
+      }
     });
   });
 

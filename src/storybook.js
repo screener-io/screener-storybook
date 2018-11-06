@@ -8,6 +8,7 @@ var requestRetry = require('requestretry');
 var jsdom = require('jsdom/lib/old-api.js');
 var colors = require('colors/safe');
 var template = require('lodash/template');
+var semver = require('semver');
 
 var baseUrl;
 var previewCode;
@@ -45,7 +46,10 @@ exports.server = function(config, options, callback) {
     if (['react', 'vue', 'angular'].indexOf(config.storybookApp) > -1) {
       storybookApp = config.storybookApp;
     }
-    storybookVersion = config.storybookVersion;
+    storybookVersion = {
+      major: config.storybookVersion,
+      full: config.storybookVersion + '.0.0'
+    };
   } else {
     // check storybook module
     try {
@@ -65,8 +69,8 @@ exports.server = function(config, options, callback) {
     }
     var configBody = fs.readFileSync(configPath, 'utf8');
     var templateType = 'default';
-    if (storybookVersion === 2 || storybookVersion === 3) {
-      templateType = 'v' + storybookVersion;
+    if (storybookVersion.major === 2 || storybookVersion.major === 3) {
+      templateType = 'v' + storybookVersion.major;
     }
     var codeTemplate = fs.readFileSync(__dirname + '/templates/' + templateType + '.template', 'utf8');
     var code = template(codeTemplate)({ code: configBody, app: storybookApp });
@@ -89,7 +93,8 @@ exports.server = function(config, options, callback) {
       args.push('--static-dir');
       args.push(config.storybookStaticDir);
     }
-    if (storybookVersion === 4) {
+    // support storybook v4 `--ci` flag starting from v4.0.0-alpha.23
+    if (storybookVersion.major === 4 && semver.gt(storybookVersion.full, '4.0.0-alpha.22')) {
       args.push('--ci');
     }
     console.log('\nStarting Storybook server...');
