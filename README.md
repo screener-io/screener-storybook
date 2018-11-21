@@ -254,6 +254,7 @@ module.exports = {
       /^Component/
     ]
     ```
+    - Note: `includeRules` can be added as a property to objects in `browsers` or `resolutions` in order to filter states specifically by a browser or resolution.
 - **excludeRules:** Optional array of RegExp expressions to filter states by. Rules are matched against state name. All matching states will be removed.
     - Example:
     ```javascript
@@ -261,6 +262,7 @@ module.exports = {
       /^Component/
     ]
     ```
+    - Note: `excludeRules` can be added as a property to objects in `browsers` or `resolutions` in order to filter states specifically by a browser or resolution.
 - **diffOptions:** Visual diff options to control validations.
     - Example:
     ```javascript
