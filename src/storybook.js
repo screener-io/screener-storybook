@@ -125,7 +125,10 @@ exports.server = function(config, options, callback) {
     // wait for storybook server to be ready
     setTimeout(function() {
       baseUrl = 'http://localhost:' + port;
-      requestRetry.get(baseUrl + '/', function(err, response, body) {
+      var retryStrategy = function(err, response) {
+        return requestRetry.RetryStrategies.HTTPOrNetworkError(err, response) || (response && response.statusCode === 404);
+      };
+      requestRetry.get(baseUrl + '/', {retryStrategy: retryStrategy}, function(err, response, body) {
         if (err) return callback(err);
         if (response.statusCode != 200 || !body) {
           return callback(new Error('Error loading Storybook'));
