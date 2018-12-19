@@ -110,6 +110,7 @@ The following step methods are currently available. Methods with selectors have 
 - `ignore(selector)`: this ignores all elements matching the provided css selector(s).
 - `wait(ms)`: this will pause execution for the specified number of ms.
 - `wait(selector)`: this will wait until the element matching the provided css selector is present.
+- `waitForNotFound(selector)`: this will wait until the element matching the provided css selector is Not present.
 - `cssAnimations(isEnabled)`: this will override the global cssAnimations option for the current UI state. Set to `true` to enable CSS Animations, and set to `false` to disable.
 - `rtl()`: this will set the current UI state to right-to-left direction.
 - `ltr()`: this will set the current UI state to left-to-right direction.
