@@ -104,7 +104,11 @@ The following step methods are currently available. Methods with selectors have 
 - `mouseDown(selector)`: this will press and hold the mouse button over the first element matching the provided css selector.
 - `mouseUp(selector)`: this will release the mouse button. `selector` is optional.
 - `focus(selector)`: this will set cursor focus on the first element matching the provided css selector.
-- `setValue(selector, value)`: this will set the value of the input field matching the provided css selector.
+- `setValue(selector, value, [options])`: this will set the value of the input field matching the provided css selector.
+     - Optional `options` param can contain an `isPassword` option:
+     ```javascript
+     .setValue('.selector', 'text', {isPassword: true})
+     ```
 - `keys(selector, keys)`: this will send the provided keys to the first element matching the provided css selector.
 - `executeScript(code)`: this executes custom JS code against the client browser the test is running in.  The `code` parameter is a **string**.
 - `ignore(selector)`: this ignores all elements matching the provided css selector(s).
