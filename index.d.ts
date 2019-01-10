@@ -18,10 +18,6 @@ declare module 'screener-storybook/src/screener' {
     cropTo: string
   }
 
-  export interface SetValueOpts {
-    isPassword: boolean
-  }
-
   export interface Steps {
     url(url: string): Steps;
     click(selector: string): Steps;
@@ -32,11 +28,10 @@ declare module 'screener-storybook/src/screener' {
     mouseDown(selector: string): Steps;
     mouseUp(selector: string): Steps;
     keys(selector: string, keys: string): Steps;
-    setValue(selector: string, value: string, options?: SetValueOpts): Steps;
+    setValue(selector: string, value: string): Steps;
     executeScript(code: string, isAsync?: boolean): Steps;
     ignore(selector: string): Steps;
     wait(val: number | string): Steps;
-    waitForNotFound(selector: string): Steps;
     rtl(): Steps;
     ltr(): Steps;
     end(): object[];
@@ -47,7 +42,7 @@ declare module 'screener-storybook/src/screener' {
 
   export interface ScreenerProps {
     steps?: Steps;
-    isScreenerComponent?: boolean;
+    isScreenerComponent: boolean;
   }
 
   export default class Screener extends React.Component<ScreenerProps> {}
