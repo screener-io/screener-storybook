@@ -200,7 +200,7 @@ describe('screener-storybook/src/validate', function() {
       it('should error when setting storybookApp to any value not react, vue or angular', function() {
         return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], storybookApp: 'other'})
           .catch(function(err) {
-            expect(err.message).to.equal('child "storybookApp" fails because ["storybookApp" must be one of [react, vue, angular]]');
+            expect(err.message).to.equal('child "storybookApp" fails because ["storybookApp" must be one of [react, vue, angular, html]]');
           });
       });
 
