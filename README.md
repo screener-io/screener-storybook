@@ -1,8 +1,8 @@
 # Screener-Storybook [![Build Status](https://circleci.com/gh/screener-io/screener-storybook/tree/master.svg?style=shield)](https://circleci.com/gh/screener-io/screener-storybook)
 
-Automated Visual Testing for [Storybook](https://storybook.js.org) (React, Vue or Angular) using [Screener.io](https://screener.io).
+Automated Visual Testing for [Storybook](https://storybook.js.org) (React, Vue, Angular or HTML) using [Screener.io](https://screener.io).
 
-Screener-Storybook will use your existing Storybook stories as visual test cases, and run them against [Screener's](https://screener.io) automated visual testing service. Get visual regression tests across your React, Vue or Angular components with no additional coding!
+Screener-Storybook will use your existing Storybook stories as visual test cases, and run them against [Screener's](https://screener.io) automated visual testing service. Get visual regression tests across your React, Vue, Angular or HTML components with no additional coding!
 
 ### Installation
 
