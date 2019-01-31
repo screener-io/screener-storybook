@@ -109,6 +109,27 @@ describe('screener-storybook/src/check', function() {
     });
   });
 
+  it('should return html storybook v4', function() {
+    var tmpRequire = function() {
+      return {version: '4.0.0'};
+    };
+    tmpRequire.resolve = function(path) {
+      if (path === '@storybook/html/package.json') {
+        return 'package.json';
+      }
+      throw new Error();
+    };
+    storybookCheck.__set__('require', tmpRequire);
+    var result = storybookCheck();
+    expect(result).to.deep.equal({
+      app: 'html',
+      version: {
+        major: 4,
+        full: '4.0.0'
+      }
+    });
+  });
+
   it('should return react storybook v2', function() {
     var tmpRequire = function() {
       return {version: '4.0.0'};
