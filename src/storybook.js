@@ -43,7 +43,7 @@ exports.server = function(config, options, callback) {
   }
   if ([2, 3, 4].indexOf(config.storybookVersion) > -1) {
     storybookApp = 'react';
-    if (['react', 'vue', 'angular'].indexOf(config.storybookApp) > -1) {
+    if (['react', 'vue', 'angular', 'html'].indexOf(config.storybookApp) > -1) {
       storybookApp = config.storybookApp;
     }
     storybookVersion = {
