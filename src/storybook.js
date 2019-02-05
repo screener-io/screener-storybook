@@ -200,7 +200,8 @@ exports.get = function(options, callback) {
   var setupCode = [
     fs.readFileSync(__dirname + '/polyfills/match-media.js', 'utf8'),
     fs.readFileSync(__dirname + '/polyfills/local-storage.js', 'utf8'),
-    fs.readFileSync(__dirname + '/polyfills/event-source.js', 'utf8')
+    fs.readFileSync(__dirname + '/polyfills/event-source.js', 'utf8'),
+    fs.readFileSync(__dirname + '/polyfills/web-components.js', 'utf8')
   ];
   var jsDomConfig = {
     html: '',
