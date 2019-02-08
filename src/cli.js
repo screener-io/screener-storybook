@@ -44,10 +44,7 @@ StorybookRunner.startStorybook(config, program)
     if (program.debug) {
       console.log('DEBUG: config.storybookPort', server.port);
     }
-    return StorybookRunner.getStorybook(program);
-  })
-  .then(function(storybook) {
-    config.storybook = storybook;
+    config.storybook = StorybookRunner.getStorybook(program);
     if (program.debug) {
       console.log('DEBUG: config.storybook', JSON.stringify(config.storybook, null, 2));
     }

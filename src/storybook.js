@@ -1,38 +1,40 @@
 var storybookCheck = require('./check');
 var path = require('path');
 var fs = require('fs');
+var os = require('os');
 var getPort = require('get-port');
 var spawn = require('child_process').spawn;
 var request = require('request');
 var requestRetry = require('requestretry');
-var jsdom = require('jsdom/lib/old-api.js');
+var puppeteer = require('puppeteer');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 var semver = require('semver');
+var Promise = require('bluebird');
 
-var baseUrl;
-var previewCode;
+var storybookObj;
 
-var resourceLoader = function(prefix, callback) {
-  return function(resource, cb) {
-    var pathname = resource.url.pathname;
-    // fetch additional js files from storybook server
-    if (/\.js$/.test(pathname)) {
-      request.get(prefix + pathname, function(err, response, body) {
-        if (err) return cb(err);
-        if (response.statusCode === 200 && body) {
-          if (callback) {
-            callback(null, body);
-          }
-          cb(null, body);
-        } else {
-          resource.defaultFetch(cb);
-        }
-      });
-    } else {
-      resource.defaultFetch(cb);
-    }
-  };
+var getStorybook = function(page, tries) {
+  var maxTries = 5;
+  if (typeof tries === 'undefined') {
+    tries = 0;
+  }
+  return page.evaluate('window.__screener_storybook__()')
+    .then(function(result) {
+      if (tries < maxTries && (!result || (typeof result === 'object' && result.length === 0))) {
+        return Promise.delay(2*1000).then(function() {
+          return getStorybook(page, tries + 1);
+        });
+      }
+      if (typeof result === 'object' && result.length > 0) {
+        var stepsScript = fs.readFileSync(__dirname + '/scripts/story-steps.js', 'utf8');
+        return page.evaluate(stepsScript);
+      }
+      return result;
+    })
+    .catch(function() {
+      return null;
+    });
 };
 
 exports.server = function(config, options, callback) {
@@ -69,7 +71,7 @@ exports.server = function(config, options, callback) {
     }
     var configBody = fs.readFileSync(configPath, 'utf8');
     var templateType = 'default';
-    if (storybookVersion.major === 2 || storybookVersion.major === 3) {
+    if (storybookVersion.major === 2) {
       templateType = 'v' + storybookVersion.major;
     }
     var codeTemplate = fs.readFileSync(__dirname + '/templates/' + templateType + '.template', 'utf8');
@@ -124,7 +126,7 @@ exports.server = function(config, options, callback) {
 
     // wait for storybook server to be ready
     setTimeout(function() {
-      baseUrl = 'http://localhost:' + port;
+      var baseUrl = 'http://localhost:' + port;
       var retryStrategy = function(err, response) {
         return requestRetry.RetryStrategies.HTTPOrNetworkError(err, response) || (response && response.statusCode === 404);
       };
@@ -140,96 +142,62 @@ exports.server = function(config, options, callback) {
           if (response.statusCode != 200) {
             previewRoute = '/iframe.html';
           }
-          var scripts = [];
-          var jsDomConfig = {
-            url: baseUrl + previewRoute,
-            pretendToBeVisual: true,
-            resourceLoader: resourceLoader(baseUrl, function(err, script) {
-              if (script) scripts.push(script);
-            }),
-            features: {
-              FetchExternalResources: ['script']
-            },
-            done: function(err, window) {
-              if (err) return callback(err);
-              // jsdom window no longer needed. close it
-              try { window.close(); } catch (ex) { /**/ }
-              previewCode = scripts.join('\n');
-              try {
-                // reset config file to original code
-                fs.writeFileSync(configPath, configBody, 'utf8');
-              } catch(ex) {
-                return callback(ex);
-              }
-              callback(null, {port: port, preview: previewRoute});
-            }
-          };
-          if (options && options.debug) {
-            jsDomConfig.virtualConsole = jsdom.createVirtualConsole().sendTo(console);
+          // get storybook obj with puppeteer
+          var launchOptions = {headless: true};
+          if (os.platform() === 'linux') {
+            launchOptions.args = ['--no-sandbox'];
           }
-          jsdom.env(jsDomConfig);
+          var browser, page;
+          var done = function() {
+            try {
+              // reset config file to original code
+              fs.writeFileSync(configPath, configBody, 'utf8');
+            } catch(ex) {
+              return callback(ex);
+            }
+            callback(null, {port: port, preview: previewRoute});
+          };
+          puppeteer.launch(launchOptions)
+            .then(function(_browser) {
+              browser = _browser;
+              return browser.newPage();
+            })
+            .then(function(_page) {
+              page = _page;
+              return page.goto(baseUrl + previewRoute);
+            })
+            .then(function() {
+              return getStorybook(page);
+            })
+            .then(function(result) {
+              storybookObj = result;
+              return browser.close();
+            })
+            .then(done)
+            .catch(function(ex) {
+              if (options && options.debug) {
+                console.error(ex);
+              }
+              if (browser) {
+                return browser.close().then(done);
+              }
+              done();
+            });
         });
       });
     }, 3*1000);
   }).catch(callback);
 };
 
-var getStorybook = function(window, tries, callback) {
-  var storybookObj = null;
-  var _storybook = window && window.__screener_storybook__;
-  if (typeof _storybook === 'function') {
-    var maxTries = 5;
-    try {
-      storybookObj = _storybook();
-    } catch (ex) {
-      return callback(ex);
-    }
-    if (tries < maxTries && (!storybookObj || (typeof storybookObj === 'object' && storybookObj.length === 0))) {
-      setTimeout(function() {
-        getStorybook(window, tries + 1, callback);
-      }, 2*1000);
+exports.get = function(options) {
+  if (!storybookObj) {
+    console.error(colors.red('Error getting Storybook object'));
+    if (options && options.debug) {
+      console.error(colors.red('Please send debug output to support@screener.io'));
     } else {
-      callback(null, storybookObj);
+      console.error(colors.red('Please re-run with --debug flag, and send debug output to support@screener.io'));
     }
-  } else {
-    callback(null, _storybook);
+    throw new Error('Storybook object not found');
   }
-};
-
-exports.get = function(options, callback) {
-  var setupCode = [
-    fs.readFileSync(__dirname + '/polyfills/match-media.js', 'utf8'),
-    fs.readFileSync(__dirname + '/polyfills/local-storage.js', 'utf8'),
-    fs.readFileSync(__dirname + '/polyfills/event-source.js', 'utf8'),
-    fs.readFileSync(__dirname + '/polyfills/web-components.js', 'utf8')
-  ];
-  var jsDomConfig = {
-    html: '',
-    src: setupCode.concat(previewCode),
-    pretendToBeVisual: true,
-    resourceLoader: resourceLoader(baseUrl),
-    done: function(err, window) {
-      if (err) return callback(err);
-      getStorybook(window, 0, function(err, storybookObj) {
-        if (err) return callback(err);
-        if (!storybookObj) {
-          console.error(colors.red('Error getting Storybook object'));
-          if (options && options.debug) {
-            console.error(colors.red('Please send debug output to support@screener.io'));
-          } else {
-            console.error(colors.red('Please re-run with --debug flag, and send debug output to support@screener.io'));
-          }
-          return callback(new Error('Storybook object not found'));
-        }
-        // jsdom window no longer needed. close it
-        try { window.close(); } catch (ex) { /**/ }
-        callback(null, storybookObj);
-      });
-    }
-  };
-  if (options && options.debug) {
-    jsDomConfig.virtualConsole = jsdom.createVirtualConsole().sendTo(console);
-  }
-  // parse preview bundle js code and retrieve window object
-  jsdom.env(jsDomConfig);
+  return storybookObj;
 };
