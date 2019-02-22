@@ -25,9 +25,9 @@ describe('screener-storybook/src/check', function() {
     });
   });
 
-  it('should return react storybook v4 alpha version', function() {
+  it('should return react storybook v5 beta version', function() {
     var tmpRequire = function() {
-      return {version: '4.0.0-alpha.3'};
+      return {version: '5.0.0-beta.3'};
     };
     tmpRequire.resolve = function(path) {
       if (path === '@storybook/react/package.json') {
@@ -40,8 +40,8 @@ describe('screener-storybook/src/check', function() {
     expect(result).to.deep.equal({
       app: 'react',
       version: {
-        major: 4,
-        full: '4.0.0-alpha.3'
+        major: 5,
+        full: '5.0.0-beta.3'
       }
     });
   });

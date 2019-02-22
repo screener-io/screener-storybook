@@ -173,14 +173,10 @@ describe('screener-storybook/src/validate', function() {
           });
       });
 
-      it('should error when setting storybookVersion to any value not 2, 3 or 4', function() {
+      it('should error when setting storybookVersion to any value not 2, 3, 4, 5', function() {
         return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], storybookVersion: 1})
           .catch(function(err) {
-            expect(err.message).to.equal('child "storybookVersion" fails because ["storybookVersion" must be one of [2, 3, 4]]');
-            return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], storybookVersion: 5})
-            .catch(function(err) {
-              expect(err.message).to.equal('child "storybookVersion" fails because ["storybookVersion" must be one of [2, 3, 4]]');
-            });
+            expect(err.message).to.equal('child "storybookVersion" fails because ["storybookVersion" must be one of [2, 3, 4, 5]]');
           });
       });
 
