@@ -43,7 +43,7 @@ exports.server = function(config, options, callback) {
   if (!config || !config.storybookConfigDir) {
     return callback(new Error('Error: \'storybookConfigDir\' not found in config file.'));
   }
-  if ([2, 3, 4].indexOf(config.storybookVersion) > -1) {
+  if ([2, 3, 4, 5].indexOf(config.storybookVersion) > -1) {
     storybookApp = 'react';
     if (['react', 'vue', 'angular', 'html'].indexOf(config.storybookApp) > -1) {
       storybookApp = config.storybookApp;
@@ -95,8 +95,8 @@ exports.server = function(config, options, callback) {
       args.push('--static-dir');
       args.push(config.storybookStaticDir);
     }
-    // support storybook v4 `--ci` flag starting from v4.0.0-alpha.23
-    if (storybookVersion.major === 4 && semver.gt(storybookVersion.full, '4.0.0-alpha.22')) {
+    // support storybook v4+ `--ci` flag starting from v4.0.0-alpha.23
+    if (storybookVersion.major >= 4 && semver.gt(storybookVersion.full, '4.0.0-alpha.22')) {
       args.push('--ci');
     }
     console.log('\nStarting Storybook server...');
