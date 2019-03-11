@@ -130,7 +130,7 @@ exports.server = function(config, options, callback) {
       var retryStrategy = function(err, response) {
         return requestRetry.RetryStrategies.HTTPOrNetworkError(err, response) || (response && response.statusCode === 404);
       };
-      requestRetry.get(baseUrl + '/', {retryStrategy: retryStrategy, maxAttempts: 30}, function(err, response, body) {
+      requestRetry.get(baseUrl + '/', {retryStrategy: retryStrategy, maxAttempts: 60}, function(err, response, body) {
         if (err) return callback(err);
         if (response.statusCode != 200 || !body) {
           return callback(new Error('Error loading Storybook'));
