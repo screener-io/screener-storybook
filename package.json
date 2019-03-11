@@ -1,6 +1,6 @@
 {
   "name": "screener-storybook",
-  "version": "0.17.3",
+  "version": "0.17.4",
   "description": "Automated Visual Testing for React Storybook using Screener.io",
   "main": "./index.js",
   "types": "./index.d.ts",
