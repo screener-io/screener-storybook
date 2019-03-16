@@ -14,8 +14,11 @@ var Promise = require('bluebird');
 
 var storybookObj;
 
-var getStorybook = function(page, tries) {
+var getStorybook = function(page, tries, options) {
   var maxTries = 5;
+  if (options && options.debug) {
+    console.log('DEBUG: getStorybook', tries);
+  }
   if (typeof tries === 'undefined') {
     tries = 0;
   }
@@ -23,7 +26,7 @@ var getStorybook = function(page, tries) {
     .then(function(result) {
       if (tries < maxTries && (!result || (typeof result === 'object' && result.length === 0))) {
         return Promise.delay(2*1000).then(function() {
-          return getStorybook(page, tries + 1);
+          return getStorybook(page, tries + 1, options);
         });
       }
       if (typeof result === 'object' && result.length > 0) {
@@ -32,7 +35,10 @@ var getStorybook = function(page, tries) {
       }
       return result;
     })
-    .catch(function() {
+    .catch(function(ex) {
+      if (options && options.debug) {
+        console.error('DEBUG: getStorybook', ex);
+      }
       return null;
     });
 };
@@ -128,7 +134,12 @@ exports.server = function(config, options, callback) {
     setTimeout(function() {
       var baseUrl = 'http://localhost:' + port;
       var retryStrategy = function(err, response) {
-        return requestRetry.RetryStrategies.HTTPOrNetworkError(err, response) || (response && response.statusCode === 404);
+        var networkError = requestRetry.RetryStrategies.HTTPOrNetworkError(err, response);
+        var statusCode = response && response.statusCode;
+        if (options && options.debug) {
+          console.log('DEBUG: GET', baseUrl, networkError, statusCode);
+        }
+        return networkError || statusCode === 404;
       };
       requestRetry.get(baseUrl + '/', {retryStrategy: retryStrategy, maxAttempts: 60}, function(err, response, body) {
         if (err) return callback(err);
@@ -141,6 +152,9 @@ exports.server = function(config, options, callback) {
           if (err) return callback(err);
           if (response.statusCode != 200) {
             previewRoute = '/iframe.html';
+          }
+          if (options && options.debug) {
+            console.log('DEBUG: previewRoute', previewRoute);
           }
           // get storybook obj with puppeteer
           var launchOptions = {headless: true};
@@ -164,10 +178,13 @@ exports.server = function(config, options, callback) {
             })
             .then(function(_page) {
               page = _page;
+              if (options && options.debug) {
+                console.log('DEBUG: GET', baseUrl + previewRoute);
+              }
               return page.goto(baseUrl + previewRoute);
             })
             .then(function() {
-              return getStorybook(page);
+              return getStorybook(page, 0, options);
             })
             .then(function(result) {
               storybookObj = result;
