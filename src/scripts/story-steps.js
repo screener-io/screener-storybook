@@ -52,6 +52,11 @@ function getStorySteps(storybook) {
                         if (!steps && current.props.initialContent) {
                           steps = findScreenerSteps(current.props.initialContent);
                         }
+                        if (!steps && typeof current.type === 'function') {
+                          try {
+                            steps = findScreenerSteps(current.type());
+                          } catch(ex) { /**/ }
+                        }
                         if (!steps && current.props.children) {
                           var children = current.props.children;
                           // handle array of children
