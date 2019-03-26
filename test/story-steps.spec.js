@@ -199,6 +199,66 @@ describe('screener-storybook/src/scripts/story-steps', function() {
       ]);
     });
 
+    it('should extract steps from React children with type function', function() {
+      var storybookData = [
+        {
+          kind: 'Component1',
+          stories: [
+            {
+              name: 'default',
+              render: function() {
+                return {
+                  props: {
+                    initialContent: {
+                      props: {
+                        children: {
+                          props: {},
+                          type: function() {
+                            return {
+                              props: {
+                                isScreenerComponent: true,
+                                steps: [
+                                  {
+                                    type: 'clickElement'
+                                  },
+                                  {
+                                    type: 'saveScreenshot',
+                                  }
+                                ]
+                              }
+                            };
+                          }
+                        }
+                      }
+                    }
+                  }
+                };
+              }
+            }
+          ]
+        }
+      ];
+      var result = getStorySteps(storybookData);
+      expect(result).to.deep.equal([
+        {
+          kind: 'Component1',
+          stories: [
+            {
+              name: 'default',
+              steps: [
+                {
+                  type: 'clickElement'
+                },
+                {
+                  type: 'saveScreenshot',
+                }
+              ]
+            }
+          ]
+        }
+      ]);
+    });
+
     it('should extract nested initialContent steps from React storybook array', function() {
       var storybookData = [
         {
