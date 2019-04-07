@@ -185,7 +185,7 @@ For Cross Browser Testing, Screener provides cloud browsers and device emulators
 - Firefox
 - Internet Explorer 11
 
-To test against additional browsers, Screener provides integrations with [Sauce Labs](https://saucelabs.com/) and [BrowserStack](https://browserstack.com) to provide access to Safari and Edge browsers. For more information, view the [Sauce Labs Integration](https://screener.io/v2/docs/sauce) or [BrowserStack Integration](https://screener.io/v2/docs/browserstack) documentation.
+To test against additional browsers, Screener provides integrations with [Sauce Labs](https://saucelabs.com/) to provide access to Safari and Edge browsers. For more information, view the [Sauce Labs Integration](https://screener.io/v2/docs/sauce) documentation.
 
 Cross Browser Testing is available through Screener's Perform plan. By default, Screener runs tests against the Chrome browser.
 
@@ -221,8 +221,8 @@ module.exports = {
 | chrome | *-do not set-* | |
 | firefox | *-do not set-* | |
 | internet explorer | 11 | |
-| microsoftedge | 17.17134 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) or [BrowserStack](https://screener.io/v2/docs/browserstack) Integration |
-| safari | 11.1 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) or [BrowserStack](https://screener.io/v2/docs/browserstack) Integration |
+| microsoftedge | 17.17134 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
+| safari | 11.1 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
 
 
 
