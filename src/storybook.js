@@ -158,7 +158,9 @@ exports.server = function(config, options, callback) {
           }
           // get storybook obj with puppeteer
           var launchOptions = {headless: true};
-          if (os.platform() === 'linux') {
+          // launch without sandbox in container-based and windows server environments
+          // https://docs.travis-ci.com/user/chrome#Sandboxing
+          if (os.platform() === 'linux' || os.platform() === 'win32') {
             launchOptions.args = ['--no-sandbox'];
           }
           var browser, page;
