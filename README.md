@@ -109,9 +109,11 @@ The following step methods are currently available. Methods with selectors have 
      ```javascript
      .setValue('.selector', 'text', {isPassword: true})
      ```
+- `clearValue(selector)`: this will clear the value of the input field matching the provided css selector.
 - `keys(selector, keys)`: this will send the provided keys to the first element matching the provided css selector.
 - `executeScript(code)`: this executes custom JS code against the client browser the test is running in.  The `code` parameter is a **string**.
 - `ignore(selector)`: this ignores all elements matching the provided css selector(s).
+- `clearIgnores()`: this resets all ignores added using the ignore(selector) step.
 - `wait(ms)`: this will pause execution for the specified number of ms.
 - `wait(selector)`: this will wait until the element matching the provided css selector is present.
 - `waitForNotFound(selector)`: this will wait until the element matching the provided css selector is Not present.
