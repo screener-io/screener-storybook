@@ -42,7 +42,7 @@
     "react-dom": "^16.0.0",
     "request": "^2.87.0",
     "requestretry": "~1.12.2",
-    "screener-runner": "^0.10.33",
+    "screener-runner": "^0.10.34",
     "semver": "~5.6.0"
   },
   "devDependencies": {
