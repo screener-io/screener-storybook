@@ -10,6 +10,7 @@ var puppeteer = require('puppeteer');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 var semver = require('semver');
+var nodeStatic = require('node-static');
 var Promise = require('bluebird');
 
 var storybookObj;
@@ -43,11 +44,111 @@ var getStorybook = function(page, tries, options) {
     });
 };
 
+var storybookReady = function(port, options, callback) {
+  // wait for storybook server to be ready
+  setTimeout(function() {
+    var baseUrl = 'http://localhost:' + port;
+    var retryStrategy = function(err, response) {
+      var networkError = requestRetry.RetryStrategies.HTTPOrNetworkError(err, response);
+      var statusCode = response && response.statusCode;
+      if (options && options.debug) {
+        console.log('DEBUG: GET', baseUrl, networkError, statusCode);
+      }
+      return networkError || statusCode === 404;
+    };
+    requestRetry.get(baseUrl + '/', {retryStrategy: retryStrategy, maxAttempts: 60}, function(err, response, body) {
+      if (err) return callback(err);
+      if (response.statusCode != 200 || !body) {
+        return callback(new Error('Error loading Storybook'));
+      }
+      var previewRoute = '/preview.html';
+      // confirm existence of preview.html, or fallback to iframe.html
+      request.get(baseUrl + previewRoute, function(err, response) {
+        if (err) return callback(err);
+        if (response.statusCode != 200) {
+          previewRoute = '/iframe.html';
+        }
+        if (options && options.debug) {
+          console.log('DEBUG: previewRoute', previewRoute);
+        }
+        // get storybook obj with puppeteer
+        var launchOptions = {headless: true};
+        // launch without sandbox in container-based and windows server environments
+        // https://docs.travis-ci.com/user/chrome#Sandboxing
+        if (os.platform() === 'linux' || os.platform() === 'win32') {
+          launchOptions.args = ['--no-sandbox'];
+        }
+        var browser, page;
+        var done = function() {
+          callback(null, {port: port, preview: previewRoute});
+        };
+        puppeteer.launch(launchOptions)
+          .then(function(_browser) {
+            browser = _browser;
+            return browser.newPage();
+          })
+          .then(function(_page) {
+            page = _page;
+            if (options && options.debug) {
+              console.log('DEBUG: GET', baseUrl + previewRoute);
+            }
+            return page.goto(baseUrl + previewRoute);
+          })
+          .then(function() {
+            return getStorybook(page, 0, options);
+          })
+          .then(function(result) {
+            storybookObj = result;
+            return browser.close();
+          })
+          .then(done)
+          .catch(function(ex) {
+            if (options && options.debug) {
+              console.error(ex);
+            }
+            if (browser) {
+              return browser.close().then(done);
+            }
+            done();
+          });
+      });
+    });
+  }, 3*1000);
+};
+
+var staticServer = exports.staticServer = function(config, options, callback) {
+  // confirm static folder exists
+  var storybookBuildPath = path.resolve(process.cwd(), config.storybookStaticBuildDir);
+  if (!fs.existsSync(storybookBuildPath)) {
+    return callback(new Error('Error: \'storybookStaticBuildDir\' directory not found.'));
+  }
+  console.log('Use Static Storybook Build:\n' + storybookBuildPath);
+  // find free port
+  getPort().then(function(port) {
+    var fileServer = new nodeStatic.Server(storybookBuildPath);
+    require('http').createServer(function(req, res) {
+      req.addListener('end', function() {
+        fileServer.serve(req, res);
+      }).resume();
+    }).listen(port, function(err) {
+      if (err) {
+        return callback(new Error('Error starting static server to ' + storybookBuildPath + ': ' + err.toString()));
+      }
+      console.log('Started server: http://localhost:' + port);
+      storybookReady(port, options, callback);
+    });
+  }).catch(callback);
+};
+
 exports.server = function(config, options, callback) {
   var storybookApp;
   var storybookVersion;
   if (!config || !config.storybookConfigDir) {
     return callback(new Error('Error: \'storybookConfigDir\' not found in config file.'));
+  }
+  // switch to using staticServer instead for static Storybook builds
+  if (config.storybookStaticBuildDir) {
+    return staticServer(config, options, callback);
   }
   if ([2, 3, 4, 5].indexOf(config.storybookVersion) > -1) {
     storybookApp = 'react';
@@ -130,81 +231,15 @@ exports.server = function(config, options, callback) {
       process.exit(1);
     });
 
-    // wait for storybook server to be ready
-    setTimeout(function() {
-      var baseUrl = 'http://localhost:' + port;
-      var retryStrategy = function(err, response) {
-        var networkError = requestRetry.RetryStrategies.HTTPOrNetworkError(err, response);
-        var statusCode = response && response.statusCode;
-        if (options && options.debug) {
-          console.log('DEBUG: GET', baseUrl, networkError, statusCode);
-        }
-        return networkError || statusCode === 404;
-      };
-      requestRetry.get(baseUrl + '/', {retryStrategy: retryStrategy, maxAttempts: 60}, function(err, response, body) {
-        if (err) return callback(err);
-        if (response.statusCode != 200 || !body) {
-          return callback(new Error('Error loading Storybook'));
-        }
-        var previewRoute = '/preview.html';
-        // confirm existence of preview.html, or fallback to iframe.html
-        request.get(baseUrl + previewRoute, function(err, response) {
-          if (err) return callback(err);
-          if (response.statusCode != 200) {
-            previewRoute = '/iframe.html';
-          }
-          if (options && options.debug) {
-            console.log('DEBUG: previewRoute', previewRoute);
-          }
-          // get storybook obj with puppeteer
-          var launchOptions = {headless: true};
-          // launch without sandbox in container-based and windows server environments
-          // https://docs.travis-ci.com/user/chrome#Sandboxing
-          if (os.platform() === 'linux' || os.platform() === 'win32') {
-            launchOptions.args = ['--no-sandbox'];
-          }
-          var browser, page;
-          var done = function() {
-            try {
-              // reset config file to original code
-              fs.writeFileSync(configPath, configBody, 'utf8');
-            } catch(ex) {
-              return callback(ex);
-            }
-            callback(null, {port: port, preview: previewRoute});
-          };
-          puppeteer.launch(launchOptions)
-            .then(function(_browser) {
-              browser = _browser;
-              return browser.newPage();
-            })
-            .then(function(_page) {
-              page = _page;
-              if (options && options.debug) {
-                console.log('DEBUG: GET', baseUrl + previewRoute);
-              }
-              return page.goto(baseUrl + previewRoute);
-            })
-            .then(function() {
-              return getStorybook(page, 0, options);
-            })
-            .then(function(result) {
-              storybookObj = result;
-              return browser.close();
-            })
-            .then(done)
-            .catch(function(ex) {
-              if (options && options.debug) {
-                console.error(ex);
-              }
-              if (browser) {
-                return browser.close().then(done);
-              }
-              done();
-            });
-        });
-      });
-    }, 3*1000);
+    storybookReady(port, options, function(err, result) {
+      try {
+        // reset config file to original code
+        fs.writeFileSync(configPath, configBody, 'utf8');
+      } catch(ex) {
+        return callback(ex);
+      }
+      callback(result);
+    });
   }).catch(callback);
 };
 
