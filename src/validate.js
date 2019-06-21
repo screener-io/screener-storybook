@@ -72,12 +72,12 @@ exports.storybookConfig = function(value) {
     storybookVersion: Joi.number().valid(2, 3, 4, 5),
     storybookApp: Joi.string().valid('react', 'vue', 'angular', 'html')
   })
-  .without('resolutions', ['resolution'])
-  .without('sauce', ['browserStack'])
-  .with('storybookBinPath', ['storybookVersion'])
-  .with('useNewerBaseBranch', ['baseBranch'])
-  .with('alwaysAcceptBaseBranch', ['baseBranch'])
-  .required();
+    .without('resolutions', ['resolution'])
+    .without('sauce', ['browserStack'])
+    .with('storybookBinPath', ['storybookVersion'])
+    .with('useNewerBaseBranch', ['baseBranch'])
+    .with('alwaysAcceptBaseBranch', ['baseBranch'])
+    .required();
   var validator = Promise.promisify(Joi.validate);
   return validator(value, schema);
 };
