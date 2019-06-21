@@ -114,6 +114,7 @@ describe('screener-storybook/src/runner', function() {
     it('should remove storybook-specific props', function() {
       var testConfig = JSON.parse(JSON.stringify(configWithPort));
       testConfig.storybookStaticDir = '/static';
+      testConfig.storybookStaticBuildDir = 'storybook-static';
       testConfig.storybookApp = 'react';
       testConfig.storybookVersion = 3;
       testConfig.storybookBinPath = '/path';
@@ -122,6 +123,7 @@ describe('screener-storybook/src/runner', function() {
           expect(runnerConfig).to.not.have.property('storybook');
           expect(runnerConfig).to.not.have.property('storybookConfigDir');
           expect(runnerConfig).to.not.have.property('storybookStaticDir');
+          expect(runnerConfig).to.not.have.property('storybookStaticBuildDir');
           expect(runnerConfig).to.not.have.property('storybookPort');
           expect(runnerConfig).to.not.have.property('storybookApp');
           expect(runnerConfig).to.not.have.property('storybookVersion');

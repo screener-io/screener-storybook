@@ -13,6 +13,7 @@ exports.storybookConfig = function(value) {
     projectRepo: Joi.string().max(100).required(),
     storybookConfigDir: Joi.string().required(),
     storybookStaticDir: Joi.string(),
+    storybookStaticBuildDir: Joi.string(),
     storybookPort: Joi.number().required(),
     storybookPreview: Joi.string().required(),
     storybook: Joi.array().min(0).items(
