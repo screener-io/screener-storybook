@@ -238,7 +238,7 @@ exports.server = function(config, options, callback) {
       } catch(ex) {
         return callback(ex);
       }
-      callback(result);
+      callback(null, result);
     });
   }).catch(callback);
 };
