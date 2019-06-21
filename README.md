@@ -22,6 +22,7 @@ $ npm run test-storybook
 - [Testing Interactions](#testing-interactions)
 - [Testing Responsive Designs](#testing-responsive)
 - [Cross Browser Testing](#cross-browser-testing)
+- [Testing with Static Storybook App](#static-build)
 - [Additional Configuration Options](#config-options)
 
 ---
@@ -237,6 +238,34 @@ module.exports = {
 
 
 
+### <a name="static-build"></a>Testing with Static Storybook App
+
+To run Screener against a static Storybook build, instead of starting the Storybook Dev server, follow these setup instructions:
+
+1. Update your Storybook config file (`.storybook/config.js`), and add the following code to the end of the file:
+
+```javascript
+if (typeof window === 'object') {
+  window.__screener_storybook__ = require('@storybook/react').getStorybook;
+}
+```
+
+2. Re-export your Storybook project into a static web app: `npm run build-storybook`
+
+
+3. Update your `screener.config.js` file, and add the `storybookStaticBuildDir` option with its value set to your static Storybook folder:
+
+```javascript
+// screener.config.js
+module.exports = {
+  ...
+
+  storybookStaticBuildDir: 'storybook-static'
+};
+```
+
+
+
 
 ### <a name="config-options"></a>Additional Configuration Options
 
@@ -263,6 +292,7 @@ module.exports = {
 - **baseBranch:** Optional branch name of your project's base branch (e.g. master). Set this option when developing using feature branches to:
     - automatically compare and accept changes when merging a feature branch into the base branch, or when rebasing a feature branch.
     - automatically pull the initial baseline of UI states for a feature branch from this base branch.
+- **storybookStaticBuildDir:** Optional path to exported static Storybook app. When this is used, tests will be run against the static Storybook app only. See above section "Testing with Static Storybook App" for setup instructions.
 - **includeRules:** Optional array of RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
     - Example:
     ```javascript
