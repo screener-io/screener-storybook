@@ -92,7 +92,7 @@ var storybookReady = function(port, options, callback) {
             if (options && options.debug) {
               console.log('DEBUG: GET', baseUrl + previewRoute);
             }
-            return page.goto(baseUrl + previewRoute);
+            return page.goto(baseUrl + previewRoute, {timeout: 300000});
           })
           .then(function() {
             return getStorybook(page, 0, options);
