@@ -351,7 +351,9 @@ module.exports = {
     sauce: {
       username: 'sauce_user',
       accessKey: 'sauce_access_key',
-      maxConcurrent: 10 // optional available concurrency you have from Sauce Labs
+      maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
+      extendedDebugging: true, // optional
+      tunnelIdentifier: 'MyTunnel01' // optional
     }
     ```
 - **vsts:** Optional configuration for integrating with Visual Studio Team Services.
