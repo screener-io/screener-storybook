@@ -262,9 +262,9 @@ exports.get = function(options) {
   if (!storybookObj) {
     console.error(colors.red('Error getting Storybook object'));
     if (options && options.debug) {
-      console.error(colors.red('Please send debug output to support@screener.io'));
+      console.error(colors.red('Please send debug output to help@saucelabs.com'));
     } else {
-      console.error(colors.red('Please re-run with --debug flag, and send debug output to support@screener.io'));
+      console.error(colors.red('Please re-run with --debug flag, and send debug output to help@saucelabs.com'));
     }
     throw new Error('Storybook object not found');
   }
