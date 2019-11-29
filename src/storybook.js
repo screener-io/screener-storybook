@@ -14,6 +14,21 @@ var nodeStatic = require('node-static');
 var Promise = require('bluebird');
 
 var storybookObj;
+/*
+ * valid ports that are supported by sauce connect, please refer here:
+ * https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?
+ * notice that we kicked out 5555 and 8080 for safe
+*/
+const VALIDPORTS = [
+  2000, 2001, 2020, 2109, 2222, 2310, 3000,
+  3001, 3010, 3030, 3210, 3333, 4000, 4001,
+  4201, 4040, 4321, 4502, 4503, 4567, 5000,
+  5001, 5002, 5050, 5432, 6000, 6001, 6060,
+  6666, 6543, 7000, 7070, 7774, 7777, 8000,
+  8001, 8003, 8031, 8081, 8443, 8765, 8777,
+  8888, 9000, 9001, 9031, 9080, 9081, 9090,
+  9191, 9876, 9877, 9999, 49221, 55001
+];
 
 var getStorybook = function(page, tries, options) {
   var maxTries = 5;
@@ -124,7 +139,7 @@ var staticServer = exports.staticServer = function(config, options, callback) {
   }
   console.log('Use Static Storybook Build:\n' + storybookBuildPath);
   // find free port
-  getPort().then(function(port) {
+  getPort({ port: VALIDPORTS }).then(function(port) {
     var fileServer = new nodeStatic.Server(storybookBuildPath);
     require('http').createServer(function(req, res) {
       req.addListener('end', function() {
@@ -170,7 +185,7 @@ exports.server = function(config, options, callback) {
     }
   }
   // find free port
-  getPort().then(function(port) {
+  getPort({ port: VALIDPORTS }).then(function(port) {
     // inject temp storybook config file to get storybook
     var configPath = path.resolve(process.cwd(), config.storybookConfigDir, 'config.js');
     if (!fs.existsSync(configPath)) {

@@ -1,5 +1,4 @@
 var Joi = require('joi');
-var Promise = require('bluebird');
 var stepsSchema = require('screener-runner/src/validate').stepsSchema;
 var resolutionSchema = require('screener-runner/src/validate').resolutionSchema;
 var browsersSchema = require('screener-runner/src/validate').browsersSchema;
@@ -49,7 +48,7 @@ exports.storybookConfig = function(value) {
     ),
     baseBranch: Joi.string().max(100),
     initialBaselineBranch: Joi.string().max(100),
-    useNewerBaseBranch: Joi.string().valid(['accepted', 'latest']),
+    useNewerBaseBranch: Joi.string().valid('accepted', 'latest'),
     diffOptions: Joi.object().keys({
       structure: Joi.boolean(),
       layout: Joi.boolean(),
@@ -78,6 +77,6 @@ exports.storybookConfig = function(value) {
     .with('useNewerBaseBranch', ['baseBranch'])
     .with('alwaysAcceptBaseBranch', ['baseBranch'])
     .required();
-  var validator = Promise.promisify(Joi.validate);
-  return validator(value, schema);
+
+  return schema.validate(value);
 };
