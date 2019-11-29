@@ -14,6 +14,11 @@ var nodeStatic = require('node-static');
 var Promise = require('bluebird');
 
 var storybookObj;
+/*
+ * valid ports that are supported by sauce connect, please refer here:
+ * https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?
+ * notice that we kicked out 5555 and 8080 for safe
+*/
 const VALIDPORTS = [
   2000, 2001, 2020, 2109, 2222, 2310, 3000,
   3001, 3010, 3030, 3210, 3333, 4000, 4001,

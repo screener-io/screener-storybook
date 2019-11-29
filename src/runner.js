@@ -41,7 +41,7 @@ exports.run = function(config, options) {
       };
       var host = 'localhost:' + config.storybookPort;
       var localUrl = 'http://' + host;
-      // add tunnel details
+      // add tunnel details only when sauce object does not exist or it exists but launchSauceConnect flag is false
       if (!config.sauce || !config.sauce.launchSauceConnect) {
         config.tunnel = {
           host: host,
