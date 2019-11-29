@@ -42,11 +42,13 @@ exports.run = function(config, options) {
       var host = 'localhost:' + config.storybookPort;
       var localUrl = 'http://' + host;
       // add tunnel details
-      config.tunnel = {
-        host: host,
-        gzip: true,
-        cache: true
-      };
+      if (!config.sauce || !config.sauce.launchSauceConnect) {
+        config.tunnel = {
+          host: host,
+          gzip: true,
+          cache: true
+        };
+      }
       // generate config format expected by screener-runner
       config.states = transformToStates(config.storybook, localUrl, config.storybookPreview);
       // remove storybook-specific fields
