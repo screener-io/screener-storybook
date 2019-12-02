@@ -20,10 +20,10 @@ npm run test-storybook
 ## Docs
 
 - [Testing Interactions](#testing-interactions)
-- [Testing Responsive Designs](#testing-responsive)
+- [Testing Responsive Designs](#testing-responsive-designs)
 - [Cross Browser Testing](#cross-browser-testing)
-- [Testing with Static Storybook App](#static-build)
-- [Additional Configuration Options](#config-options)
+- [Testing with Static Storybook App](#testing-with-static-storybook-app)
+- [Additional Configuration Options](#additional-configuration-options)
 
 ---
 
@@ -241,6 +241,60 @@ module.exports = {
 | microsoftedge | 17.17134 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
 | safari | 11.1 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
 
+#### Sauce Connect Integration
+
+When using Sauce Labs browsers, you have the option to use the Sauce Connect tunnel by setting the flag `launchSauceConnect: true`. When enabled, Sauce Connect will be launched and managed by this module, and assigned a unique tunnel identifier.
+
+  ```javascript
+  sauce: {
+    username: 'sauce_user',
+    accessKey: 'sauce_access_key',
+    maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
+    launchSauceConnect: true // optional,
+  }
+  ```
+
+##### Sauce Connect Notes
+
+- Must use Sauce browsers
+
+  When you run your tests in sauce labs, you could only run your tests inside sauce browsers, which means that you have to specify both the name of the browser and the version of the browser up to one digit after the decimal dot:
+
+    ```javascript
+      browsers: [
+        {
+          browserName: 'chrome',
+          version: '78.0'
+        },
+        {
+          browserName: 'firefox',
+          version: '70.0'
+        },
+        {
+          browserName: 'internet explorer',
+          version: '11.0'
+        }
+      ]
+    ```
+
+  If you don't follow the rules, the runner will throw you the error: `Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled`.
+
+- Where Sauce Connect logs are stored
+
+  The sauce connect tunnel will generate `sauce-connect.log` log file for debugging purpose at `node_modules/screener-runner`.
+
+- `launchSauceConnect` and `tunnelIdentifier`
+
+  Please note that if you turn `launchSauceConnect` to be true, the runner will set a unique `tunnelIdentifier` for you insead of setting by yourself. If you don't follow the rules, the runner will throw you the error: `tunnelIdentifier cannot be set when launchSauceConnect flag is enabled`.
+
+- Sauce Connect valid ports
+
+  Sauce connect only supports these [valid ports](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?) when you run your tests in localhost, so please make sure you have at least one of them available and `screener-storybook` will grab one for you.
+
+- Further question
+
+  If you have further question, you could visit [Sauce Connect FAQ](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS) and [Sauce Connect troubleshooting](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Troubleshooting) pages.
+
 ### Testing with Static Storybook App
 
 To run Screener against a static Storybook build, instead of starting the Storybook Dev server, follow these setup instructions:
@@ -366,7 +420,7 @@ module.exports = {
       maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
       extendedDebugging: true, // optional
       tunnelIdentifier: 'MyTunnel01', // optional
-      launchSauceConnect: true // optional
+      launchSauceConnect: true // optional, view "Sauce Connect" for more information
     }
     ```
 
@@ -378,50 +432,3 @@ module.exports = {
       instance: 'myproject.visualstudio.com'
     }
     ```
-
-### Sauce Connect Integration
-
-You could run your tests through sauce connect tunnel by setting the flag `launchSauceConnect: true`:
-
-  ```javascript
-  sauce: {
-    username: 'sauce_user',
-    accessKey: 'sauce_access_key',
-    maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
-    extendedDebugging: true, // optional
-    launchSauceConnect: true // optional
-  }
-  ```
-
-The sauce connect tunnel will generate `sauce-connect.log` log file for debugging purpose at `node_modules/screener-runner`.
-
-#### Mutual Exclusion Relationship
-
-- `launchSauceConnect` and `tunnelIdentifier`
-  Please note that if you turn `launchSauceConnect` to be true, the runner will set a unique `tunnelIdentifier` for you insead of setting by yourself. If you don't follow the rules, the runner will throw you the error: `tunnelIdentifier cannot be set when launchSauceConnect flag is enabled`.
-
-- `sauce` browsers and `screener` browsers
-  When you run your tests in sauce labs, you could only run your tests inside sauce browsers, which means that you have to specify both the name of the browser and the version of the browser up to one digit after the decimal dot:
-
-```javascript
-  browsers: [
-    {
-      browserName: 'chrome',
-      version: '78.0'
-    },
-    {
-      browserName: 'firefox',
-      version: '70.0'
-    },
-    {
-      browserName: 'internet explorer',
-      version: '11.0'
-    }
-  ]
-```
-
-  If you don't follow the rules, the runner will throw you the error: `Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled`.
-
-#### Caveat
-
-Sauce connect only supports these [valid ports](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?) when you run your tests in localhost, so please make sure you have at least one of them available and `screener-storybook` will grab one for you.
