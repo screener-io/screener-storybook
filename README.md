@@ -281,7 +281,7 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
 
 - Where Sauce Connect logs are stored
 
-  The sauce connect tunnel will generate `sauce-connect.log` log file for debugging purpose at `node_modules/screener-runner`.
+  The sauce connect tunnel will generate `sauce-connect.log` log file for debugging purpose at the root directory of your project.
 
 - `launchSauceConnect` and `tunnelIdentifier`
 
