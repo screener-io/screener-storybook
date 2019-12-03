@@ -254,44 +254,25 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
   }
   ```
 
-##### Sauce Connect Notes
+##### Important Notes on Sauce Connect
 
-- Must use Sauce browsers
-
-  When you run your tests in sauce labs, you could only run your tests inside sauce browsers, which means that you have to specify both the name of the browser and the version of the browser up to one digit after the decimal dot:
-
-    ```javascript
-      browsers: [
-        {
-          browserName: 'chrome',
-          version: '78.0'
-        },
-        {
-          browserName: 'firefox',
-          version: '70.0'
-        },
-        {
-          browserName: 'internet explorer',
-          version: '11.0'
-        }
-      ]
-    ```
+- Sauce Connect Integration requires all browsers to be Sauce Labs Browsers. An error is thrown when using non-Sauce browsers.
 
   If you don't follow the rules, the runner will throw you the error: `Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled`.
 
-- Where Sauce Connect logs are stored
+- Logs for Sauce Connect are saved in the root of your project under `sauce-connect.log` for debugging purposes.
 
   The sauce connect tunnel will generate `sauce-connect.log` log file for debugging purpose at the root directory of your project.
 
-- `launchSauceConnect` and `tunnelIdentifier`
+- A unique `tunnelIdentifier` is automatically generated for you when using the Sauce Connect Integration. An error is thrown when `tunnelIdentifier` is set manually.
 
   Please note that if you turn `launchSauceConnect` to be true, the runner will set a unique `tunnelIdentifier` for you insead of setting by yourself. If you don't follow the rules, the runner will throw you the error: `tunnelIdentifier cannot be set when launchSauceConnect flag is enabled`.
 
-- Sauce Connect valid ports
+- When running Sauce Connect tunnel on your localhost, please note that Sauce Connect only supports a limited set of valid ports.
 
-  Sauce connect only supports these [valid ports](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?) when you run your tests in localhost, so please make sure you have at least one of them available and `screener-storybook` will grab one for you.
+  When you run your tests in your localhost, please be cautious that sauce connect only supports these [valid ports](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?).
 
-- Further question
+- For additional information on Sauce Connect please refer to the Sauce Connect FAQ and Sauce Connect Troubleshooting documentation.
 
   If you have further question, you could visit [Sauce Connect FAQ](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS) and [Sauce Connect troubleshooting](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Troubleshooting) pages.
 
