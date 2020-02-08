@@ -155,6 +155,46 @@ var staticServer = exports.staticServer = function(config, options, callback) {
   }).catch(callback);
 };
 
+var setStorybookConfig = exports.setStorybookConfig = function(storybookApp, storybookVersion, storybookConfigDir) {
+  var configPath = path.resolve(process.cwd(), storybookConfigDir, 'config.js');
+  var isNewFile = false;
+  if (!fs.existsSync(configPath)) {
+    // handle declaritive configuration and preview.js in Storybook 5.3+
+    if (storybookVersion.major >= 5 && semver.gt(storybookVersion.full, '5.2.0')) {
+      configPath = path.resolve(process.cwd(), storybookConfigDir, 'preview.js');
+      if (!fs.existsSync(configPath)) {
+        fs.writeFileSync(configPath, '', 'utf8');
+        isNewFile = true;
+      }
+    } else {
+      throw new Error('Storybook config file not found: ' + configPath);
+    }
+  }
+  var configBody = fs.readFileSync(configPath, 'utf8');
+  var templateType = 'default';
+  if (storybookVersion.major === 2) {
+    templateType = 'v' + storybookVersion.major;
+  }
+  var codeTemplate = fs.readFileSync(__dirname + '/templates/' + templateType + '.template', 'utf8');
+  var code = template(codeTemplate)({ code: configBody, app: storybookApp });
+  fs.writeFileSync(configPath, code, 'utf8');
+  return {
+    path: configPath,
+    body: configBody,
+    isNewFile: isNewFile
+  };
+};
+
+var resetStorybookConfig = exports.resetStorybookConfig = function({path: configPath, body, isNewFile}, allowRemoveFile) {
+  if (fs.existsSync(configPath)) {
+    if (isNewFile && allowRemoveFile) {
+      fs.unlinkSync(configPath);
+    } else if (fs.readFileSync(configPath, 'utf8') !== body) {
+      fs.writeFileSync(configPath, body, 'utf8');
+    }
+  }
+};
+
 exports.server = function(config, options, callback) {
   var storybookApp;
   var storybookVersion;
@@ -186,20 +226,12 @@ exports.server = function(config, options, callback) {
   }
   // find free port
   getPort({ port: VALIDPORTS }).then(function(port) {
-    // inject temp storybook config file to get storybook
-    var configPath = path.resolve(process.cwd(), config.storybookConfigDir, 'config.js');
-    if (!fs.existsSync(configPath)) {
-      return callback(new Error('Storybook config file not found: ' + configPath));
+    var configObj;
+    try {
+      configObj = setStorybookConfig(storybookApp, storybookVersion, config.storybookConfigDir);
+    } catch(ex) {
+      return callback(ex);
     }
-    var configBody = fs.readFileSync(configPath, 'utf8');
-    var templateType = 'default';
-    if (storybookVersion.major === 2) {
-      templateType = 'v' + storybookVersion.major;
-    }
-    var codeTemplate = fs.readFileSync(__dirname + '/templates/' + templateType + '.template', 'utf8');
-    var code = template(codeTemplate)({ code: configBody, app: storybookApp });
-    fs.writeFileSync(configPath, code, 'utf8');
-
     // start Storybook dev server
     var binPath = path.resolve(process.cwd(), 'node_modules/.bin');
     if (config.storybookBinPath) {
@@ -231,9 +263,7 @@ exports.server = function(config, options, callback) {
 
     // clean-up all child processes when this process is terminated
     process.on('exit', function() {
-      if (fs.readFileSync(configPath, 'utf8') !== configBody) {
-        fs.writeFileSync(configPath, configBody, 'utf8');
-      }
+      resetStorybookConfig(configObj, true);
       if (!isWin) {
         process.kill(-serverProcess.pid);
       }
@@ -249,7 +279,7 @@ exports.server = function(config, options, callback) {
     storybookReady(port, options, function(err, result) {
       try {
         // reset config file to original code
-        fs.writeFileSync(configPath, configBody, 'utf8');
+        resetStorybookConfig(configObj);
       } catch(ex) {
         return callback(ex);
       }
