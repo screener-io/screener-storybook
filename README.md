@@ -272,7 +272,7 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
 
 To run Screener against a static Storybook build, instead of starting the Storybook Dev server, follow these setup instructions:
 
-1 Update your Storybook config file (`.storybook/config.js`), and add the following code to the end of the file:
+1 Update your Storybook config file (`.storybook/config.js` or `.storybook/preview.js`), and add the following code to the end of the file:
 
 ```javascript
 if (typeof window === 'object') {
