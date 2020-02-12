@@ -186,11 +186,25 @@ exports.server = function(config, options, callback) {
   }
   // find free port
   getPort({ port: VALIDPORTS }).then(function(port) {
-    // inject temp storybook config file to get storybook
-    var configPath = path.resolve(process.cwd(), config.storybookConfigDir, 'config.js');
-    if (!fs.existsSync(configPath)) {
-      return callback(new Error('Storybook config file not found: ' + configPath));
+    var configPath;
+    var previewCreated;
+    
+    // From 5.3, Storybook changed config method.  Presence of main.js indicates
+    // the need for using preview.js, whether it exists or not.
+    if (semver.gt(storybookVersion.full, '5.3.0')) {
+      configPath = path.resolve(process.cwd(), config.storybookConfigDir, 'preview.js');
+      if (!fs.existsSync(configPath)) {
+        var previewCreated
+        fs.closeSync(fs.openSync(configPath, 'a'));
+      }
+    } else { 
+      configPath = path.resolve(process.cwd(), config.storybookConfigDir, 'config.js');
+
+      if (!fs.existsSync(configPath)) {
+        return callback(new Error('Storybook config file not found: ' + configPath));
+      }
     }
+      
     var configBody = fs.readFileSync(configPath, 'utf8');
     var templateType = 'default';
     if (storybookVersion.major === 2) {
@@ -248,8 +262,12 @@ exports.server = function(config, options, callback) {
 
     storybookReady(port, options, function(err, result) {
       try {
-        // reset config file to original code
-        fs.writeFileSync(configPath, configBody, 'utf8');
+        if (previewCreated) {
+          fs.unlinkSync(configPath);
+        } else {
+          // reset config file to original code
+          fs.writeFileSync(configPath, configBody, 'utf8');
+        }
       } catch(ex) {
         return callback(ex);
       }
