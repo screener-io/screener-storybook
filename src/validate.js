@@ -5,6 +5,7 @@ var browsersSchema = require('screener-runner/src/validate').browsersSchema;
 var sauceSchema = require('screener-runner/src/validate').sauceSchema;
 var vstsSchema = require('screener-runner/src/validate').vstsSchema;
 var browserStackSchema = require('screener-runner/src/validate').browserStackSchema;
+var ngrokSchema = require('screener-runner/src/validate').ngrokSchema;
 
 exports.storybookConfig = function(value) {
   var schema = Joi.object().keys({
@@ -59,6 +60,7 @@ exports.storybookConfig = function(value) {
       minShiftGraphic: Joi.number().integer().min(0),
       compareSVGDOM: Joi.boolean()
     }),
+    ngrok: ngrokSchema,
     sauce: sauceSchema,
     vsts: vstsSchema,
     browserStack: browserStackSchema,
