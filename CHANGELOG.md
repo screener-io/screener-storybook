@@ -1,4 +1,6 @@
 # Change Log
+## 0.20.0
+- Update request-retry dependency
 
 ## 0.19.1
 
