@@ -256,7 +256,7 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
 
 ##### Important Notes on Sauce Connect
 
-- Using Sauce Connect version `4.5.4`.
+- Using Sauce Connect version `4.6.2`.
 
 - Sauce Connect Integration requires all browsers to be Sauce Labs Browsers. An error is thrown when using non-Sauce browsers.
 
