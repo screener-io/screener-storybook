@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var getStorySteps = require('../src/scripts/story-steps');
+var getStorySteps = require('../../src/scripts/story-steps');
 
 describe('screener-storybook/src/scripts/story-steps', function() {
   describe('getStorySteps', function() {

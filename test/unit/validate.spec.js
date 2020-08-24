@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var validate = require('../src/validate');
+var validate = require('../../src/validate');
 
 describe('screener-storybook/src/validate', function() {
   describe('validate.storybookConfig', function() {

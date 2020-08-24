@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
 var rewire = require('rewire');
 var Promise = require('bluebird');
-var StorybookRunner = rewire('../src/runner');
-var pkg = require('../package.json');
+var StorybookRunner = rewire('../../src/runner');
+var pkg = require('../../package.json');
 
 var configWithPort = {
   apiKey: 'api-key',

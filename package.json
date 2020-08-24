@@ -12,7 +12,7 @@
     "screener-storybook": "./bin/screener-storybook.js"
   },
   "scripts": {
-    "test": "npm run lint && nyc mocha \"test/**/*.spec.js\" && npm run coverage",
+    "test": "npm run lint && nyc mocha \"test/unit/*.spec.js\" && npm run coverage",
     "lint": "eslint .",
     "coverage": "nyc check-coverage --statements 90 --functions 90 --branches 80 --lines 90"
   },
