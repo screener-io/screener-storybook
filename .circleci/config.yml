@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -44,3 +44,10 @@ jobs:
       - run: npm install --prefix tests/e2e
       - run: npm run storybook:build --prefix tests/e2e
       - run: npm test:e2e --prefix tests/e2e
+
+workflows:
+  version: 2
+  default_workflow:
+    jobs:
+      - build
+      - e2e-test
