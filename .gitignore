@@ -11,6 +11,7 @@ pids
 
 # Dependency directory
 node_modules
+**node_modules**
 
 # Code coverage output
 .nyc_output
