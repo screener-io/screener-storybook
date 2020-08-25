@@ -43,7 +43,7 @@ jobs:
 
       - run: npm install --prefix test/e2e
       - run: npm run storybook:build --prefix test/e2e
-      - run: npm run test:e2e --prefix test/e2e
+      - run: npm run storybook:test-static --prefix test/e2e
 
 workflows:
   version: 2
