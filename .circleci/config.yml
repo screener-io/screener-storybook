@@ -41,9 +41,9 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm install --prefix tests/e2e
-      - run: npm run storybook:build --prefix tests/e2e
-      - run: npm test:e2e --prefix tests/e2e
+      - run: npm install --prefix test/e2e
+      - run: npm run storybook:build --prefix test/e2e
+      - run: npm test:e2e --prefix test/e2e
 
 workflows:
   version: 2
