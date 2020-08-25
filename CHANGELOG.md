@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.20.0
+- Remove node-static dependency due to security issues. [https://www.npmjs.com/advisories/1208](https://www.npmjs.com/advisories/1208)
+- Add circle-ci stage with storybook static test
+
+## 0.19.5
+
+- Support declarative configs
+
 ## 0.19.4
 
 - Update to Sauce Connect 4.6.2
