@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "visual<visualtesting@saucelabs.com>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@storybook/addon-actions": "^6.0.0",
