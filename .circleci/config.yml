@@ -23,7 +23,7 @@ jobs:
       - run: npm test
   e2e-test:
     docker:
-      - image: saucelabs/storybook-base
+      - image: saucelabs/storybook-base:alpha-rc.0.0.1
     steps:
       - checkout
 
