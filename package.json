@@ -1,6 +1,6 @@
 {
   "name": "screener-storybook",
-  "version": "0.19.5",
+  "version": "0.20.0",
   "description": "Automated Visual Testing for React Storybook using Screener.io",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -12,7 +12,7 @@
     "screener-storybook": "./bin/screener-storybook.js"
   },
   "scripts": {
-    "test": "npm run lint && nyc mocha \"test/**/*.spec.js\" && npm run coverage",
+    "test": "npm run lint && nyc mocha \"test/unit/*.spec.js\" && npm run coverage",
     "lint": "eslint .",
     "coverage": "nyc check-coverage --statements 90 --functions 90 --branches 80 --lines 90"
   },
@@ -33,11 +33,11 @@
     "bluebird": "~3.4.6",
     "colors": "~1.1.2",
     "commander": "~2.9.0",
+    "express": "^4.17.1",
     "get-port": "~4.2.0",
     "joi": "~14.3.1",
     "js-yaml": "^3.13.1",
     "lodash": "~4.17.13",
-    "node-static": "~0.7.11",
     "prop-types": "^15.6.0",
     "puppeteer": "~1.17.0",
     "react": "^16.0.0",

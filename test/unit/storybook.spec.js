@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 var rewire = require('rewire');
-var Storybook = rewire('../src/storybook');
+var Storybook = rewire('../../src/storybook');
 
 describe('screener-storybook/src/storybook', function() {
 

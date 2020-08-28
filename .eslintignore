@@ -1,1 +1,3 @@
 src/polyfills/*
+test/e2e/stories/*
+

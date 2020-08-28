@@ -10,8 +10,9 @@ var puppeteer = require('puppeteer');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 var semver = require('semver');
-var nodeStatic = require('node-static');
 var Promise = require('bluebird');
+var express = require('express');
+var { Server } = require('http');
 
 var storybookObj;
 /*
@@ -140,12 +141,10 @@ var staticServer = exports.staticServer = function(config, options, callback) {
   console.log('Use Static Storybook Build:\n' + storybookBuildPath);
   // find free port
   getPort({ port: VALIDPORTS }).then(function(port) {
-    var fileServer = new nodeStatic.Server(storybookBuildPath);
-    require('http').createServer(function(req, res) {
-      req.addListener('end', function() {
-        fileServer.serve(req, res);
-      }).resume();
-    }).listen(port, function(err) {
+    var expressApp = express();
+    var fileServer = Server(expressApp);
+    expressApp.use(express.static(storybookBuildPath));
+    fileServer.listen(port, '127.0.0.1', function(err) {
       if (err) {
         return callback(new Error('Error starting static server to ' + storybookBuildPath + ': ' + err.toString()));
       }
