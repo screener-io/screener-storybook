@@ -5,42 +5,14 @@ jobs:
       - image: circleci/node:6.10
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
       - run: npm install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
       - run: npm test
   e2e-test:
     docker:
       - image: saucelabs/storybook-base:alpha-rc.0.0.1
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
       - run: npm install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
       - run: npm install --prefix test/e2e
       - run: npm run storybook:build --prefix test/e2e
       - run: npm run storybook:test-static --prefix test/e2e
