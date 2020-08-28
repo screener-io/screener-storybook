@@ -6,6 +6,10 @@ jobs:
     steps:
       - checkout
       - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
   e2e-test:
     docker:
@@ -14,6 +18,10 @@ jobs:
       - checkout
       - run: npm install
       - run: npm install --prefix test/e2e
+      - save_cache:
+          paths:
+            - node_modules
+          key: e2e-dependencies-{{ checksum "package.json" }}
       - run: npm run storybook:build --prefix test/e2e
       - run: npm run storybook:test-static --prefix test/e2e
 
