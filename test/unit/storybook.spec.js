@@ -50,6 +50,22 @@ describe('screener-storybook/src/storybook', function() {
       expect(configObj.path).to.include('/preview.js');
     });
 
+    it('should update preview typescript file', function() {
+      Storybook.__set__('fs', {
+        existsSync: (filepath) => {
+          return (filepath.includes('/preview.ts')) ? true : false;
+        },
+        readFileSync: () => '${code}${app}',
+        writeFileSync: (configPath, code) => {
+          expect(code).to.equal('${code}${app}react');
+        }
+      });
+      var configObj = Storybook.setStorybookConfig('react', storybookVersion, '.storybook');
+      expect(configObj.body).to.equal('${code}${app}');
+      expect(configObj.isNewFile).to.equal(false);
+      expect(configObj.path).to.include('/preview.ts');
+    });
+
     it('should create and update preview file', function() {
       Storybook.__set__('fs', {
         existsSync: () => false,
