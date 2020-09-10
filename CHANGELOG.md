@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.20.2
+- Support typescript preview
+
 ## 0.20.0
 - Remove node-static dependency due to security issues. [https://www.npmjs.com/advisories/1208](https://www.npmjs.com/advisories/1208)
 - Add circle-ci stage with storybook static test

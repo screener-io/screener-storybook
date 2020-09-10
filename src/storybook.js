@@ -163,9 +163,15 @@ var setStorybookConfig = exports.setStorybookConfig = function(storybookApp, sto
     if (storybookVersion.major >= 5 && semver.gt(storybookVersion.full, '5.2.0')) {
       configPath = path.resolve(process.cwd(), storybookConfigDir, 'preview.js');
       if (!fs.existsSync(configPath)) {
-        // generate file when does not exist (temporary, remove later)
-        fs.writeFileSync(configPath, '', 'utf8');
-        isNewFile = true;
+        // check for typescript file
+        var tsConfigPath = path.resolve(process.cwd(), storybookConfigDir, 'preview.ts');
+        if (fs.existsSync(tsConfigPath)) {
+          configPath = tsConfigPath;
+        } else {
+          // generate file when does not exist (temporary, remove later)
+          fs.writeFileSync(configPath, '', 'utf8');
+          isNewFile = true;
+        }
       }
     } else {
       throw new Error('Storybook config file not found: ' + configPath);
