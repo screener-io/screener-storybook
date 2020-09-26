@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.20.3
+- Add `disableDiffOnError` option
+
 ## 0.20.2
 - Support typescript preview
 

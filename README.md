@@ -357,6 +357,7 @@ module.exports = {
     }
     ```
 
+- **disableDiffOnError:** Option to disable performing diff on snapshots when underlying test session(s) had an error. Defaults to false.
 - **failOnNewStates:** Option to set build to failure when `new` states are found, and to disable using `new` states as a baseline. Defaults to true.
 - **alwaysAcceptBaseBranch:** Option to automatically accept `new` and `changed` states in base branch. Assumes base branch should always be correct.
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.

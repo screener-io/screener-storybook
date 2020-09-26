@@ -67,7 +67,7 @@ describe('screener-storybook/src/validate', function() {
     });
 
     it('should allow adding optional fields', function() {
-      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookStaticDir: './public', storybookStaticBuildDir: 'storybook-static', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], build: 'build', branch: 'branch', commit: 'commit', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', hide: 'hide', includeRules: [], excludeRules: [], initialBaselineBranch: 'master', baseBranch: 'master', alwaysAcceptBaseBranch: true, diffOptions: {compareSVGDOM: true, minShiftGraphic: 5}, failOnNewStates: true, beforeEachScript: function() {}, ieNativeEvents: true})
+      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookStaticDir: './public', storybookStaticBuildDir: 'storybook-static', storybookPort: 6006, storybookPreview: '/preview.html', storybook: [], build: 'build', branch: 'branch', commit: 'commit', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', hide: 'hide', includeRules: [], excludeRules: [], initialBaselineBranch: 'master', baseBranch: 'master', alwaysAcceptBaseBranch: true, disableDiffOnError: true, diffOptions: {compareSVGDOM: true, minShiftGraphic: 5}, failOnNewStates: true, beforeEachScript: function() {}, ieNativeEvents: true})
         .catch(function() {
           throw new Error('Should not be here');
         });

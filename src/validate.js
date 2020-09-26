@@ -49,6 +49,7 @@ exports.storybookConfig = function(value) {
     baseBranch: Joi.string().max(100),
     initialBaselineBranch: Joi.string().max(100),
     useNewerBaseBranch: Joi.string().valid('accepted', 'latest'),
+    disableDiffOnError: Joi.boolean(),
     diffOptions: Joi.object().keys({
       structure: Joi.boolean(),
       layout: Joi.boolean(),
