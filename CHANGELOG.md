@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.20.5
+- Update Sauce browser versions
+
 ## 0.20.3
 - Add `disableDiffOnError` option
 
