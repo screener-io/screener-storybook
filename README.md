@@ -238,8 +238,8 @@ module.exports = {
 | chrome | *-do not set-* | |
 | firefox | *-do not set-* | |
 | internet explorer | 11 | |
-| microsoftedge | 17.17134 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
-| safari | 11.1 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
+| microsoftedge | [view supported versions](https://screener.io/v2/docs/sauce) | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
+| safari | [view supported versions](https://screener.io/v2/docs/sauce) | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
 
 #### Sauce Connect Integration
 
