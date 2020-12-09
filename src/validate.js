@@ -78,6 +78,7 @@ exports.storybookConfig = function(value) {
     .without('sauce', ['browserStack'])
     .xor('username', 'apiKey')
     .and('username', 'accessKey')
+    .xor('accessKey', 'apiKey')
     .with('storybookBinPath', ['storybookVersion'])
     .with('useNewerBaseBranch', ['baseBranch'])
     .with('alwaysAcceptBaseBranch', ['baseBranch'])
