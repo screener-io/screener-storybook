@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.20.4
+## 0.21
 - Add support to run tests with sauce credentials
 
 ## 0.20.3
