@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var validate = require('../../src/validate');
 
-describe.only('screener-storybook/src/validate', function() {
+describe('screener-storybook/src/validate', function() {
   describe('validate.storybookConfig', function() {
     it('should throw error when no value passed in', function() {
       return validate.storybookConfig()
