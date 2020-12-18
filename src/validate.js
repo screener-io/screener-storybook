@@ -8,7 +8,9 @@ var browserStackSchema = require('screener-runner/src/validate').browserStackSch
 
 exports.storybookConfig = function(value) {
   var schema = Joi.object().keys({
-    apiKey: Joi.string().required(),
+    apiKey: Joi.string(),
+    username: Joi.string(),
+    accessKey: Joi.string(),
     projectRepo: Joi.string().max(100).required(),
     storybookConfigDir: Joi.string().required(),
     storybookStaticDir: Joi.string(),
@@ -74,6 +76,9 @@ exports.storybookConfig = function(value) {
   })
     .without('resolutions', ['resolution'])
     .without('sauce', ['browserStack'])
+    .xor('username', 'apiKey')
+    .and('username', 'accessKey')
+    .xor('accessKey', 'apiKey')
     .with('storybookBinPath', ['storybookVersion'])
     .with('useNewerBaseBranch', ['baseBranch'])
     .with('alwaysAcceptBaseBranch', ['baseBranch'])

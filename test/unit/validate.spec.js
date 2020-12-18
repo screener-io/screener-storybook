@@ -10,10 +10,24 @@ describe('screener-storybook/src/validate', function() {
         });
     });
 
-    it('should throw error when no apiKey', function() {
-      return validate.storybookConfig({})
+    it('should throw error when no apiKey or username', function() {
+      return validate.storybookConfig({ projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: []})
         .catch(function(err) {
-          expect(err.message).to.equal('child "apiKey" fails because ["apiKey" is required]');
+          expect(err.message).to.equal('"value" must contain at least one of [username, apiKey]');
+        });
+    });
+    
+    it('should throw error when no accessKey if username', function() {
+      return validate.storybookConfig({ username: 'username', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: []})
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" contains [username] without its required peers [accessKey]');
+        });
+    });
+
+    it('should throw error when no usrname and apiKey are defined at the same time', function() {
+      return validate.storybookConfig({ apiKey:'test', username: 'username', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: []})
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" contains a conflict between exclusive peers [username, apiKey]');
         });
     });
 

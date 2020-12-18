@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.21
+- Add support to run tests with sauce credentials
+
 ## 0.20.3
 - Add `disableDiffOnError` option
 
