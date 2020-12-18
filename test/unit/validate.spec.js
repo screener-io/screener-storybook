@@ -24,6 +24,13 @@ describe('screener-storybook/src/validate', function() {
         });
     });
 
+    it('should throw error when no usrname and apiKey are defined at the same time', function() {
+      return validate.storybookConfig({ apiKey:'test', username: 'username', projectRepo: 'repo', storybookConfigDir: '.storybook', storybookPort: 6006, storybookPreview: '/preview.html', storybook: []})
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" contains a conflict between exclusive peers [username, apiKey]');
+        });
+    });
+
     it('should throw error when no projectRepo', function() {
       return validate.storybookConfig({apiKey: 'key'})
         .catch(function(err) {
