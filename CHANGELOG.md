@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.21.0
+- Update screener-runner using saucelabs package for Sauce Connect tunnel
+- Node 10+
+
 ## 0.20.3
 - Add `disableDiffOnError` option
 
