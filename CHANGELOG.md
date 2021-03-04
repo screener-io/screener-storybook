@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.21.1
+- Add cache-control to static storybook build
+
 ## 0.21.0
 - Update screener-runner using saucelabs package for Sauce Connect tunnel
 - Node 10+

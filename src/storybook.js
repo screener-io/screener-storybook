@@ -143,7 +143,7 @@ var staticServer = exports.staticServer = function(config, options, callback) {
   getPort({ port: VALIDPORTS }).then(function(port) {
     var expressApp = express();
     var fileServer = Server(expressApp);
-    expressApp.use(express.static(storybookBuildPath));
+    expressApp.use(express.static(storybookBuildPath, {maxAge: 900}));
     fileServer.listen(port, '127.0.0.1', function(err) {
       if (err) {
         return callback(new Error('Error starting static server to ' + storybookBuildPath + ': ' + err.toString()));
