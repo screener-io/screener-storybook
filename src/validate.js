@@ -27,7 +27,7 @@ exports.storybookConfig = function(value) {
       })
     ).required(),
     build: Joi.string().max(40),
-    branch: Joi.string().max(100),
+    branch: Joi.string().max(200),
     commit: Joi.string(),
     pullRequest: Joi.string(),
     resolution: resolutionSchema,
@@ -46,8 +46,8 @@ exports.storybookConfig = function(value) {
       Joi.string(),
       Joi.object().type(RegExp)
     ),
-    baseBranch: Joi.string().max(100),
-    initialBaselineBranch: Joi.string().max(100),
+    baseBranch: Joi.string().max(200),
+    initialBaselineBranch: Joi.string().max(200),
     useNewerBaseBranch: Joi.string().valid('accepted', 'latest'),
     disableDiffOnError: Joi.boolean(),
     diffOptions: Joi.object().keys({
