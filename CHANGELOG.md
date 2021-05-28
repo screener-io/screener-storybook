@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.21.3
+- Update package versions
+
 ## 0.21.1
 - Add cache-control to static storybook build
 
