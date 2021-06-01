@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.21.4
+- Increase branch max length
+
 ## 0.21.3
 - Update package versions
 
