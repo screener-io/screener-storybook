@@ -138,6 +138,7 @@ The following step methods are currently available. Methods with selectors have 
 - `cssAnimations(isEnabled)`: this will override the global cssAnimations option for the current UI state. Set to `true` to enable CSS Animations, and set to `false` to disable.
 - `rtl()`: this will set the current UI state to right-to-left direction.
 - `ltr()`: this will set the current UI state to left-to-right direction.
+- `url(url)`: this will load a new url.
 - `end()`: this will return the steps to be run.
 
 **Note:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
@@ -255,6 +256,8 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
   ```
 
 ##### Important Notes on Sauce Connect
+
+- RECOMMENDATION: when using Sauce Connect with screener-storybook, it is highly recommended to run tests with a [static Storybook build](#testing-with-static-storybook-app).
 
 - Using Sauce Connect version `4.6.2`.
 
@@ -393,7 +396,6 @@ module.exports = {
       accessKey: 'sauce_access_key',
       maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
       extendedDebugging: true, // optional
-      tunnelIdentifier: 'MyTunnel01', // optional
       launchSauceConnect: true // optional, view "Sauce Connect" for more information
     }
     ```

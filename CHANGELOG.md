@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.21.5
+- Update docs with `url` method and SC recommendation
+
 ## 0.21.4
 - Increase branch max length
 
