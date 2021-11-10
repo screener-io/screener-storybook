@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.22.0
+- Update screener-runner to 0.13.0
+
 ## 0.21.6
 - Update screener-runner/screener-ngrok
 
