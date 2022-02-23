@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.23.0
+- Update react and react-dom dependencies to ^17.0.0
+
 ## 0.22.0
 - Update screener-runner to 0.13.0
 
