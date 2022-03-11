@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.23.0
+- Update requestRetry npm lib from 4.0.2 -> 7.0.0
+
 ## 0.22.0
 - Update screener-runner to 0.13.0
 
