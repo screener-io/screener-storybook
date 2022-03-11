@@ -43,7 +43,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "request": "^2.87.0",
-    "requestretry": "4.0.2",
+    "requestretry": "7.0.0",
     "screener-runner": "~0.13.0",
     "semver": "~5.6.0"
   },
