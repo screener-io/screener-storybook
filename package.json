@@ -44,7 +44,7 @@
     "react-dom": "^16.0.0",
     "request": "^2.87.0",
     "requestretry": "7.0.0",
-    "screener-runner": "~0.13.0",
+    "screener-runner": "https://artifactory.inf.las1.saucelabs.net:443/artifactory/all-npm/screener-runner/-/screener-runner-rc0.14.0-1.tgz",
     "semver": "~5.6.0"
   },
   "devDependencies": {
