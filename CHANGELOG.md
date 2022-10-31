@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.24.0
+- Bump screener-runner to v0.14.0
+
 ## 0.23.0
 - Update requestRetry npm lib from 4.0.2 -> 7.0.0
 
