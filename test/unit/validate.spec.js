@@ -24,12 +24,13 @@ describe('screener-storybook/src/validate', function() {
         });
     });
 
-    it('should throw error when no storybookConfigDir', function() {
-      return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo'})
-        .catch(function(err) {
-          expect(err.message).to.equal('child "storybookConfigDir" fails because ["storybookConfigDir" is required]');
-        });
-    });
+    // TODO: this is only required for legacy server
+    // it('should throw error for legacy server when no storybookConfigDir', function() {
+    //   return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo'})
+    //     .catch(function(err) {
+    //       expect(err.message).to.equal('child "storybookConfigDir" fails because ["storybookConfigDir" is required]');
+    //     });
+    // });
 
     it('should throw error when no storybookPort', function() {
       return validate.storybookConfig({apiKey: 'key', projectRepo: 'repo', storybookConfigDir: '.storybook'})
