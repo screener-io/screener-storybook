@@ -1,0 +1,1837 @@
+{
+  "example-button--primary": {
+    "args": {
+      "primary": true,
+      "label": "Button",
+      "onClick": {}
+    },
+    "componentId": "example-button",
+    "title": "Example/Button",
+    "kind": "Example/Button",
+    "id": "example-button--primary",
+    "name": "Primary",
+    "story": "Primary",
+    "parameters": {
+      "docs": {
+        "inlineStories": true,
+        "prepareForInline": {},
+        "extractArgTypes": {},
+        "extractComponentDescription": {},
+        "getContainer": {},
+        "getPage": {}
+      },
+      "framework": "react",
+      "backgrounds": {
+        "grid": {
+          "cellSize": 20,
+          "opacity": 0.5,
+          "cellAmount": 5
+        },
+        "values": [
+          {
+            "name": "light",
+            "value": "#F8F8F8"
+          },
+          {
+            "name": "dark",
+            "value": "#333333"
+          }
+        ]
+      },
+      "actions": {
+        "argTypesRegex": "^on[A-Z].*"
+      },
+      "fileName": "./stories/Button.stories.tsx",
+      "storySource": {
+        "source": "(args) => <Button {...args} />"
+      },
+      "__isArgsStory": true,
+      "__id": "example-button--primary",
+      "globals": {
+        "measureEnabled": false,
+        "outline": false
+      },
+      "globalTypes": {},
+      "args": {
+        "primary": true,
+        "label": "Button",
+        "onClick": {}
+      },
+      "argTypes": {
+        "primary": {
+          "control": {
+            "type": "boolean"
+          },
+          "name": "primary",
+          "type": {
+            "name": "boolean",
+            "required": false
+          },
+          "description": "Is this the principal call to action on the page?",
+          "table": {
+            "type": {
+              "summary": "boolean"
+            },
+            "defaultValue": {
+              "summary": "false"
+            }
+          }
+        },
+        "label": {
+          "control": {
+            "type": "text"
+          },
+          "name": "label",
+          "type": {
+            "name": "string",
+            "required": true
+          },
+          "description": "Button contents",
+          "table": {
+            "type": {
+              "summary": "string"
+            },
+            "defaultValue": null
+          }
+        },
+        "backgroundColor": {
+          "control": {
+            "type": "color"
+          },
+          "name": "backgroundColor",
+          "description": "What background color to use",
+          "type": {
+            "required": false,
+            "name": "string"
+          },
+          "table": {
+            "type": {
+              "summary": "string"
+            },
+            "defaultValue": null
+          }
+        },
+        "size": {
+          "control": {
+            "type": "radio"
+          },
+          "options": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "name": "size",
+          "description": "How large should the button be?",
+          "type": {
+            "required": false,
+            "name": "enum",
+            "value": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "table": {
+            "type": {
+              "summary": "\"small\" | \"medium\" | \"large\""
+            },
+            "defaultValue": {
+              "summary": "\"medium\""
+            }
+          }
+        },
+        "onClick": {
+          "name": "onClick",
+          "description": "Optional click handler",
+          "type": {
+            "required": false,
+            "name": "function",
+            "value": "(() => void)"
+          },
+          "table": {
+            "type": {
+              "summary": "(() => void)"
+            },
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "initialArgs": {
+      "primary": true,
+      "label": "Button",
+      "onClick": {}
+    },
+    "argTypes": {
+      "primary": {
+        "control": {
+          "type": "boolean"
+        },
+        "name": "primary",
+        "type": {
+          "name": "boolean",
+          "required": false
+        },
+        "description": "Is this the principal call to action on the page?",
+        "table": {
+          "type": {
+            "summary": "boolean"
+          },
+          "defaultValue": {
+            "summary": "false"
+          }
+        }
+      },
+      "label": {
+        "control": {
+          "type": "text"
+        },
+        "name": "label",
+        "type": {
+          "name": "string",
+          "required": true
+        },
+        "description": "Button contents",
+        "table": {
+          "type": {
+            "summary": "string"
+          },
+          "defaultValue": null
+        }
+      },
+      "backgroundColor": {
+        "control": {
+          "type": "color"
+        },
+        "name": "backgroundColor",
+        "description": "What background color to use",
+        "type": {
+          "required": false,
+          "name": "string"
+        },
+        "table": {
+          "type": {
+            "summary": "string"
+          },
+          "defaultValue": null
+        }
+      },
+      "size": {
+        "control": {
+          "type": "radio"
+        },
+        "options": [
+          "small",
+          "medium",
+          "large"
+        ],
+        "name": "size",
+        "description": "How large should the button be?",
+        "type": {
+          "required": false,
+          "name": "enum",
+          "value": [
+            "small",
+            "medium",
+            "large"
+          ]
+        },
+        "table": {
+          "type": {
+            "summary": "\"small\" | \"medium\" | \"large\""
+          },
+          "defaultValue": {
+            "summary": "\"medium\""
+          }
+        }
+      },
+      "onClick": {
+        "name": "onClick",
+        "description": "Optional click handler",
+        "type": {
+          "required": false,
+          "name": "function",
+          "value": "(() => void)"
+        },
+        "table": {
+          "type": {
+            "summary": "(() => void)"
+          },
+          "defaultValue": null
+        }
+      }
+    }
+  },
+  "example-button--secondary": {
+    "args": {
+      "label": "Button",
+      "onClick": {}
+    },
+    "componentId": "example-button",
+    "title": "Example/Button",
+    "kind": "Example/Button",
+    "id": "example-button--secondary",
+    "name": "Secondary",
+    "story": "Secondary",
+    "parameters": {
+      "docs": {
+        "inlineStories": true,
+        "prepareForInline": {},
+        "extractArgTypes": {},
+        "extractComponentDescription": {},
+        "getContainer": {},
+        "getPage": {}
+      },
+      "framework": "react",
+      "backgrounds": {
+        "grid": {
+          "cellSize": 20,
+          "opacity": 0.5,
+          "cellAmount": 5
+        },
+        "values": [
+          {
+            "name": "light",
+            "value": "#F8F8F8"
+          },
+          {
+            "name": "dark",
+            "value": "#333333"
+          }
+        ]
+      },
+      "actions": {
+        "argTypesRegex": "^on[A-Z].*"
+      },
+      "fileName": "./stories/Button.stories.tsx",
+      "storySource": {
+        "source": "(args) => <Button {...args} />"
+      },
+      "__isArgsStory": true,
+      "__id": "example-button--secondary",
+      "globals": {
+        "measureEnabled": false,
+        "outline": false
+      },
+      "globalTypes": {},
+      "args": {
+        "label": "Button",
+        "onClick": {}
+      },
+      "argTypes": {
+        "label": {
+          "control": {
+            "type": "text"
+          },
+          "name": "label",
+          "type": {
+            "name": "string",
+            "required": true
+          },
+          "description": "Button contents",
+          "table": {
+            "type": {
+              "summary": "string"
+            },
+            "defaultValue": null
+          }
+        },
+        "primary": {
+          "control": {
+            "type": "boolean"
+          },
+          "name": "primary",
+          "description": "Is this the principal call to action on the page?",
+          "type": {
+            "required": false,
+            "name": "boolean"
+          },
+          "table": {
+            "type": {
+              "summary": "boolean"
+            },
+            "defaultValue": {
+              "summary": "false"
+            }
+          }
+        },
+        "backgroundColor": {
+          "control": {
+            "type": "color"
+          },
+          "name": "backgroundColor",
+          "description": "What background color to use",
+          "type": {
+            "required": false,
+            "name": "string"
+          },
+          "table": {
+            "type": {
+              "summary": "string"
+            },
+            "defaultValue": null
+          }
+        },
+        "size": {
+          "control": {
+            "type": "radio"
+          },
+          "options": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "name": "size",
+          "description": "How large should the button be?",
+          "type": {
+            "required": false,
+            "name": "enum",
+            "value": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "table": {
+            "type": {
+              "summary": "\"small\" | \"medium\" | \"large\""
+            },
+            "defaultValue": {
+              "summary": "\"medium\""
+            }
+          }
+        },
+        "onClick": {
+          "name": "onClick",
+          "description": "Optional click handler",
+          "type": {
+            "required": false,
+            "name": "function",
+            "value": "(() => void)"
+          },
+          "table": {
+            "type": {
+              "summary": "(() => void)"
+            },
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "initialArgs": {
+      "label": "Button",
+      "onClick": {}
+    },
+    "argTypes": {
+      "label": {
+        "control": {
+          "type": "text"
+        },
+        "name": "label",
+        "type": {
+          "name": "string",
+          "required": true
+        },
+        "description": "Button contents",
+        "table": {
+          "type": {
+            "summary": "string"
+          },
+          "defaultValue": null
+        }
+      },
+      "primary": {
+        "control": {
+          "type": "boolean"
+        },
+        "name": "primary",
+        "description": "Is this the principal call to action on the page?",
+        "type": {
+          "required": false,
+          "name": "boolean"
+        },
+        "table": {
+          "type": {
+            "summary": "boolean"
+          },
+          "defaultValue": {
+            "summary": "false"
+          }
+        }
+      },
+      "backgroundColor": {
+        "control": {
+          "type": "color"
+        },
+        "name": "backgroundColor",
+        "description": "What background color to use",
+        "type": {
+          "required": false,
+          "name": "string"
+        },
+        "table": {
+          "type": {
+            "summary": "string"
+          },
+          "defaultValue": null
+        }
+      },
+      "size": {
+        "control": {
+          "type": "radio"
+        },
+        "options": [
+          "small",
+          "medium",
+          "large"
+        ],
+        "name": "size",
+        "description": "How large should the button be?",
+        "type": {
+          "required": false,
+          "name": "enum",
+          "value": [
+            "small",
+            "medium",
+            "large"
+          ]
+        },
+        "table": {
+          "type": {
+            "summary": "\"small\" | \"medium\" | \"large\""
+          },
+          "defaultValue": {
+            "summary": "\"medium\""
+          }
+        }
+      },
+      "onClick": {
+        "name": "onClick",
+        "description": "Optional click handler",
+        "type": {
+          "required": false,
+          "name": "function",
+          "value": "(() => void)"
+        },
+        "table": {
+          "type": {
+            "summary": "(() => void)"
+          },
+          "defaultValue": null
+        }
+      }
+    }
+  },
+  "example-button--large": {
+    "args": {
+      "size": "large",
+      "label": "Button",
+      "onClick": {}
+    },
+    "componentId": "example-button",
+    "title": "Example/Button",
+    "kind": "Example/Button",
+    "id": "example-button--large",
+    "name": "Large",
+    "story": "Large",
+    "parameters": {
+      "docs": {
+        "inlineStories": true,
+        "prepareForInline": {},
+        "extractArgTypes": {},
+        "extractComponentDescription": {},
+        "getContainer": {},
+        "getPage": {}
+      },
+      "framework": "react",
+      "backgrounds": {
+        "grid": {
+          "cellSize": 20,
+          "opacity": 0.5,
+          "cellAmount": 5
+        },
+        "values": [
+          {
+            "name": "light",
+            "value": "#F8F8F8"
+          },
+          {
+            "name": "dark",
+            "value": "#333333"
+          }
+        ]
+      },
+      "actions": {
+        "argTypesRegex": "^on[A-Z].*"
+      },
+      "fileName": "./stories/Button.stories.tsx",
+      "storySource": {
+        "source": "(args) => <Button {...args} />"
+      },
+      "__isArgsStory": true,
+      "__id": "example-button--large",
+      "globals": {
+        "measureEnabled": false,
+        "outline": false
+      },
+      "globalTypes": {},
+      "args": {
+        "size": "large",
+        "label": "Button",
+        "onClick": {}
+      },
+      "argTypes": {
+        "size": {
+          "control": {
+            "type": "radio"
+          },
+          "options": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "name": "size",
+          "type": {
+            "name": "enum",
+            "required": false,
+            "value": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "description": "How large should the button be?",
+          "table": {
+            "type": {
+              "summary": "\"small\" | \"medium\" | \"large\""
+            },
+            "defaultValue": {
+              "summary": "\"medium\""
+            }
+          }
+        },
+        "label": {
+          "control": {
+            "type": "text"
+          },
+          "name": "label",
+          "type": {
+            "name": "string",
+            "required": true
+          },
+          "description": "Button contents",
+          "table": {
+            "type": {
+              "summary": "string"
+            },
+            "defaultValue": null
+          }
+        },
+        "primary": {
+          "control": {
+            "type": "boolean"
+          },
+          "name": "primary",
+          "description": "Is this the principal call to action on the page?",
+          "type": {
+            "required": false,
+            "name": "boolean"
+          },
+          "table": {
+            "type": {
+              "summary": "boolean"
+            },
+            "defaultValue": {
+              "summary": "false"
+            }
+          }
+        },
+        "backgroundColor": {
+          "control": {
+            "type": "color"
+          },
+          "name": "backgroundColor",
+          "description": "What background color to use",
+          "type": {
+            "required": false,
+            "name": "string"
+          },
+          "table": {
+            "type": {
+              "summary": "string"
+            },
+            "defaultValue": null
+          }
+        },
+        "onClick": {
+          "name": "onClick",
+          "description": "Optional click handler",
+          "type": {
+            "required": false,
+            "name": "function",
+            "value": "(() => void)"
+          },
+          "table": {
+            "type": {
+              "summary": "(() => void)"
+            },
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "initialArgs": {
+      "size": "large",
+      "label": "Button",
+      "onClick": {}
+    },
+    "argTypes": {
+      "size": {
+        "control": {
+          "type": "radio"
+        },
+        "options": [
+          "small",
+          "medium",
+          "large"
+        ],
+        "name": "size",
+        "type": {
+          "name": "enum",
+          "required": false,
+          "value": [
+            "small",
+            "medium",
+            "large"
+          ]
+        },
+        "description": "How large should the button be?",
+        "table": {
+          "type": {
+            "summary": "\"small\" | \"medium\" | \"large\""
+          },
+          "defaultValue": {
+            "summary": "\"medium\""
+          }
+        }
+      },
+      "label": {
+        "control": {
+          "type": "text"
+        },
+        "name": "label",
+        "type": {
+          "name": "string",
+          "required": true
+        },
+        "description": "Button contents",
+        "table": {
+          "type": {
+            "summary": "string"
+          },
+          "defaultValue": null
+        }
+      },
+      "primary": {
+        "control": {
+          "type": "boolean"
+        },
+        "name": "primary",
+        "description": "Is this the principal call to action on the page?",
+        "type": {
+          "required": false,
+          "name": "boolean"
+        },
+        "table": {
+          "type": {
+            "summary": "boolean"
+          },
+          "defaultValue": {
+            "summary": "false"
+          }
+        }
+      },
+      "backgroundColor": {
+        "control": {
+          "type": "color"
+        },
+        "name": "backgroundColor",
+        "description": "What background color to use",
+        "type": {
+          "required": false,
+          "name": "string"
+        },
+        "table": {
+          "type": {
+            "summary": "string"
+          },
+          "defaultValue": null
+        }
+      },
+      "onClick": {
+        "name": "onClick",
+        "description": "Optional click handler",
+        "type": {
+          "required": false,
+          "name": "function",
+          "value": "(() => void)"
+        },
+        "table": {
+          "type": {
+            "summary": "(() => void)"
+          },
+          "defaultValue": null
+        }
+      }
+    }
+  },
+  "example-button--small": {
+    "args": {
+      "size": "small",
+      "label": "Button",
+      "onClick": {}
+    },
+    "componentId": "example-button",
+    "title": "Example/Button",
+    "kind": "Example/Button",
+    "id": "example-button--small",
+    "name": "Small",
+    "story": "Small",
+    "parameters": {
+      "docs": {
+        "inlineStories": true,
+        "prepareForInline": {},
+        "extractArgTypes": {},
+        "extractComponentDescription": {},
+        "getContainer": {},
+        "getPage": {}
+      },
+      "framework": "react",
+      "backgrounds": {
+        "grid": {
+          "cellSize": 20,
+          "opacity": 0.5,
+          "cellAmount": 5
+        },
+        "values": [
+          {
+            "name": "light",
+            "value": "#F8F8F8"
+          },
+          {
+            "name": "dark",
+            "value": "#333333"
+          }
+        ]
+      },
+      "actions": {
+        "argTypesRegex": "^on[A-Z].*"
+      },
+      "fileName": "./stories/Button.stories.tsx",
+      "storySource": {
+        "source": "(args) => <Button {...args} />"
+      },
+      "__isArgsStory": true,
+      "__id": "example-button--small",
+      "globals": {
+        "measureEnabled": false,
+        "outline": false
+      },
+      "globalTypes": {},
+      "args": {
+        "size": "small",
+        "label": "Button",
+        "onClick": {}
+      },
+      "argTypes": {
+        "size": {
+          "control": {
+            "type": "radio"
+          },
+          "options": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "name": "size",
+          "type": {
+            "name": "enum",
+            "required": false,
+            "value": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "description": "How large should the button be?",
+          "table": {
+            "type": {
+              "summary": "\"small\" | \"medium\" | \"large\""
+            },
+            "defaultValue": {
+              "summary": "\"medium\""
+            }
+          }
+        },
+        "label": {
+          "control": {
+            "type": "text"
+          },
+          "name": "label",
+          "type": {
+            "name": "string",
+            "required": true
+          },
+          "description": "Button contents",
+          "table": {
+            "type": {
+              "summary": "string"
+            },
+            "defaultValue": null
+          }
+        },
+        "primary": {
+          "control": {
+            "type": "boolean"
+          },
+          "name": "primary",
+          "description": "Is this the principal call to action on the page?",
+          "type": {
+            "required": false,
+            "name": "boolean"
+          },
+          "table": {
+            "type": {
+              "summary": "boolean"
+            },
+            "defaultValue": {
+              "summary": "false"
+            }
+          }
+        },
+        "backgroundColor": {
+          "control": {
+            "type": "color"
+          },
+          "name": "backgroundColor",
+          "description": "What background color to use",
+          "type": {
+            "required": false,
+            "name": "string"
+          },
+          "table": {
+            "type": {
+              "summary": "string"
+            },
+            "defaultValue": null
+          }
+        },
+        "onClick": {
+          "name": "onClick",
+          "description": "Optional click handler",
+          "type": {
+            "required": false,
+            "name": "function",
+            "value": "(() => void)"
+          },
+          "table": {
+            "type": {
+              "summary": "(() => void)"
+            },
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "initialArgs": {
+      "size": "small",
+      "label": "Button",
+      "onClick": {}
+    },
+    "argTypes": {
+      "size": {
+        "control": {
+          "type": "radio"
+        },
+        "options": [
+          "small",
+          "medium",
+          "large"
+        ],
+        "name": "size",
+        "type": {
+          "name": "enum",
+          "required": false,
+          "value": [
+            "small",
+            "medium",
+            "large"
+          ]
+        },
+        "description": "How large should the button be?",
+        "table": {
+          "type": {
+            "summary": "\"small\" | \"medium\" | \"large\""
+          },
+          "defaultValue": {
+            "summary": "\"medium\""
+          }
+        }
+      },
+      "label": {
+        "control": {
+          "type": "text"
+        },
+        "name": "label",
+        "type": {
+          "name": "string",
+          "required": true
+        },
+        "description": "Button contents",
+        "table": {
+          "type": {
+            "summary": "string"
+          },
+          "defaultValue": null
+        }
+      },
+      "primary": {
+        "control": {
+          "type": "boolean"
+        },
+        "name": "primary",
+        "description": "Is this the principal call to action on the page?",
+        "type": {
+          "required": false,
+          "name": "boolean"
+        },
+        "table": {
+          "type": {
+            "summary": "boolean"
+          },
+          "defaultValue": {
+            "summary": "false"
+          }
+        }
+      },
+      "backgroundColor": {
+        "control": {
+          "type": "color"
+        },
+        "name": "backgroundColor",
+        "description": "What background color to use",
+        "type": {
+          "required": false,
+          "name": "string"
+        },
+        "table": {
+          "type": {
+            "summary": "string"
+          },
+          "defaultValue": null
+        }
+      },
+      "onClick": {
+        "name": "onClick",
+        "description": "Optional click handler",
+        "type": {
+          "required": false,
+          "name": "function",
+          "value": "(() => void)"
+        },
+        "table": {
+          "type": {
+            "summary": "(() => void)"
+          },
+          "defaultValue": null
+        }
+      }
+    }
+  },
+  "example-header--logged-in": {
+    "args": {
+      "user": {},
+      "onLogin": {},
+      "onLogout": {},
+      "onCreateAccount": {}
+    },
+    "componentId": "example-header",
+    "title": "Example/Header",
+    "kind": "Example/Header",
+    "id": "example-header--logged-in",
+    "name": "Logged In",
+    "story": "Logged In",
+    "parameters": {
+      "docs": {
+        "inlineStories": true,
+        "prepareForInline": {},
+        "extractArgTypes": {},
+        "extractComponentDescription": {},
+        "getContainer": {},
+        "getPage": {}
+      },
+      "framework": "react",
+      "backgrounds": {
+        "grid": {
+          "cellSize": 20,
+          "opacity": 0.5,
+          "cellAmount": 5
+        },
+        "values": [
+          {
+            "name": "light",
+            "value": "#F8F8F8"
+          },
+          {
+            "name": "dark",
+            "value": "#333333"
+          }
+        ]
+      },
+      "actions": {
+        "argTypesRegex": "^on[A-Z].*"
+      },
+      "fileName": "./stories/Header.stories.tsx",
+      "storySource": {
+        "source": "(args) => <Header {...args} />"
+      },
+      "__isArgsStory": true,
+      "__id": "example-header--logged-in",
+      "globals": {
+        "measureEnabled": false,
+        "outline": false
+      },
+      "globalTypes": {},
+      "args": {
+        "user": {},
+        "onLogin": {},
+        "onLogout": {},
+        "onCreateAccount": {}
+      },
+      "argTypes": {
+        "user": {
+          "control": {
+            "type": "object"
+          },
+          "name": "user",
+          "type": {
+            "name": "other",
+            "value": "{}",
+            "required": false
+          },
+          "description": "",
+          "table": {
+            "type": {
+              "summary": "{}"
+            },
+            "defaultValue": null
+          }
+        },
+        "onLogin": {
+          "name": "onLogin",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "onLogout": {
+          "name": "onLogout",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "onCreateAccount": {
+          "name": "onCreateAccount",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "initialArgs": {
+      "user": {},
+      "onLogin": {},
+      "onLogout": {},
+      "onCreateAccount": {}
+    },
+    "argTypes": {
+      "user": {
+        "control": {
+          "type": "object"
+        },
+        "name": "user",
+        "type": {
+          "name": "other",
+          "value": "{}",
+          "required": false
+        },
+        "description": "",
+        "table": {
+          "type": {
+            "summary": "{}"
+          },
+          "defaultValue": null
+        }
+      },
+      "onLogin": {
+        "name": "onLogin",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      },
+      "onLogout": {
+        "name": "onLogout",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      },
+      "onCreateAccount": {
+        "name": "onCreateAccount",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      }
+    }
+  },
+  "example-header--logged-out": {
+    "args": {
+      "onLogin": {},
+      "onLogout": {},
+      "onCreateAccount": {}
+    },
+    "componentId": "example-header",
+    "title": "Example/Header",
+    "kind": "Example/Header",
+    "id": "example-header--logged-out",
+    "name": "Logged Out",
+    "story": "Logged Out",
+    "parameters": {
+      "docs": {
+        "inlineStories": true,
+        "prepareForInline": {},
+        "extractArgTypes": {},
+        "extractComponentDescription": {},
+        "getContainer": {},
+        "getPage": {}
+      },
+      "framework": "react",
+      "backgrounds": {
+        "grid": {
+          "cellSize": 20,
+          "opacity": 0.5,
+          "cellAmount": 5
+        },
+        "values": [
+          {
+            "name": "light",
+            "value": "#F8F8F8"
+          },
+          {
+            "name": "dark",
+            "value": "#333333"
+          }
+        ]
+      },
+      "actions": {
+        "argTypesRegex": "^on[A-Z].*"
+      },
+      "fileName": "./stories/Header.stories.tsx",
+      "storySource": {
+        "source": "(args) => <Header {...args} />"
+      },
+      "__isArgsStory": true,
+      "__id": "example-header--logged-out",
+      "globals": {
+        "measureEnabled": false,
+        "outline": false
+      },
+      "globalTypes": {},
+      "args": {
+        "onLogin": {},
+        "onLogout": {},
+        "onCreateAccount": {}
+      },
+      "argTypes": {
+        "user": {
+          "control": {
+            "type": "object"
+          },
+          "name": "user",
+          "description": "",
+          "type": {
+            "required": false,
+            "name": "other",
+            "value": "{}"
+          },
+          "table": {
+            "type": {
+              "summary": "{}"
+            },
+            "defaultValue": null
+          }
+        },
+        "onLogin": {
+          "name": "onLogin",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "onLogout": {
+          "name": "onLogout",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "onCreateAccount": {
+          "name": "onCreateAccount",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "initialArgs": {
+      "onLogin": {},
+      "onLogout": {},
+      "onCreateAccount": {}
+    },
+    "argTypes": {
+      "user": {
+        "control": {
+          "type": "object"
+        },
+        "name": "user",
+        "description": "",
+        "type": {
+          "required": false,
+          "name": "other",
+          "value": "{}"
+        },
+        "table": {
+          "type": {
+            "summary": "{}"
+          },
+          "defaultValue": null
+        }
+      },
+      "onLogin": {
+        "name": "onLogin",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      },
+      "onLogout": {
+        "name": "onLogout",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      },
+      "onCreateAccount": {
+        "name": "onCreateAccount",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      }
+    }
+  },
+  "example-page--logged-in": {
+    "args": {
+      "user": {},
+      "onLogin": {},
+      "onLogout": {},
+      "onCreateAccount": {}
+    },
+    "componentId": "example-page",
+    "title": "Example/Page",
+    "kind": "Example/Page",
+    "id": "example-page--logged-in",
+    "name": "Logged In",
+    "story": "Logged In",
+    "parameters": {
+      "docs": {
+        "inlineStories": true,
+        "prepareForInline": {},
+        "extractArgTypes": {},
+        "extractComponentDescription": {},
+        "getContainer": {},
+        "getPage": {}
+      },
+      "framework": "react",
+      "backgrounds": {
+        "grid": {
+          "cellSize": 20,
+          "opacity": 0.5,
+          "cellAmount": 5
+        },
+        "values": [
+          {
+            "name": "light",
+            "value": "#F8F8F8"
+          },
+          {
+            "name": "dark",
+            "value": "#333333"
+          }
+        ]
+      },
+      "actions": {
+        "argTypesRegex": "^on[A-Z].*"
+      },
+      "fileName": "./stories/Page.stories.tsx",
+      "storySource": {
+        "source": "(args) => <Page {...args} />"
+      },
+      "__isArgsStory": true,
+      "__id": "example-page--logged-in",
+      "globals": {
+        "measureEnabled": false,
+        "outline": false
+      },
+      "globalTypes": {},
+      "args": {
+        "user": {},
+        "onLogin": {},
+        "onLogout": {},
+        "onCreateAccount": {}
+      },
+      "argTypes": {
+        "user": {
+          "control": {
+            "type": "object"
+          },
+          "name": "user",
+          "type": {
+            "name": "other",
+            "value": "{}",
+            "required": false
+          },
+          "description": "",
+          "table": {
+            "type": {
+              "summary": "{}"
+            },
+            "defaultValue": null
+          }
+        },
+        "onLogin": {
+          "name": "onLogin",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "onLogout": {
+          "name": "onLogout",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "onCreateAccount": {
+          "name": "onCreateAccount",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "initialArgs": {
+      "user": {},
+      "onLogin": {},
+      "onLogout": {},
+      "onCreateAccount": {}
+    },
+    "argTypes": {
+      "user": {
+        "control": {
+          "type": "object"
+        },
+        "name": "user",
+        "type": {
+          "name": "other",
+          "value": "{}",
+          "required": false
+        },
+        "description": "",
+        "table": {
+          "type": {
+            "summary": "{}"
+          },
+          "defaultValue": null
+        }
+      },
+      "onLogin": {
+        "name": "onLogin",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      },
+      "onLogout": {
+        "name": "onLogout",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      },
+      "onCreateAccount": {
+        "name": "onCreateAccount",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      }
+    }
+  },
+  "example-page--logged-out": {
+    "args": {
+      "onLogin": {},
+      "onLogout": {},
+      "onCreateAccount": {}
+    },
+    "componentId": "example-page",
+    "title": "Example/Page",
+    "kind": "Example/Page",
+    "id": "example-page--logged-out",
+    "name": "Logged Out",
+    "story": "Logged Out",
+    "parameters": {
+      "docs": {
+        "inlineStories": true,
+        "prepareForInline": {},
+        "extractArgTypes": {},
+        "extractComponentDescription": {},
+        "getContainer": {},
+        "getPage": {}
+      },
+      "framework": "react",
+      "backgrounds": {
+        "grid": {
+          "cellSize": 20,
+          "opacity": 0.5,
+          "cellAmount": 5
+        },
+        "values": [
+          {
+            "name": "light",
+            "value": "#F8F8F8"
+          },
+          {
+            "name": "dark",
+            "value": "#333333"
+          }
+        ]
+      },
+      "actions": {
+        "argTypesRegex": "^on[A-Z].*"
+      },
+      "fileName": "./stories/Page.stories.tsx",
+      "storySource": {
+        "source": "(args) => <Page {...args} />"
+      },
+      "__isArgsStory": true,
+      "__id": "example-page--logged-out",
+      "globals": {
+        "measureEnabled": false,
+        "outline": false
+      },
+      "globalTypes": {},
+      "args": {
+        "onLogin": {},
+        "onLogout": {},
+        "onCreateAccount": {}
+      },
+      "argTypes": {
+        "user": {
+          "control": {
+            "type": "object"
+          },
+          "name": "user",
+          "description": "",
+          "type": {
+            "required": false,
+            "name": "other",
+            "value": "{}"
+          },
+          "table": {
+            "type": {
+              "summary": "{}"
+            },
+            "defaultValue": null
+          }
+        },
+        "onLogin": {
+          "name": "onLogin",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "onLogout": {
+          "name": "onLogout",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "onCreateAccount": {
+          "name": "onCreateAccount",
+          "description": "",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "() => void"
+          },
+          "table": {
+            "type": {
+              "summary": "() => void"
+            },
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "initialArgs": {
+      "onLogin": {},
+      "onLogout": {},
+      "onCreateAccount": {}
+    },
+    "argTypes": {
+      "user": {
+        "control": {
+          "type": "object"
+        },
+        "name": "user",
+        "description": "",
+        "type": {
+          "required": false,
+          "name": "other",
+          "value": "{}"
+        },
+        "table": {
+          "type": {
+            "summary": "{}"
+          },
+          "defaultValue": null
+        }
+      },
+      "onLogin": {
+        "name": "onLogin",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      },
+      "onLogout": {
+        "name": "onLogout",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      },
+      "onCreateAccount": {
+        "name": "onCreateAccount",
+        "description": "",
+        "type": {
+          "required": true,
+          "name": "function",
+          "value": "() => void"
+        },
+        "table": {
+          "type": {
+            "summary": "() => void"
+          },
+          "defaultValue": null
+        }
+      }
+    }
+  }
+}
