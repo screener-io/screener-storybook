@@ -1,5 +1,3 @@
-// var object = require('lodash/fp/object');
-
 //  Receive raw stories we pull from the storybook server via puppeteer, align them for
 //  legacy steps processing.
 //
@@ -10,12 +8,15 @@ exports.alignStories = function(rawStories) {
       return rawStories;
     } else {
       console.warn('screener-storybook stories not returned in array, re-aligning ..');
-      // return object.toPairs(rawStories);
       const objectToArray = Object.keys(rawStories);
       return objectToArray.map( (key) => {
-        return rawStories[key];
+        const storeObject = rawStories[key];
+        let objectStory = { name: storeObject.name };
+        return {
+          kind: storeObject.kind,
+          stories: [ objectStory ]
+        };
       });
-      // return Object.keys(rawStories);
     }
   }
 
