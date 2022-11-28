@@ -22,7 +22,7 @@ const getStorybookFeatures = function() {
   // features are within `.storybook/main.js`
   const storybookMainPath = path.join(dotStorybookPath, 'main.js');
   if (!fs.existsSync(storybookMainPath)) {
-    console.warn(' SB6-  .storybook/main.js not found');
+    console.warn('.storybook/main.js not found');
     return {};
   }
 
@@ -39,12 +39,12 @@ const getStorybookFeatures = function() {
     return {};
   }
 
+  // main.js/framework added in 6.4, mandatory in 7.0
+  // https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#framework-field-mandatory
   const frameworkUnderTest = storybookMain.framework;
-  if (!frameworkUnderTest) {
-    console.info(' SB6.3-  No framework indicated in .storybook/main.js');
-    return {};
+  if (frameworkUnderTest) {
+    console.info('Found framework', frameworkUnderTest, 'configured in main.js');
   }
-  console.info('Found framework', frameworkUnderTest, 'configured in main.js');
 
   const features = storybookMain.features;
   return {

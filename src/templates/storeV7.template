@@ -1,0 +1,17 @@
+${code}
+
+if (typeof window === 'object') {
+  window.__screener_storybook__ = async () => {
+    try {
+      const store = __STORYBOOK_STORY_STORE__;
+      console.log("loading all stories ...");
+      await store.cacheAllCSFFiles();
+      console.log("loaded.");
+      const stories = await store.extract();
+      console.log("stories", stories);
+      return stories;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
