@@ -213,20 +213,20 @@ var resetLegacyConfig = exports.resetStorybookConfig = function({path: configPat
   }
 };
 
-// const restorePreviewSource = exports.resetPreviewSource = function(storybookConfig, fileBody) {
-//   console.info('restoring previous verson of preview source file', storybookConfig.previewSource);
-//
-//   const previewSource = storybookConfig.previewSource;
-//   if (fs.existsSync(previewSource)) {
-//     if (fileBody) {
-//       // revert file back to original contents
-//       fs.writeFileSync(previewSource, fileBody, 'utf8');
-//     } else {
-//       // we didn't read anything there before
-//       fs.unlinkSync(previewSource);
-//     }
-//   }
-// };
+const restorePreviewSource = exports.resetPreviewSource = function(storybookConfig, fileBody) {
+  console.info('restoring previous verson of preview source file', storybookConfig.previewSource);
+
+  const previewSource = storybookConfig.previewSource;
+  if (fs.existsSync(previewSource)) {
+    if (fileBody) {
+      // revert file back to original contents
+      fs.writeFileSync(previewSource, fileBody, 'utf8');
+    } else {
+      // we didn't read anything there before
+      fs.unlinkSync(previewSource);
+    }
+  }
+};
 
 var configureFeatureServer = exports.configureFeatureServer = function(storybookConfig) {
   console.warn('DEBUG configureFeatureServer storybookConfig', storybookConfig);
@@ -243,13 +243,11 @@ var configureFeatureServer = exports.configureFeatureServer = function(storybook
   }
 
   // add store global hook (for now)
-  // TODO: install hook from template
-  // var templateType = 'store';
-  // var templatePath = path.resolve(__dirname, 'templates', templateType + '.template');
-  // var codeTemplate = fs.readFileSync(templatePath, 'utf8');
-  // // TODO: is framework a replacement for app here?
-  // var code = template(codeTemplate)({ code: previewBody, app: storybookConfig.framework });
-  // fs.writeFileSync(previewSource, code, 'utf8');
+  var templateType = 'storeV7';
+  var templatePath = path.resolve(__dirname, 'templates', templateType + '.template');
+  var codeTemplate = fs.readFileSync(templatePath, 'utf8');
+  var code = template(codeTemplate)({ code: previewBody });
+  fs.writeFileSync(previewSource, code, 'utf8');
   return previewBody;
 };
 
@@ -380,8 +378,7 @@ const launchFeatureServer = function(screenerConfig, options, port, storybookCon
 
   // clean-up all child processes when this process is terminated
   process.on('exit', function() {
-    // TODO: re-enable template
-    // restorePreviewSource(storybookConfig, previewBody);
+    restorePreviewSource(storybookConfig, previewBody);
     if (!isWin) {
       process.kill(-serverProcess.pid);
     }
@@ -396,8 +393,7 @@ const launchFeatureServer = function(screenerConfig, options, port, storybookCon
 
   storybookReady(port, options, function(err, result) {
     try {
-      // TODO: re-enable template
-      // restorePreviewSource(storybookConfig, previewBody);
+      restorePreviewSource(storybookConfig, previewBody);
     } catch(ex) {
       return callback(ex);
     }
