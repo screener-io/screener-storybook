@@ -408,3 +408,11 @@ module.exports = {
       instance: 'myproject.visualstudio.com'
     }
     ```
+
+#### Experimental Configuration Options
+- **experimentalHook:** Optional configuration to force the usage of experimental (storybook@v7) server hook when users encounter problems using storybook `6.4.x` and higher when storybook option `feature.storyStoreV7` is disabled (explicity or not). Defaults to false.
+  - Example:
+
+    ```javascript
+    experimentalHook: true
+    ```
