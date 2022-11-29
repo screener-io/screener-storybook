@@ -56,7 +56,11 @@ StorybookRunner.startStorybook(config, program)
     if (isEmpty(storybookFeatures)) {
       config.storybook = stories;
     } else {
-      if (storybookFeatures.features.storyStoreV7) {
+      const usesFeaturedServer = (
+        (storybookFeatures.features && storybookFeatures.features.storyStoreV7) || //Automatically fallback to stories align
+        config.experimentalHook
+      );
+      if (usesFeaturedServer) {
         config.storybook = alignStories(stories);
       }
     }

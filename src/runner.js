@@ -52,7 +52,7 @@ exports.run = function(config, options) {
       // generate config format expected by screener-runner
       config.states = transformToStates(config.storybook, localUrl, config.storybookPreview);
       // remove storybook-specific fields
-      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookStaticBuildDir', 'storybookPort', 'storybookApp', 'storybookVersion', 'storybookBinPath', 'storybookPreview']);
+      config = omit(config, ['storybook', 'storybookConfigDir', 'storybookStaticDir', 'storybookStaticBuildDir', 'storybookPort', 'storybookApp', 'storybookVersion', 'storybookBinPath', 'storybookPreview', 'experimentalHook']);
       if (options && options.debug) {
         console.log('DEBUG: config', JSON.stringify(config, null, 2));
       }

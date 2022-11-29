@@ -417,7 +417,14 @@ exports.server = function(screenerConfig, options, callback) {
       console.info('launching screener-storybook on port', port);
 
       const storybookConfig = storybookCheck();
-      if (!storybookConfig.framework) {  // SB6.3-
+
+      //Determine server behaviour
+      const usesFeaturedServer = (
+        (storybookConfig.features && storybookConfig.features.storyStoreV7) || //Automatically fallback to feature server
+        screenerConfig.experimentalHook
+      );
+
+      if (!usesFeaturedServer) {  // SB6.3-
         return launchLegacyServer(screenerConfig, options, port, callback);
       }
 
