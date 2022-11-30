@@ -9,41 +9,36 @@ const getStorybookFeatures = function() {
   const siteUnderTest = path.resolve('.');
   if (!siteUnderTest) {
     // TODO: consider upgrade these to exceptions past Alpha pending varied integration feedback
-    console.warn('Could not determine the location of the site under test, necessary to locate Storybook features');
+    console.warn('screener-storybook Could not determine the location of the site under test, necessary to locate Storybook features');
     return {};
   }
 
   const dotStorybookPath = path.join(siteUnderTest, '.storybook');
   if (!fs.existsSync(dotStorybookPath)) {
-    console.warn(' .storybook not found, necessary to locate Storybook features');
+    console.warn('screener-storybook .storybook not found, necessary to locate Storybook features');
     return {};
   }
 
+  // main.js was added in 5.3
+  // https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#to-mainjs-configuration
   // features are within `.storybook/main.js`
   const storybookMainPath = path.join(dotStorybookPath, 'main.js');
   if (!fs.existsSync(storybookMainPath)) {
-    console.warn('.storybook/main.js not found');
-    return {};
-  }
-
-  // TODO: check for typescript preview.ts file
-  const storybookPreview = path.join(dotStorybookPath, 'preview.js');
-  if (!fs.existsSync(storybookPreview)) {
-    console.warn(' .storybook/preview.js not found');
+    console.warn('screener-storybook .storybook/main.js not found');
     return {};
   }
 
   const storybookMain = require(storybookMainPath);
   if (!storybookMain) {
-    console.error('Could not load .storybook/main.js');
+    console.warn('screener-storybook Could not load .storybook/main.js');
     return {};
   }
 
-  // main.js/framework added in 6.4, mandatory in 7.0
+  // main.js/framework added in 6.4 as optional, mandatory in 7.0
   // https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#framework-field-mandatory
   const frameworkUnderTest = storybookMain.framework;
   if (frameworkUnderTest) {
-    console.info('Found framework', frameworkUnderTest, 'configured in main.js');
+    console.info('screener-storybook Found framework', frameworkUnderTest, 'configured in main.js');
   }
 
   const features = storybookMain.features;
@@ -53,7 +48,6 @@ const getStorybookFeatures = function() {
     siteUnderTestPath: siteUnderTest,
     dotStorybookPath: dotStorybookPath,
     mainjs: storybookMainPath,
-    previewSource: storybookPreview,
   };
 };
 

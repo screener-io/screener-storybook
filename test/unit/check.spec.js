@@ -246,7 +246,7 @@ describe('screener-storybook/src/check', function() {
       });
     });
 
-    it('should return the main.js framework version', function() {
+    it('should return the main.js features and framework if present', function() {
       const result = storybookCheck();
       expect(result).to.deep.equal({
         framework: '@storybook/react',
@@ -255,13 +255,7 @@ describe('screener-storybook/src/check', function() {
         },
         dotStorybookPath: '/home/user/sut/.storybook/main.js',
         mainjs: '/home/user/sut/.storybook/main.js',
-        previewSource: '/home/user/sut/.storybook/main.js',
         siteUnderTestPath: '/home/user/sut',
-        // version: {
-        //   major: 6,
-        //   minor: 5,
-        //   full: '6.5.12'
-        // },
       });
     });
 

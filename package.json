@@ -1,6 +1,6 @@
 {
   "name": "screener-storybook",
-  "version": "0.25.0-alpha.5",
+  "version": "0.25.0-alpha.6",
   "description": "Automated Visual Testing for React Storybook using Screener.io",
   "license": "MIT",
   "main": "./index.js",
@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "eslint": "^4.18.2",
+    "eslint": "^8.0.0",
     "mocha": "^10.0.0",
     "nyc": "^14.1.1",
     "rewire": "^6.0.0"
