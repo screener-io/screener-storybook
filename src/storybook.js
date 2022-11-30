@@ -37,17 +37,16 @@ const VALIDPORTS = [
  * Note: this differs from screener-storybook versions prior to 0.25 which dynamically injected a hook into the
  * preview.js.
  */
-const getStorybook = async (page) => {
+const getStorybook = async function (page) {
   await page.waitForFunction(`
     (window.__STORYBOOK_PREVIEW__ && window.__STORYBOOK_PREVIEW__.extract && window.__STORYBOOK_PREVIEW__.extract()) ||
     (window.__STORYBOOK_STORY_STORE__ && window.__STORYBOOK_STORY_STORE__.extract && window.__STORYBOOK_STORY_STORE__.extract())
-  `)
+  `);
 
   const storybook = JSON.parse(
     await page.evaluate(async () => {
-      const storiesJSON = JSON.stringify(window.__STORYBOOK_STORY_STORE__.getStoriesJsonData(), null, 2);
-      console.log("storiesJSON", storiesJSON);
-      return storiesJSON;
+      // eslint-disable-next-line no-undef
+      return JSON.stringify(window.__STORYBOOK_STORY_STORE__.getStoriesJsonData(), null, 2);
     })
   );
 
@@ -153,9 +152,9 @@ var staticServer = exports.staticServer = function(config, options, callback) {
 };
 
 var setLegacyConfig = exports.setStorybookConfig = function(storybookApp, storybookVersion, storybookConfigDir) {
-  console.warn('DEBUG storybookApp', storybookApp);
-  console.warn('DEBUG storybookVersion', storybookVersion);
-  console.warn('DEBUG storybookConfigDir', storybookConfigDir);
+  console.info('screener-storybook storybookApp', storybookApp);
+  console.info('screener-storybook storybookVersion', storybookVersion);
+  console.info('screener-storybook storybookConfigDir', storybookConfigDir);
   var configPath = path.resolve(process.cwd(), storybookConfigDir, 'config.js');
   var isNewFile = false;
   if (!fs.existsSync(configPath)) {
@@ -361,7 +360,7 @@ exports.server = function(screenerConfig, options, callback) {
   try {
     // find free port and launch the server from it's binary
     getPort({ port: VALIDPORTS }).then(function(port) {
-      console.info('launching screener-storybook on port', port);
+      console.info('screener-storybook launching as server on port', port);
 
       const storybookConfig = storybookCheck();
 
@@ -380,8 +379,6 @@ exports.server = function(screenerConfig, options, callback) {
       //  and some default are specified.
 
       launchFeatureServer(screenerConfig, options, port, storybookConfig, callback);
-
-      console.info('LAUNCH screener-storybook end of sync launch setup');
     }).catch(callback);
 
   } catch(ex) {

@@ -61,7 +61,6 @@ describe('screener-storybook/src/features', function() {
         },
         dotStorybookPath: '/home/user/sut/.storybook/main.js',
         mainjs: '/home/user/sut/.storybook/main.js',
-        previewSource: '/home/user/sut/.storybook/main.js',
         siteUnderTestPath: '/home/user/sut',
       });
     });
