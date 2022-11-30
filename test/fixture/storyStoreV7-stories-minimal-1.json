@@ -1,6 +1,9 @@
 {
-  "example-button--primary": {
-  },
-  "example-button--secondary": {
+  "v": 3,
+  "stories": {
+    "example-introduction--page": {
+    },
+    "example-button--secondary": {
+    }
   }
 }
