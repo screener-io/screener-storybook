@@ -10,7 +10,6 @@ var puppeteer = require('puppeteer');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 var semver = require('semver');
-var Promise = require('bluebird');
 var express = require('express');
 var { Server } = require('http');
 
@@ -31,33 +30,32 @@ const VALIDPORTS = [
   9191, 9876, 9877, 9999, 49221, 55001
 ];
 
-var getStorybook = function(page, tries, options) {
-  var maxTries = 5;
-  if (options && options.debug) {
-    console.log('DEBUG: getStorybook', tries);
-  }
-  if (typeof tries === 'undefined') {
-    tries = 0;
-  }
-  return page.evaluate('window.__screener_storybook__()')
-    .then(function(result) {
-      if (tries < maxTries && (!result || (typeof result === 'object' && result.length === 0))) {
-        return Promise.delay(2*1000).then(function() {
-          return getStorybook(page, tries + 1, options);
-        });
-      }
-      if (typeof result === 'object' && result.length > 0) {
-        var stepsScript = fs.readFileSync(__dirname + '/scripts/story-steps.js', 'utf8');
-        return page.evaluate(stepsScript);
-      }
-      return result;
+/*
+ * Credit to storybookjs for a slick way to pull the stories across versions without an interim hook.
+ * https://github.com/storybookjs/storybook/blob/350279a9960ca293b81c7ad207c0c8a2f0bcdeac/lib/cli/src/extract.ts#L16-L16
+ *
+ * Note: this differs from screener-storybook versions prior to 0.25 which dynamically injected a hook into the
+ * preview.js.
+ */
+const getStorybook = async (page) => {
+  await page.waitForFunction(`
+    (window.__STORYBOOK_PREVIEW__ && window.__STORYBOOK_PREVIEW__.extract && window.__STORYBOOK_PREVIEW__.extract()) ||
+    (window.__STORYBOOK_STORY_STORE__ && window.__STORYBOOK_STORY_STORE__.extract && window.__STORYBOOK_STORY_STORE__.extract())
+  `)
+
+  const storybook = JSON.parse(
+    await page.evaluate(async () => {
+      const storiesJSON = JSON.stringify(window.__STORYBOOK_STORY_STORE__.getStoriesJsonData(), null, 2);
+      console.log("storiesJSON", storiesJSON);
+      return storiesJSON;
     })
-    .catch(function(ex) {
-      if (options && options.debug) {
-        console.error('DEBUG: getStorybook', ex);
-      }
-      return null;
-    });
+  );
+
+  if (storybook.length > 0) {
+    const stepsScript = fs.readFileSync(__dirname + '/scripts/story-steps.js', 'utf8');
+    return page.evaluate(stepsScript);
+  }
+  return storybook;
 };
 
 var storybookReady = function(port, options, callback) {
@@ -213,44 +211,6 @@ var resetLegacyConfig = exports.resetStorybookConfig = function({path: configPat
   }
 };
 
-const restorePreviewSource = exports.resetPreviewSource = function(storybookConfig, fileBody) {
-  console.info('restoring previous verson of preview source file', storybookConfig.previewSource);
-
-  const previewSource = storybookConfig.previewSource;
-  if (fs.existsSync(previewSource)) {
-    if (fileBody) {
-      // revert file back to original contents
-      fs.writeFileSync(previewSource, fileBody, 'utf8');
-    } else {
-      // we didn't read anything there before
-      fs.unlinkSync(previewSource);
-    }
-  }
-};
-
-var configureFeatureServer = exports.configureFeatureServer = function(storybookConfig) {
-  console.warn('DEBUG configureFeatureServer storybookConfig', storybookConfig);
-
-  const previewSource = storybookConfig.previewSource;
-  let previewBody;
-
-  // hold original file contents
-  if (fs.existsSync(previewSource)) {
-    previewBody = fs.readFileSync(previewSource, 'utf8');
-  } else {
-    // generate file when does not exist (temporary, remove later)
-    fs.writeFileSync(previewSource, '', 'utf8');
-  }
-
-  // add store global hook (for now)
-  var templateType = 'storeV7';
-  var templatePath = path.resolve(__dirname, 'templates', templateType + '.template');
-  var codeTemplate = fs.readFileSync(templatePath, 'utf8');
-  var code = template(codeTemplate)({ code: previewBody });
-  fs.writeFileSync(previewSource, code, 'utf8');
-  return previewBody;
-};
-
 const isWindowsPlatform = function() {
   return /^win/.test(process.platform);
 };
@@ -350,14 +310,6 @@ const launchLegacyServer = function(config, options, port, callback) {
 const launchFeatureServer = function(screenerConfig, options, port, storybookConfig, callback) {
   const isWin = isWindowsPlatform();
 
-  let previewBody;
-  try {
-    previewBody = configureFeatureServer(storybookConfig);
-    console.info('configureFeatureServer found prior preview source file with:', previewBody);
-  } catch(ex) {
-    return callback(ex);
-  }
-
   // start Storybook dev server
   const binPath = path.resolve(process.cwd(), 'node_modules/.bin');
   let bin = path.resolve(binPath, 'start-storybook');
@@ -366,7 +318,8 @@ const launchFeatureServer = function(screenerConfig, options, port, storybookCon
   }
   console.info('screener-storybook using SB server startup bin', bin);
 
-  const args = ['--port', port, '--config-dir', storybookConfig.dotStorybookPath];
+  // --ci mode (skip interactive prompts, don't open browser) https://storybook.js.org/docs/react/api/cli-options
+  let args = ['--port', port,'--no-manager-cache', '--ci', '--config-dir', storybookConfig.dotStorybookPath];
 
   console.info('\nStarting Storybook server...');
   console.info('>', 'start-storybook', args.join(' '), '\n\nPlease wait. Starting Storybook may take a minute...\n');
@@ -378,7 +331,6 @@ const launchFeatureServer = function(screenerConfig, options, port, storybookCon
 
   // clean-up all child processes when this process is terminated
   process.on('exit', function() {
-    restorePreviewSource(storybookConfig, previewBody);
     if (!isWin) {
       process.kill(-serverProcess.pid);
     }
@@ -392,11 +344,6 @@ const launchFeatureServer = function(screenerConfig, options, port, storybookCon
   });
 
   storybookReady(port, options, function(err, result) {
-    try {
-      restorePreviewSource(storybookConfig, previewBody);
-    } catch(ex) {
-      return callback(ex);
-    }
     callback(null, result);
   });
 };
@@ -428,13 +375,9 @@ exports.server = function(screenerConfig, options, callback) {
         return launchLegacyServer(screenerConfig, options, port, callback);
       }
 
-      //  This is our normal course since SB 6.4, whereby a main.js should indicate
+      //  This is our normal course since SB 6.4, whereby a main.js may indicate
       //  a framework being used by the site under test, and features (some optional)
       //  and some default are specified.
-
-      // TODO:
-      // * do we need the --ci flag?
-      // * launching from binary is unnecessary if we run as an AddOn
 
       launchFeatureServer(screenerConfig, options, port, storybookConfig, callback);
 

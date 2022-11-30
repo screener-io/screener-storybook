@@ -7,10 +7,11 @@ exports.alignStories = function(rawStories) {
       console.info('screener-storybook standard stories array detected');
       return rawStories;
     } else {
-      console.warn('screener-storybook stories not returned in array, re-aligning ..');
-      const objectToArray = Object.keys(rawStories);
+      console.info('screener-storybook stories not returned in array, re-aligning ..');
+      const embeddedStories = rawStories.stories;
+      const objectToArray = Object.keys(embeddedStories);
       return objectToArray.map( (key) => {
-        const storeObject = rawStories[key];
+        const storeObject = embeddedStories[key];
         let objectStory = { name: storeObject.name };
         return {
           kind: storeObject.kind,
