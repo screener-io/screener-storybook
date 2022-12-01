@@ -70,8 +70,7 @@ exports.storybookConfig = function(value) {
     ieNativeEvents: Joi.boolean(),
     storybookBinPath: Joi.string(),
     storybookVersion: Joi.number().valid(2, 3, 4, 5),
-    storybookApp: Joi.string().valid('react', 'vue', 'angular', 'html'),
-    experimentalHook: Joi.boolean(),
+    storybookApp: Joi.string().valid('react', 'vue', 'angular', 'html')
   })
     .without('resolutions', ['resolution'])
     .without('sauce', ['browserStack'])

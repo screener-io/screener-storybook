@@ -1,5 +1,6 @@
 var storybookCheck = require('./check');
 var path = require('path');
+var { isStorybookFeaturedServer } = require('./features');
 var fs = require('fs');
 var os = require('os');
 var getPort = require('get-port');
@@ -367,7 +368,7 @@ exports.server = function(screenerConfig, options, callback) {
       //Determine server behaviour
       const usesFeaturedServer = (
         (storybookConfig.features && storybookConfig.features.storyStoreV7) || //Automatically fallback to feature server
-        screenerConfig.experimentalHook
+        isStorybookFeaturedServer()
       );
 
       if (!usesFeaturedServer) {  // SB6.3-

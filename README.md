@@ -19,11 +19,25 @@ npm run test-storybook
 
 ## Docs
 
-- [Testing Interactions](#testing-interactions)
-- [Testing Responsive Designs](#testing-responsive-designs)
-- [Cross Browser Testing](#cross-browser-testing)
-- [Testing with Static Storybook App](#testing-with-static-storybook-app)
-- [Additional Configuration Options](#additional-configuration-options)
+- [Screener-Storybook ](#screener-storybook-)
+  - [Installation](#installation)
+  - [Run](#run)
+  - [Docs](#docs)
+    - [Testing Interactions](#testing-interactions)
+      - [With React](#with-react)
+      - [With Vue](#with-vue)
+      - [With Angular](#with-angular)
+      - [Steps](#steps)
+    - [Testing Responsive Designs](#testing-responsive-designs)
+      - [Available Devices](#available-devices)
+    - [Cross Browser Testing](#cross-browser-testing)
+      - [Overview](#overview)
+      - [Adding Browsers](#adding-browsers)
+      - [Supported Browsers](#supported-browsers)
+      - [Sauce Connect Integration](#sauce-connect-integration)
+        - [Important Notes on Sauce Connect](#important-notes-on-sauce-connect)
+    - [Testing with Static Storybook App](#testing-with-static-storybook-app)
+    - [Additional Configuration Options](#additional-configuration-options)
 
 ---
 
@@ -407,12 +421,4 @@ module.exports = {
     vsts: {
       instance: 'myproject.visualstudio.com'
     }
-    ```
-
-#### Experimental Configuration Options
-- **experimentalHook:** Optional configuration to force the usage of experimental (storybook@v7) server hook when users encounter problems using storybook `6.4.x` and higher when storybook option `feature.storyStoreV7` is disabled (explicity or not). Defaults to false.
-  - Example:
-
-    ```javascript
-    experimentalHook: true
     ```

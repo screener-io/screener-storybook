@@ -5,7 +5,7 @@ var pjson = require('../package.json');
 var colors = require('colors/safe');
 var StorybookRunner = require('./index');
 var Promise = require('bluebird');
-var { getStorybookFeatures, isEmpty } = require('./features');
+var { getStorybookFeatures, isEmpty, isStorybookFeaturedServer } = require('./features');
 var { alignStories } = require('./storeV7');
 
 program
@@ -58,7 +58,7 @@ StorybookRunner.startStorybook(config, program)
     } else {
       const usesFeaturedServer = (
         (storybookFeatures.features && storybookFeatures.features.storyStoreV7) || //Automatically fallback to stories align
-        config.experimentalHook
+        isStorybookFeaturedServer()
       );
       if (usesFeaturedServer) {
         config.storybook = alignStories(stories);
