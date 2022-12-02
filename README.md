@@ -4,6 +4,68 @@ Automated Visual Testing for [Storybook](https://storybook.js.org) (React, Vue, 
 
 Screener-Storybook will use your existing Storybook stories as visual test cases, and run them against [Screener's](https://screener.io) automated visual testing service. Get visual regression tests across your React, Vue, Angular or HTML components with no additional coding!
 
+## StoryStoreV7 Support
+
+Currently available as Alpha releases, version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7` 
+[feature enabled](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#story-store-v7).
+
+It is an Alpha for feedback and to un-block some users experiencing pre-V7 drift where despite not having
+storyStoreV7 enabled the internals seem to be configured as if it is enabled.
+
+```
+npm install screener-storybook@alpha --save-dev
+```
+
+### Migration 
+
+**Please remove the now legacy** `__screener_storybook__` from any `preview.js|ts` file including static builds.
+
+It looks like this, please delete it:
+```javascript
+if (typeof window === 'object') {
+  window.__screener_storybook__ = require('@storybook/react').getStorybook;
+}
+```
+
+### What's Working, What's Changed
+
+Initial states of all stories are present in the Visual UI including MDX.  If you are missing any stories please
+let us know immediately.  This does not include missing states due to Screener Steps, this we are aware
+of and are working on a resolution.
+
+**Hookless** 
+
+We've removed the requirement of the prior preview.js hook function.  This should reduce brittleness, resolve several 
+open issues, and provide simplicity during runtime where we no longer dynamically alter your `preview.js|ts`.
+
+**Puppeteer Upgraded from v1 to v18**
+
+Puppeteer v19 caused instability in our CI matrices, so we stepped down to v18.  As it is a major (very) upgrade if you
+run into problems please let us know.
+
+We fortunately have not experienced any visual regressions due to this upgrade, so far but suspect edge cases due to
+specific Chromium features.  Please share any regressions you might find with us, or simply accept them via the Visual UI.
+
+### Compatibility 
+
+There is a good deal of legacy compatibility in 1.0, we're testing this routinely in a CI matrix that includes:
+
+* Storybook versions 5, 6
+* `storyStoreV7` enabled / disabled
+* dependency combinations including Storybook as a peer dependency
+
+Given the severity of internal changes we chose a major version bump, though tried to keep the legacy path intact.
+
+### Known Issues
+
+Screener Steps are currently broken in the Alpha, so any states beyond the initial will not be present in the Visual UI.
+
+We will consider automatically removing the `__screener_storybook__` hooks or providing a migration tool for this closer to release.
+
+Documentation updates to follow closer to release.
+
+___
+
 ## Installation
 
 1. Go to [https://screener.io/v2/new](https://screener.io/v2/new)
@@ -19,11 +81,25 @@ npm run test-storybook
 
 ## Docs
 
-- [Testing Interactions](#testing-interactions)
-- [Testing Responsive Designs](#testing-responsive-designs)
-- [Cross Browser Testing](#cross-browser-testing)
-- [Testing with Static Storybook App](#testing-with-static-storybook-app)
-- [Additional Configuration Options](#additional-configuration-options)
+- [Screener-Storybook ](#screener-storybook-)
+  - [Installation](#installation)
+  - [Run](#run)
+  - [Docs](#docs)
+    - [Testing Interactions](#testing-interactions)
+      - [With React](#with-react)
+      - [With Vue](#with-vue)
+      - [With Angular](#with-angular)
+      - [Steps](#steps)
+    - [Testing Responsive Designs](#testing-responsive-designs)
+      - [Available Devices](#available-devices)
+    - [Cross Browser Testing](#cross-browser-testing)
+      - [Overview](#overview)
+      - [Adding Browsers](#adding-browsers)
+      - [Supported Browsers](#supported-browsers)
+      - [Sauce Connect Integration](#sauce-connect-integration)
+        - [Important Notes on Sauce Connect](#important-notes-on-sauce-connect)
+    - [Testing with Static Storybook App](#testing-with-static-storybook-app)
+    - [Additional Configuration Options](#additional-configuration-options)
 
 ---
 

@@ -1,5 +1,6 @@
 var storybookCheck = require('./check');
 var path = require('path');
+var { isStorybookFeaturedServer } = require('./features');
 var fs = require('fs');
 var os = require('os');
 var getPort = require('get-port');
@@ -10,7 +11,6 @@ var puppeteer = require('puppeteer');
 var colors = require('colors/safe');
 var template = require('lodash/template');
 var semver = require('semver');
-var Promise = require('bluebird');
 var express = require('express');
 var { Server } = require('http');
 
@@ -31,33 +31,31 @@ const VALIDPORTS = [
   9191, 9876, 9877, 9999, 49221, 55001
 ];
 
-var getStorybook = function(page, tries, options) {
-  var maxTries = 5;
-  if (options && options.debug) {
-    console.log('DEBUG: getStorybook', tries);
-  }
-  if (typeof tries === 'undefined') {
-    tries = 0;
-  }
-  return page.evaluate('window.__screener_storybook__()')
-    .then(function(result) {
-      if (tries < maxTries && (!result || (typeof result === 'object' && result.length === 0))) {
-        return Promise.delay(2*1000).then(function() {
-          return getStorybook(page, tries + 1, options);
-        });
-      }
-      if (typeof result === 'object' && result.length > 0) {
-        var stepsScript = fs.readFileSync(__dirname + '/scripts/story-steps.js', 'utf8');
-        return page.evaluate(stepsScript);
-      }
-      return result;
+/*
+ * Credit to storybookjs for a slick way to pull the stories across versions without an interim hook.
+ * https://github.com/storybookjs/storybook/blob/350279a9960ca293b81c7ad207c0c8a2f0bcdeac/lib/cli/src/extract.ts#L16-L16
+ *
+ * Note: this differs from screener-storybook versions prior to 0.25 which dynamically injected a hook into the
+ * preview.js.
+ */
+const getStorybook = async function (page) {
+  await page.waitForFunction(`
+    (window.__STORYBOOK_PREVIEW__ && window.__STORYBOOK_PREVIEW__.extract && window.__STORYBOOK_PREVIEW__.extract()) ||
+    (window.__STORYBOOK_STORY_STORE__ && window.__STORYBOOK_STORY_STORE__.extract && window.__STORYBOOK_STORY_STORE__.extract())
+  `);
+
+  const storybook = JSON.parse(
+    await page.evaluate(async () => {
+      // eslint-disable-next-line no-undef
+      return JSON.stringify(window.__STORYBOOK_STORY_STORE__.getStoriesJsonData(), null, 2);
     })
-    .catch(function(ex) {
-      if (options && options.debug) {
-        console.error('DEBUG: getStorybook', ex);
-      }
-      return null;
-    });
+  );
+
+  if (storybook.length > 0) {
+    const stepsScript = fs.readFileSync(__dirname + '/scripts/story-steps.js', 'utf8');
+    return page.evaluate(stepsScript);
+  }
+  return storybook;
 };
 
 var storybookReady = function(port, options, callback) {
@@ -154,7 +152,10 @@ var staticServer = exports.staticServer = function(config, options, callback) {
   }).catch(callback);
 };
 
-var setStorybookConfig = exports.setStorybookConfig = function(storybookApp, storybookVersion, storybookConfigDir) {
+var setLegacyConfig = exports.setStorybookConfig = function(storybookApp, storybookVersion, storybookConfigDir) {
+  console.info('screener-storybook storybookApp', storybookApp);
+  console.info('screener-storybook storybookVersion', storybookVersion);
+  console.info('screener-storybook storybookConfigDir', storybookConfigDir);
   var configPath = path.resolve(process.cwd(), storybookConfigDir, 'config.js');
   var isNewFile = false;
   if (!fs.existsSync(configPath)) {
@@ -196,7 +197,9 @@ var setStorybookConfig = exports.setStorybookConfig = function(storybookApp, sto
   };
 };
 
-var resetStorybookConfig = exports.resetStorybookConfig = function({path: configPath, body, isNewFile}, allowRemoveFile) {
+var resetLegacyConfig = exports.resetStorybookConfig = function({path: configPath, body, isNewFile}, allowRemoveFile) {
+  console.info('resetStorybookConfig sees configPath', configPath);
+
   if (fs.existsSync(configPath)) {
     if (isNewFile && allowRemoveFile) {
       // clean-up generated file
@@ -208,15 +211,17 @@ var resetStorybookConfig = exports.resetStorybookConfig = function({path: config
   }
 };
 
-exports.server = function(config, options, callback) {
+const isWindowsPlatform = function() {
+  return /^win/.test(process.platform);
+};
+
+//  Pre SB6.4 approach of user defined config dir, package interrogation
+//
+const launchLegacyServer = function(config, options, port, callback) {
   var storybookApp;
   var storybookVersion;
   if (!config || !config.storybookConfigDir) {
     return callback(new Error('Error: \'storybookConfigDir\' not found in config file.'));
-  }
-  // switch to using staticServer instead for static Storybook builds
-  if (config.storybookStaticBuildDir) {
-    return staticServer(config, options, callback);
   }
   if ([2, 3, 4, 5].indexOf(config.storybookVersion) > -1) {
     storybookApp = 'react';
@@ -237,11 +242,12 @@ exports.server = function(config, options, callback) {
       return callback(ex);
     }
   }
+
   // find free port
   getPort({ port: VALIDPORTS }).then(function(port) {
     var configObj;
     try {
-      configObj = setStorybookConfig(storybookApp, storybookVersion, config.storybookConfigDir);
+      configObj = setLegacyConfig(storybookApp, storybookVersion, config.storybookConfigDir);
     } catch(ex) {
       return callback(ex);
     }
@@ -252,12 +258,12 @@ exports.server = function(config, options, callback) {
       console.log('Use custom storybook bin path: ' + binPath);
     }
     var bin = path.resolve(binPath, 'start-storybook');
-    var isWin = false;
-    if (/^win/.test(process.platform)) {
-      isWin = true;
+    var isWin = isWindowsPlatform();
+    if (isWin) {
       bin += '.cmd';
     }
     var args = ['--port', port, '--config-dir', config.storybookConfigDir];
+    // TODO: this looks like dead code or undocumented legacy?  see conflicting `storybookStaticBuildDir`
     if (config.storybookStaticDir) {
       args.push('--static-dir');
       args.push(config.storybookStaticDir);
@@ -276,7 +282,7 @@ exports.server = function(config, options, callback) {
 
     // clean-up all child processes when this process is terminated
     process.on('exit', function() {
-      resetStorybookConfig(configObj, true);
+      resetLegacyConfig(configObj, true);
       if (!isWin) {
         process.kill(-serverProcess.pid);
       }
@@ -292,13 +298,93 @@ exports.server = function(config, options, callback) {
     storybookReady(port, options, function(err, result) {
       try {
         // reset config file to original code
-        resetStorybookConfig(configObj);
+        resetLegacyConfig(configObj);
       } catch(ex) {
         return callback(ex);
       }
       callback(null, result);
     });
   }).catch(callback);
+};
+
+const launchFeatureServer = function(screenerConfig, options, port, storybookConfig, callback) {
+  const isWin = isWindowsPlatform();
+
+  // start Storybook dev server
+  const binPath = path.resolve(process.cwd(), 'node_modules/.bin');
+  let bin = path.resolve(binPath, 'start-storybook');
+  if (isWin) {
+    bin += '.cmd';
+  }
+  console.info('screener-storybook using SB server startup bin', bin);
+
+  // --ci mode (skip interactive prompts, don't open browser) https://storybook.js.org/docs/react/api/cli-options
+  let args = ['--port', port,'--no-manager-cache', '--ci', '--config-dir', storybookConfig.dotStorybookPath];
+
+  console.info('\nStarting Storybook server...');
+  console.info('>', 'start-storybook', args.join(' '), '\n\nPlease wait. Starting Storybook may take a minute...\n');
+  const serverProcess = spawn(bin, args, {detached: !isWin});
+  if (options && (options.debug || options.serverOnly)) {
+    serverProcess.stdout.on('data', function(data) { console.log(data.toString('utf8').trim()); });
+    serverProcess.stderr.on('data', function(data) { console.error(data.toString('utf8').trim()); });
+  }
+
+  // clean-up all child processes when this process is terminated
+  process.on('exit', function() {
+    if (!isWin) {
+      process.kill(-serverProcess.pid);
+    }
+  });
+  process.on('SIGINT', function() {
+    process.exit();
+  });
+  process.on('uncaughtException', function(err) {
+    console.error(err);
+    process.exit(1);
+  });
+
+  storybookReady(port, options, function(err, result) {
+    callback(null, result);
+  });
+};
+
+exports.server = function(screenerConfig, options, callback) {
+  console.info('screener-storybook/storybook.js server sees screener config', screenerConfig);
+  console.info('screener-storybook/storybook.js server sees options', options);
+
+  // screener may be configured to use the static build
+  if (screenerConfig.storybookStaticBuildDir) {
+    return staticServer(screenerConfig, options, callback);
+  }
+
+  // check versions and features
+  try {
+    // find free port and launch the server from it's binary
+    getPort({ port: VALIDPORTS }).then(function(port) {
+      console.info('screener-storybook launching as server on port', port);
+
+      const storybookConfig = storybookCheck();
+
+      //Determine server behaviour
+      const usesFeaturedServer = (
+        (storybookConfig.features && storybookConfig.features.storyStoreV7) || //Automatically fallback to feature server
+        isStorybookFeaturedServer()
+      );
+
+      if (!usesFeaturedServer) {  // SB6.3-
+        return launchLegacyServer(screenerConfig, options, port, callback);
+      }
+
+      //  This is our normal course since SB 6.4, whereby a main.js may indicate
+      //  a framework being used by the site under test, and features (some optional)
+      //  and some default are specified.
+
+      launchFeatureServer(screenerConfig, options, port, storybookConfig, callback);
+    }).catch(callback);
+
+  } catch(ex) {
+    return callback(ex);
+  }
 };
 
 exports.get = function(options) {
