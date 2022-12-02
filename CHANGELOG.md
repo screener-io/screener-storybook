@@ -1,9 +1,9 @@
 # Change Log
 
-## 0.25.0.alpha.5
+## 1.0.0-alpha.12
 
 - initial support for Storybook feature storyStoreV7
-- Puppeteer upgraded to ^19.3
+- Puppeteer upgraded to ^18.2.1
 
 ## 0.24.0
 - Update screener-runner to v0.14.0

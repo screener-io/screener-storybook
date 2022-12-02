@@ -1,6 +1,6 @@
 {
   "name": "screener-storybook",
-  "version": "0.25.0-alpha.11",
+  "version": "1.0.0-alpha.12",
   "description": "Automated Visual Testing for React Storybook using Screener.io",
   "license": "MIT",
   "main": "./index.js",
