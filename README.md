@@ -1,4 +1,4 @@
-# Screener-Storybook [![Build Status](https://circleci.com/gh/screener-io/screener-storybook/tree/master.svg?style=shield)](https://circleci.com/gh/screener-io/screener-storybook)
+# Screener-Storybook
 
 Automated Visual Testing for [Storybook](https://storybook.js.org) (React, Vue, Angular or HTML) using [Screener.io](https://screener.io).
 
@@ -81,25 +81,11 @@ npm run test-storybook
 
 ## Docs
 
-- [Screener-Storybook ](#screener-storybook-)
-  - [Installation](#installation)
-  - [Run](#run)
-  - [Docs](#docs)
-    - [Testing Interactions](#testing-interactions)
-      - [With React](#with-react)
-      - [With Vue](#with-vue)
-      - [With Angular](#with-angular)
-      - [Steps](#steps)
-    - [Testing Responsive Designs](#testing-responsive-designs)
-      - [Available Devices](#available-devices)
-    - [Cross Browser Testing](#cross-browser-testing)
-      - [Overview](#overview)
-      - [Adding Browsers](#adding-browsers)
-      - [Supported Browsers](#supported-browsers)
-      - [Sauce Connect Integration](#sauce-connect-integration)
-        - [Important Notes on Sauce Connect](#important-notes-on-sauce-connect)
-    - [Testing with Static Storybook App](#testing-with-static-storybook-app)
-    - [Additional Configuration Options](#additional-configuration-options)
+- [Testing Interactions](#testing-interactions)
+- [Testing Responsive Designs](#testing-responsive-designs)
+- [Cross Browser Testing](#cross-browser-testing)
+- [Testing with Static Storybook App](#testing-with-static-storybook-app)
+- [Additional Configuration Options](#additional-configuration-options)
 
 ---
 
@@ -117,15 +103,15 @@ Here is an example:
 import Screener, {Steps} from 'screener-storybook/src/screener';
 
 storiesOf('MyComponent', module)
-        .add('default', () => (
-                <Screener steps={new Steps()
-                        .click('.selector')
-                        .snapshot('name')
-                        .end()
-                }>
-                  <MyComponent />
-                </Screener>
-        ));
+  .add('default', () => (
+    <Screener steps={new Steps()
+      .click('.selector')
+      .snapshot('name')
+      .end()
+    }>
+      <MyComponent />
+    </Screener>
+  ));
 ```
 
 #### With Vue
@@ -138,13 +124,13 @@ Here is an example:
 import Steps from 'screener-runner/src/steps';
 
 storiesOf('MyComponent', module)
-        .add('default', () => ({
-          render: h => h(MyComponent),
-          steps: new Steps()
-                  .click('.selector')
-                  .snapshot('name')
-                  .end()
-        }));
+  .add('default', () => ({
+    render: h => h(MyComponent),
+    steps: new Steps()
+      .click('.selector')
+        .snapshot('name')
+        .end()
+  }));
 ```
 
 #### With Angular
@@ -157,14 +143,14 @@ Here is an example:
 import * as Steps from 'screener-runner/src/steps';
 
 storiesOf('MyComponent', module)
-        .add('default', () => ({
-          component: MyComponent,
-          props: {},
-          steps: new Steps()
-                  .click('.selector')
-                  .snapshot('name')
-                  .end()
-        }));
+  .add('default', () => ({
+    component: MyComponent,
+    props: {},
+    steps: new Steps()
+      .click('.selector')
+        .snapshot('name')
+        .end()
+  }));
 ```
 
 #### Steps
@@ -234,16 +220,16 @@ Here is an example:
 module.exports = {
   ...
 
-          resolutions: [
-  '1024x768',
-  {
-    deviceName: 'iPhone 6'
-  },
-  {
-    deviceName: 'iPhone 6 Plus',
-    deviceOrientation: 'landscape'
-  }
-]
+  resolutions: [
+    '1024x768',
+    {
+      deviceName: 'iPhone 6'
+    },
+    {
+      deviceName: 'iPhone 6 Plus',
+      deviceOrientation: 'landscape'
+    }
+  ]
 };
 ```
 
@@ -292,18 +278,18 @@ To test against multiple browsers, add the `browsers` option to your `screener.c
 module.exports = {
   ...
 
-          browsers: [
-  {
-    browserName: 'chrome'
-  },
-  {
-    browserName: 'firefox'
-  },
-  {
-    browserName: 'internet explorer',
-    version: '11'
-  }
-]
+  browsers: [
+    {
+      browserName: 'chrome'
+    },
+    {
+      browserName: 'firefox'
+    },
+    {
+      browserName: 'internet explorer',
+      version: '11'
+    }
+  ]
 };
 
 ```
@@ -324,11 +310,11 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
 
   ```javascript
   sauce: {
-  username: 'sauce_user',
-          accessKey: 'sauce_access_key',
-          maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
-          launchSauceConnect: true // optional,
-}
+    username: 'sauce_user',
+    accessKey: 'sauce_access_key',
+    maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
+    launchSauceConnect: true // optional,
+  }
   ```
 
 ##### Important Notes on Sauce Connect
@@ -368,7 +354,7 @@ if (typeof window === 'object') {
 module.exports = {
   ...
 
-          storybookStaticBuildDir: 'storybook-static'
+  storybookStaticBuildDir: 'storybook-static'
 };
 ```
 
