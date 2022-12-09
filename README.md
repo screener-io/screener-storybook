@@ -34,7 +34,7 @@ let us know immediately.
 
 **Hookless**
 
-We've removed the requirement of the prior preview.js hook function.  This should reduce brittleness, resolve several 
+We've removed the requirement of the prior preview.js hook function.  This should reduce brittleness, resolve several
 open issues, and provide simplicity during runtime where we no longer dynamically alter your `preview.js|ts`.
 
 **Puppeteer Upgraded from v1 to v18**
