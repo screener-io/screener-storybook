@@ -1,4 +1,4 @@
-# Screener-Storybook [![Build Status](https://circleci.com/gh/screener-io/screener-storybook/tree/master.svg?style=shield)](https://circleci.com/gh/screener-io/screener-storybook)
+# Screener-Storybook
 
 Automated Visual Testing for [Storybook](https://storybook.js.org) (React, Vue, Angular or HTML) using [Screener.io](https://screener.io).
 
@@ -6,7 +6,7 @@ Screener-Storybook will use your existing Storybook stories as visual test cases
 
 ## StoryStoreV7 Support
 
-Currently available as Alpha releases, version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7` 
+Currently available as `alpha` releases only, version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7`
 [feature enabled](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#story-store-v7).
 
 It is an Alpha for feedback and to un-block some users experiencing pre-V7 drift where despite not having
@@ -16,7 +16,7 @@ storyStoreV7 enabled the internals seem to be configured as if it is enabled.
 npm install screener-storybook@alpha --save-dev
 ```
 
-### Migration 
+### Migration
 
 **Please remove the now legacy** `__screener_storybook__` from any `preview.js|ts` file including static builds.
 
@@ -32,7 +32,7 @@ if (typeof window === 'object') {
 All stories should present in the Visual UI including MDX if using Storybook 6.4+, otherwise MDX is expected to have visual regressions (Please, check [Known Issues](#known-issues) for more).  If you are missing any stories please
 let us know immediately. 
 
-**Hookless** 
+**Hookless**
 
 We've removed the requirement of the prior preview.js hook function.  This should reduce brittleness, resolve several 
 open issues, and provide simplicity during runtime where we no longer dynamically alter your `preview.js|ts`.
@@ -45,7 +45,7 @@ run into problems please let us know.
 We fortunately have not experienced any visual regressions due to this upgrade, so far but suspect edge cases due to
 specific Chromium features.  Please share any regressions you might find with us, or simply accept them via the Visual UI.
 
-### Compatibility 
+### Compatibility
 
 There is a good deal of legacy compatibility in 1.0, we're testing this routinely in a CI matrix that includes:
 
@@ -80,30 +80,11 @@ npm run test-storybook
 
 ## Docs
 
-- [Screener-Storybook ](#screener-storybook-)
-  - [StoryStoreV7 Support](#storystorev7-support)
-    - [Migration](#migration)
-    - [What's Working, What's Changed](#whats-working-whats-changed)
-    - [Compatibility](#compatibility)
-    - [Known Issues](#known-issues)
-  - [Installation](#installation)
-  - [Run](#run)
-  - [Docs](#docs)
-    - [Testing Interactions](#testing-interactions)
-      - [With React](#with-react)
-      - [With Vue](#with-vue)
-      - [With Angular](#with-angular)
-      - [Steps](#steps)
-    - [Testing Responsive Designs](#testing-responsive-designs)
-      - [Available Devices](#available-devices)
-    - [Cross Browser Testing](#cross-browser-testing)
-      - [Overview](#overview)
-      - [Adding Browsers](#adding-browsers)
-      - [Supported Browsers](#supported-browsers)
-      - [Sauce Connect Integration](#sauce-connect-integration)
-        - [Important Notes on Sauce Connect](#important-notes-on-sauce-connect)
-    - [Testing with Static Storybook App](#testing-with-static-storybook-app)
-    - [Additional Configuration Options](#additional-configuration-options)
+- [Testing Interactions](#testing-interactions)
+- [Testing Responsive Designs](#testing-responsive-designs)
+- [Cross Browser Testing](#cross-browser-testing)
+- [Testing with Static Storybook App](#testing-with-static-storybook-app)
+- [Additional Configuration Options](#additional-configuration-options)
 
 ---
 
