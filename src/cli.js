@@ -5,8 +5,6 @@ var pjson = require('../package.json');
 var colors = require('colors/safe');
 var StorybookRunner = require('./index');
 var Promise = require('bluebird');
-var { getStorybookFeatures, isEmpty, isStorybookFeaturedServer } = require('./features');
-var { alignStories } = require('./storeV7');
 
 program
   .version(pjson.version)
@@ -50,20 +48,9 @@ StorybookRunner.startStorybook(config, program)
 
     // use puppeteer to pull the stories via the hook
     let stories = StorybookRunner.getStorybook(program);
-
-    // consider raw data alignment / scrubbing by version
-    const storybookFeatures = getStorybookFeatures();
-    if (isEmpty(storybookFeatures)) {
-      config.storybook = stories;
-    } else {
-      const usesFeaturedServer = (
-        (storybookFeatures.features && storybookFeatures.features.storyStoreV7) || //Automatically fallback to stories align
-        isStorybookFeaturedServer()
-      );
-      if (usesFeaturedServer) {
-        config.storybook = alignStories(stories);
-      }
-    }
+    
+    // set stories
+    config.storybook = stories;
 
     if (program.debug) {
       console.log('DEBUG: config.storybook', JSON.stringify(config.storybook, null, 2));

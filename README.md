@@ -29,9 +29,8 @@ if (typeof window === 'object') {
 
 ### What's Working, What's Changed
 
-Initial states of all stories are present in the Visual UI including MDX.  If you are missing any stories please
-let us know immediately.  This does not include missing states due to Screener Steps, this we are aware
-of and are working on a resolution.
+All stories should present in the Visual UI including MDX if using Storybook 6.4+, otherwise MDX is expected to have visual regressions (Please, check [Known Issues](#known-issues) for more).  If you are missing any stories please
+let us know immediately. 
 
 **Hookless** 
 
@@ -58,11 +57,11 @@ Given the severity of internal changes we chose a major version bump, though tri
 
 ### Known Issues
 
-Screener Steps are currently broken in the Alpha, so any states beyond the initial will not be present in the Visual UI.
+* Storybook MDX1 (6.3=<) does not render properly at the current Alpha and might cause a visual regression on the MDX based stories. Currently, there are no known workarounds other than migrate it to MDX2 format and use Storybook 6.4+. We are working to mitigate the issue and bring a solution as soon as it becomes available.
 
-We will consider automatically removing the `__screener_storybook__` hooks or providing a migration tool for this closer to release.
+* We will consider automatically removing the `__screener_storybook__` hooks or providing a migration tool for this closer to release.
 
-Documentation updates to follow closer to release.
+* Documentation updates to follow closer to release.
 
 ___
 
@@ -82,6 +81,11 @@ npm run test-storybook
 ## Docs
 
 - [Screener-Storybook ](#screener-storybook-)
+  - [StoryStoreV7 Support](#storystorev7-support)
+    - [Migration](#migration)
+    - [What's Working, What's Changed](#whats-working-whats-changed)
+    - [Compatibility](#compatibility)
+    - [Known Issues](#known-issues)
   - [Installation](#installation)
   - [Run](#run)
   - [Docs](#docs)
@@ -348,6 +352,8 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
 - For additional information on Sauce Connect please refer to the [Sauce Connect FAQ](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS) and [Sauce Connect Troubleshooting](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Troubleshooting) documentation.
 
 ### Testing with Static Storybook App
+
+> :warning: **If you are using the `alpha` version**: These instructions are not longer necessary!
 
 To run Screener against a static Storybook build, instead of starting the Storybook Dev server, follow these setup instructions:
 

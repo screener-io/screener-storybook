@@ -66,6 +66,8 @@ const isEmpty = function isEmpty(obj) {
   return !Object.keys(obj).length;
 };
 
+// TODO: would be nice to cache this execution response
+// so we don't end calling `npm ls` multiple times
 const getStorybookVersion = function getStorybookVersion() {
   const storybookVersionRegex = /(@storybook\/[^@]+)@(\S+)/;
   try {
@@ -86,7 +88,7 @@ const getStorybookVersion = function getStorybookVersion() {
     //Return version if valid
     if (match[2]) return match[2];
   } catch (e) {
-    console.info('screener-storybook Exception while attempting to retrieve storybook dependecy version', e);
+    console.info('screener-storybook Exception while attempting to retrieve storybook dependecy version', e.toString());
   }
   return null;
 };
