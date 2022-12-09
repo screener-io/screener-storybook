@@ -1,6 +1,8 @@
 var storybookCheck = require('./check');
 var path = require('path');
-var { isStorybookFeaturedServer } = require('./features');
+var { isStorybookFeaturedServer, getStorybookVersion } = require('./features');
+// var getStorySteps = require('./scripts/story-steps');
+
 var fs = require('fs');
 var os = require('os');
 var getPort = require('get-port');
@@ -9,7 +11,6 @@ var request = require('request');
 var requestRetry = require('requestretry');
 var puppeteer = require('puppeteer');
 var colors = require('colors/safe');
-var template = require('lodash/template');
 var semver = require('semver');
 var express = require('express');
 var { Server } = require('http');
@@ -39,23 +40,18 @@ const VALIDPORTS = [
  * preview.js.
  */
 const getStorybook = async function (page) {
+  // asks storybook to extract preview (mdx?) and story store
   await page.waitForFunction(`
     (window.__STORYBOOK_PREVIEW__ && window.__STORYBOOK_PREVIEW__.extract && window.__STORYBOOK_PREVIEW__.extract()) ||
     (window.__STORYBOOK_STORY_STORE__ && window.__STORYBOOK_STORY_STORE__.extract && window.__STORYBOOK_STORY_STORE__.extract())
   `);
-
-  const storybook = JSON.parse(
-    await page.evaluate(async () => {
-      // eslint-disable-next-line no-undef
-      return JSON.stringify(window.__STORYBOOK_STORY_STORE__.getStoriesJsonData(), null, 2);
-    })
-  );
-
-  if (storybook.length > 0) {
-    const stepsScript = fs.readFileSync(__dirname + '/scripts/story-steps.js', 'utf8');
-    return page.evaluate(stepsScript);
-  }
-  return storybook;
+  // Get stories steps by extracting content from store, aligning stories and pulling steps from it
+  // -- This must be done at a single context to avoid puppeteer to serialize object instances
+  // and avoid loosing context sensitive functions -- This was hook was doing my mistake?
+  const stepsScript = fs.readFileSync(__dirname + '/scripts/story-steps.js', 'utf8');
+  const storySteps = await page.evaluate(stepsScript);
+  //
+  return storySteps;
 };
 
 var storybookReady = function(port, options, callback) {
@@ -152,65 +148,6 @@ var staticServer = exports.staticServer = function(config, options, callback) {
   }).catch(callback);
 };
 
-var setLegacyConfig = exports.setStorybookConfig = function(storybookApp, storybookVersion, storybookConfigDir) {
-  console.info('screener-storybook storybookApp', storybookApp);
-  console.info('screener-storybook storybookVersion', storybookVersion);
-  console.info('screener-storybook storybookConfigDir', storybookConfigDir);
-  var configPath = path.resolve(process.cwd(), storybookConfigDir, 'config.js');
-  var isNewFile = false;
-  if (!fs.existsSync(configPath)) {
-    // handle declarative configuration and preview.js in Storybook 5.3+
-    // more info: https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#from-version-52x-to-53x
-    if (storybookVersion.major >= 5 && semver.gt(storybookVersion.full, '5.2.0')) {
-      configPath = path.resolve(process.cwd(), storybookConfigDir, 'preview.js');
-      if (!fs.existsSync(configPath)) {
-        // check for typescript file
-        var tsConfigPath = path.resolve(process.cwd(), storybookConfigDir, 'preview.ts');
-        if (fs.existsSync(tsConfigPath)) {
-          configPath = tsConfigPath;
-        } else {
-          // generate file when does not exist (temporary, remove later)
-          fs.writeFileSync(configPath, '', 'utf8');
-          isNewFile = true;
-        }
-      }
-    } else {
-      throw new Error('Storybook config file not found: ' + configPath);
-    }
-  }
-  // store original file contents
-  var configBody = fs.readFileSync(configPath, 'utf8');
-  // generate code to expose storybook; code dependent on storybook version
-  var templateType = 'default';
-  if (storybookVersion.major === 2) {
-    templateType = 'v' + storybookVersion.major;
-  }
-  var templatePath = path.resolve(__dirname, 'templates', templateType + '.template');
-  var codeTemplate = fs.readFileSync(templatePath, 'utf8');
-  var code = template(codeTemplate)({ code: configBody, app: storybookApp });
-  // inject temp code into storybook config file to expose storybook
-  fs.writeFileSync(configPath, code, 'utf8');
-  return {
-    path: configPath,
-    body: configBody,
-    isNewFile: isNewFile
-  };
-};
-
-var resetLegacyConfig = exports.resetStorybookConfig = function({path: configPath, body, isNewFile}, allowRemoveFile) {
-  console.info('resetStorybookConfig sees configPath', configPath);
-
-  if (fs.existsSync(configPath)) {
-    if (isNewFile && allowRemoveFile) {
-      // clean-up generated file
-      fs.unlinkSync(configPath);
-    } else if (fs.readFileSync(configPath, 'utf8') !== body) {
-      // revert file back to original contents
-      fs.writeFileSync(configPath, body, 'utf8');
-    }
-  }
-};
-
 const isWindowsPlatform = function() {
   return /^win/.test(process.platform);
 };
@@ -218,93 +155,60 @@ const isWindowsPlatform = function() {
 //  Pre SB6.4 approach of user defined config dir, package interrogation
 //
 const launchLegacyServer = function(config, options, port, callback) {
-  var storybookApp;
-  var storybookVersion;
   if (!config || !config.storybookConfigDir) {
     return callback(new Error('Error: \'storybookConfigDir\' not found in config file.'));
   }
-  if ([2, 3, 4, 5].indexOf(config.storybookVersion) > -1) {
-    storybookApp = 'react';
-    if (['react', 'vue', 'angular', 'html'].indexOf(config.storybookApp) > -1) {
-      storybookApp = config.storybookApp;
-    }
-    storybookVersion = {
-      major: config.storybookVersion,
-      full: config.storybookVersion + '.0.0'
-    };
-  } else {
-    // check storybook module
-    try {
-      var pkg = storybookCheck();
-      storybookApp = pkg.app;
-      storybookVersion = pkg.version;
-    } catch(ex) {
-      return callback(ex);
-    }
+
+  // start Storybook dev server
+  var binPath = path.resolve(process.cwd(), 'node_modules/.bin');
+  if (config.storybookBinPath) {
+    binPath = config.storybookBinPath;
+    console.log('Use custom storybook bin path: ' + binPath);
+  }
+  var bin = path.resolve(binPath, 'start-storybook');
+  var isWin = isWindowsPlatform();
+  if (isWin) {
+    bin += '.cmd';
+  }
+  // Important -- we removed '--no-manager-cache' from the first alpha release
+  // due to the missing support of this value on V5 and it seems unneeded for a 
+  // successful stories extraction. Would be nice to do some investigation on this.
+  var args = ['--port', port, '--config-dir', config.storybookConfigDir];
+  // TODO: this looks like dead code or undocumented legacy?  see conflicting `storybookStaticBuildDir`
+  if (config.storybookStaticDir) {
+    args.push('--static-dir');
+    args.push(config.storybookStaticDir);
+  }
+  // support storybook v4+ `--ci` flag starting from v4.0.0-alpha.23
+  const storybookVersion = getStorybookVersion();
+  if (storybookVersion && semver.gte(storybookVersion, '4.0.0') && semver.gt(storybookVersion, '4.0.0-alpha.22')) {
+    args.push('--ci');
+  }
+  console.log('\nStarting Storybook server...');
+  console.log('>', 'start-storybook', args.join(' '), '\n\nPlease wait. Starting Storybook may take a minute...\n');
+  var serverProcess = spawn(bin, args, {detached: !isWin});
+  if (options && (options.debug || options.serverOnly)) {
+    serverProcess.stdout.on('data', function(data) { console.log(data.toString('utf8').trim()); });
+    serverProcess.stderr.on('data', function(data) { console.error(data.toString('utf8').trim()); });
   }
 
-  // find free port
-  getPort({ port: VALIDPORTS }).then(function(port) {
-    var configObj;
-    try {
-      configObj = setLegacyConfig(storybookApp, storybookVersion, config.storybookConfigDir);
-    } catch(ex) {
-      return callback(ex);
+  // clean-up all child processes when this process is terminated
+  process.on('exit', function() {
+    if (!isWin) {
+      process.kill(-serverProcess.pid);
     }
-    // start Storybook dev server
-    var binPath = path.resolve(process.cwd(), 'node_modules/.bin');
-    if (config.storybookBinPath) {
-      binPath = config.storybookBinPath;
-      console.log('Use custom storybook bin path: ' + binPath);
-    }
-    var bin = path.resolve(binPath, 'start-storybook');
-    var isWin = isWindowsPlatform();
-    if (isWin) {
-      bin += '.cmd';
-    }
-    var args = ['--port', port, '--config-dir', config.storybookConfigDir];
-    // TODO: this looks like dead code or undocumented legacy?  see conflicting `storybookStaticBuildDir`
-    if (config.storybookStaticDir) {
-      args.push('--static-dir');
-      args.push(config.storybookStaticDir);
-    }
-    // support storybook v4+ `--ci` flag starting from v4.0.0-alpha.23
-    if (storybookVersion.major >= 4 && semver.gt(storybookVersion.full, '4.0.0-alpha.22')) {
-      args.push('--ci');
-    }
-    console.log('\nStarting Storybook server...');
-    console.log('>', 'start-storybook', args.join(' '), '\n\nPlease wait. Starting Storybook may take a minute...\n');
-    var serverProcess = spawn(bin, args, {detached: !isWin});
-    if (options && (options.debug || options.serverOnly)) {
-      serverProcess.stdout.on('data', function(data) { console.log(data.toString('utf8').trim()); });
-      serverProcess.stderr.on('data', function(data) { console.error(data.toString('utf8').trim()); });
-    }
+  });
+  process.on('SIGINT', function() {
+    process.exit();
+  });
+  process.on('uncaughtException', function(err) {
+    console.error(err);
+    process.exit(1);
+  });
 
-    // clean-up all child processes when this process is terminated
-    process.on('exit', function() {
-      resetLegacyConfig(configObj, true);
-      if (!isWin) {
-        process.kill(-serverProcess.pid);
-      }
-    });
-    process.on('SIGINT', function() {
-      process.exit();
-    });
-    process.on('uncaughtException', function(err) {
-      console.error(err);
-      process.exit(1);
-    });
-
-    storybookReady(port, options, function(err, result) {
-      try {
-        // reset config file to original code
-        resetLegacyConfig(configObj);
-      } catch(ex) {
-        return callback(ex);
-      }
-      callback(null, result);
-    });
-  }).catch(callback);
+  storybookReady(port, options, function(err, result) {
+    callback(null, result);
+  });
 };
 
 const launchFeatureServer = function(screenerConfig, options, port, storybookConfig, callback) {
@@ -319,7 +223,7 @@ const launchFeatureServer = function(screenerConfig, options, port, storybookCon
   console.info('screener-storybook using SB server startup bin', bin);
 
   // --ci mode (skip interactive prompts, don't open browser) https://storybook.js.org/docs/react/api/cli-options
-  let args = ['--port', port,'--no-manager-cache', '--ci', '--config-dir', storybookConfig.dotStorybookPath];
+  let args = ['--port', port, '--ci', '--config-dir', storybookConfig.dotStorybookPath];
 
   console.info('\nStarting Storybook server...');
   console.info('>', 'start-storybook', args.join(' '), '\n\nPlease wait. Starting Storybook may take a minute...\n');
