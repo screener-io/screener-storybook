@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.0.0-alpha.12
+## 1.0.0-alpha.12-16, beta.1
 
 - initial support for Storybook feature storyStoreV7
 - Puppeteer upgraded to ^18.2.1
