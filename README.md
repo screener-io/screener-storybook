@@ -6,14 +6,14 @@ Screener-Storybook will use your existing Storybook stories as visual test cases
 
 ## StoryStoreV7 Support
 
-Currently available as Alpha releases, version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7` 
+Currently available as Beta releases, version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7` 
 [feature enabled](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#story-store-v7).
 
-It is an Alpha for feedback and to un-block some users experiencing pre-V7 drift where despite not having
-storyStoreV7 enabled the internals seem to be configured as if it is enabled.
+We are looking for your feedback during Beta, to know it runs for your build and especially if you are using 
+the storyStoreV7 opt-in feature with Storybook 6.
 
 ```
-npm install screener-storybook@alpha --save-dev
+npm install screener-storybook@beta --save-dev
 ```
 
 ### Migration 
