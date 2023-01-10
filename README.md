@@ -45,7 +45,7 @@ run into problems please let us know.
 We fortunately have not experienced any visual regressions due to this upgrade, so far but suspect edge cases due to
 specific Chromium features.  Please share any regressions you might find with us, or simply accept them via the Visual UI.
 
-### Compatibility 
+### Compatibility
 
 There is a good deal of legacy compatibility in 1.0, we're testing this routinely in a CI matrix that includes:
 
