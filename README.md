@@ -6,14 +6,14 @@ Screener-Storybook will use your existing Storybook stories as visual test cases
 
 ## StoryStoreV7 Support
 
-Currently available as `alpha` releases only, version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7`
+Currently available as `beta` releases only, version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7` 
 [feature enabled](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#story-store-v7).
 
-It is an Alpha for feedback and to un-block some users experiencing pre-V7 drift where despite not having
-storyStoreV7 enabled the internals seem to be configured as if it is enabled.
+We are looking for your feedback during this Beta program, to know it runs for your build and especially if you are using 
+the storyStoreV7 opt-in feature with Storybook 6.
 
 ```
-npm install screener-storybook@alpha --save-dev
+npm install screener-storybook@beta --save-dev
 ```
 
 ### Migration
@@ -29,9 +29,8 @@ if (typeof window === 'object') {
 
 ### What's Working, What's Changed
 
-Initial states of all stories are present in the Visual UI including MDX.  If you are missing any stories please
-let us know immediately.  This does not include missing states due to Screener Steps, this we are aware
-of and are working on a resolution.
+All states of all stories should be present in the Visual UI including MDX if using Storybook 6.4+, otherwise MDX is expected to have visual regressions (Please, check [Known Issues](#known-issues) for more).  If you are missing any stories or states please
+let us know immediately. 
 
 **Hookless**
 
@@ -46,7 +45,7 @@ run into problems please let us know.
 We fortunately have not experienced any visual regressions due to this upgrade, so far but suspect edge cases due to
 specific Chromium features.  Please share any regressions you might find with us, or simply accept them via the Visual UI.
 
-### Compatibility
+### Compatibility 
 
 There is a good deal of legacy compatibility in 1.0, we're testing this routinely in a CI matrix that includes:
 
@@ -58,11 +57,11 @@ Given the severity of internal changes we chose a major version bump, though tri
 
 ### Known Issues
 
-Screener Steps are currently broken in the Alpha, so any states beyond the initial will not be present in the Visual UI.
+* Storybook MDX1 (6.3=<) does not render properly in the current Beta and might cause a visual regression on the MDX based stories. Currently, there are no known workarounds other than migrate it to MDX2 format and use Storybook 6.4+. We are working to mitigate the issue and bring a solution as soon as it becomes available.
 
-We will consider automatically removing the `__screener_storybook__` hooks or providing a migration tool for this closer to release.
+* We will consider automatically removing the `__screener_storybook__` hooks or providing a migration tool for this closer to release.
 
-Documentation updates to follow closer to release.
+* Documentation updates to follow closer to release.
 
 ___
 
@@ -334,6 +333,8 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
 - For additional information on Sauce Connect please refer to the [Sauce Connect FAQ](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS) and [Sauce Connect Troubleshooting](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Troubleshooting) documentation.
 
 ### Testing with Static Storybook App
+
+> :warning: **If you are using the `beta` version**: These instructions are no longer necessary!
 
 To run Screener against a static Storybook build, instead of starting the Storybook Dev server, follow these setup instructions:
 
