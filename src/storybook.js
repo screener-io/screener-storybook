@@ -253,8 +253,6 @@ const launchFeatureServer = function(screenerConfig, options, port, storybookCon
 };
 
 exports.server = function(screenerConfig, options, callback) {
-  console.info('screener-storybook/storybook.js server sees screener config', screenerConfig);
-  console.info('screener-storybook/storybook.js server sees options', options);
 
   // screener may be configured to use the static build
   if (screenerConfig.storybookStaticBuildDir) {

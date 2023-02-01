@@ -1,4 +1,4 @@
-# Screener-Storybook [![Build Status](https://circleci.com/gh/screener-io/screener-storybook/tree/master.svg?style=shield)](https://circleci.com/gh/screener-io/screener-storybook)
+# Screener-Storybook
 
 Automated Visual Testing for [Storybook](https://storybook.js.org) (React, Vue, Angular or HTML) using [Screener.io](https://screener.io).
 
@@ -6,19 +6,16 @@ Screener-Storybook will use your existing Storybook stories as visual test cases
 
 ## StoryStoreV7 Support
 
-Currently available as Beta releases, version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7` 
+Version 1.0.0 provides support for Storybook 6.4+ with the `storyStoreV7` 
 [feature enabled](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#story-store-v7).
 
-We are looking for your feedback during Beta, to know it runs for your build and especially if you are using 
-the storyStoreV7 opt-in feature with Storybook 6.
-
 ```
-npm install screener-storybook@beta --save-dev
+npm install screener-storybook --save-dev
 ```
 
-### Migration 
+### Migration
 
-**Please remove the now legacy** `__screener_storybook__` from any `preview.js|ts` file including static builds.
+**Please remove the now legacy** `__screener_storybook__` from any `preview.js|ts` or `config.js` file including static builds.
 
 It looks like this, please delete it:
 ```javascript
@@ -27,27 +24,20 @@ if (typeof window === 'object') {
 }
 ```
 
-### What's Working, What's Changed
+### What's New
 
-All stories should present in the Visual UI including MDX if using Storybook 6.4+, otherwise MDX is expected to have visual regressions (Please, check [Known Issues](#known-issues) for more).  If you are missing any stories please
-let us know immediately. 
+**Hookless**
 
-**Hookless** 
-
-We've removed the requirement of the prior preview.js hook function.  This should reduce brittleness, resolve several 
+We've removed the requirement of the prior preview.js hook function.  This should reduce brittleness, resolve several
 open issues, and provide simplicity during runtime where we no longer dynamically alter your `preview.js|ts`.
 
 **Puppeteer Upgraded from v1 to v18**
 
-Puppeteer v19 caused instability in our CI matrices, so we stepped down to v18.  As it is a major (very) upgrade if you
-run into problems please let us know.
+Puppeteer v19 caused instability in our CI matrices, so we stepped down to v18.
 
-We fortunately have not experienced any visual regressions due to this upgrade, so far but suspect edge cases due to
-specific Chromium features.  Please share any regressions you might find with us, or simply accept them via the Visual UI.
+### Compatibility
 
-### Compatibility 
-
-There is a good deal of legacy compatibility in 1.0, we're testing this routinely in a CI matrix that includes:
+There is a good deal of backward compatibility in 1.0, we're testing this routinely in a CI matrix that includes:
 
 * Storybook versions 5, 6
 * `storyStoreV7` enabled / disabled
@@ -57,11 +47,8 @@ Given the severity of internal changes we chose a major version bump, though tri
 
 ### Known Issues
 
-* Storybook MDX1 (6.3=<) does not render properly at the current Alpha and might cause a visual regression on the MDX based stories. Currently, there are no known workarounds other than migrate it to MDX2 format and use Storybook 6.4+. We are working to mitigate the issue and bring a solution as soon as it becomes available.
-
-* We will consider automatically removing the `__screener_storybook__` hooks or providing a migration tool for this closer to release.
-
-* Documentation updates to follow closer to release.
+* Storybook MDX1 for Storybook 6.3 and earlier does not render properly and might cause a visual regression on the MDX based stories. Currently, there are no known workarounds other than migrate it to MDX2 format and use Storybook 6.4+.
+* Please manually remove any legacy `__screener_storybook__` hooks from `preview.js|.ts` and `config.js`
 
 ___
 
@@ -69,6 +56,8 @@ ___
 
 1. Go to [https://screener.io/v2/new](https://screener.io/v2/new)
 2. Follow the steps in the wizard to setup a New Project
+
+Additional documentation maintained at Sauce Labs [here](https://docs.saucelabs.com/visual/component-testing/setup/)
 
 ## Run
 
@@ -80,30 +69,11 @@ npm run test-storybook
 
 ## Docs
 
-- [Screener-Storybook ](#screener-storybook-)
-  - [StoryStoreV7 Support](#storystorev7-support)
-    - [Migration](#migration)
-    - [What's Working, What's Changed](#whats-working-whats-changed)
-    - [Compatibility](#compatibility)
-    - [Known Issues](#known-issues)
-  - [Installation](#installation)
-  - [Run](#run)
-  - [Docs](#docs)
-    - [Testing Interactions](#testing-interactions)
-      - [With React](#with-react)
-      - [With Vue](#with-vue)
-      - [With Angular](#with-angular)
-      - [Steps](#steps)
-    - [Testing Responsive Designs](#testing-responsive-designs)
-      - [Available Devices](#available-devices)
-    - [Cross Browser Testing](#cross-browser-testing)
-      - [Overview](#overview)
-      - [Adding Browsers](#adding-browsers)
-      - [Supported Browsers](#supported-browsers)
-      - [Sauce Connect Integration](#sauce-connect-integration)
-        - [Important Notes on Sauce Connect](#important-notes-on-sauce-connect)
-    - [Testing with Static Storybook App](#testing-with-static-storybook-app)
-    - [Additional Configuration Options](#additional-configuration-options)
+- [Testing Interactions](#testing-interactions)
+- [Testing Responsive Designs](#testing-responsive-designs)
+- [Cross Browser Testing](#cross-browser-testing)
+- [Testing with Static Storybook App](#testing-with-static-storybook-app)
+- [Additional Configuration Options](#additional-configuration-options)
 
 ---
 
@@ -339,7 +309,7 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
 
 - RECOMMENDATION: when using Sauce Connect with screener-storybook, it is highly recommended to run tests with a [static Storybook build](#testing-with-static-storybook-app).
 
-- Using Sauce Connect version `4.6.2`.
+- Using an up-to-date version of Sauce Connect.  You can inspect this by running `sc --version`.
 
 - Sauce Connect Integration requires all browsers to be Sauce Labs Browsers. An error is thrown when using non-Sauce browsers.
 
@@ -353,21 +323,11 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
 
 ### Testing with Static Storybook App
 
-> :warning: **If you are using the `alpha` version**: These instructions are not longer necessary!
+To run Screener against a static Storybook build, instead of starting the Storybook Dev server, follow these setup instructions.
 
-To run Screener against a static Storybook build, instead of starting the Storybook Dev server, follow these setup instructions:
+* Re-export your Storybook project into a static web app: `npm run build-storybook`
 
-1 Update your Storybook config file (`.storybook/config.js` or `.storybook/preview.js`), and add the following code to the end of the file:
-
-```javascript
-if (typeof window === 'object') {
-  window.__screener_storybook__ = require('@storybook/react').getStorybook;
-}
-```
-
-2 Re-export your Storybook project into a static web app: `npm run build-storybook`
-
-3 Update your `screener.config.js` file, and add the `storybookStaticBuildDir` option with its value set to your static Storybook folder:
+* Update your `screener.config.js` file, and add the `storybookStaticBuildDir` option with its value set to your static Storybook folder:
 
 ```javascript
 // screener.config.js
@@ -376,6 +336,16 @@ module.exports = {
 
   storybookStaticBuildDir: 'storybook-static'
 };
+```
+
+#### Legacy Versions 0.24 and earlier only
+
+* Update your Storybook config file (`.storybook/config.js` or `.storybook/preview.js`), and add the following code to the end of the file:
+
+```javascript
+if (typeof window === 'object') {
+  window.__screener_storybook__ = require('@storybook/react').getStorybook;
+}
 ```
 
 ### Additional Configuration Options
