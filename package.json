@@ -1,6 +1,6 @@
 {
   "name": "screener-storybook",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "description": "Automated Visual Testing for React Storybook using Screener.io",
   "license": "MIT",
   "main": "./index.js",
@@ -33,9 +33,9 @@
   },
   "dependencies": {
     "@types/react": "*",
-    "bluebird": "~3.4.6",
+    "bluebird": "~3.7.2",
     "colors": "~1.1.2",
-    "commander": "~2.9.0",
+    "commander": "~6.2.0",
     "express": "^4.17.1",
     "get-port": "~4.2.0",
     "joi": "~14.3.1",

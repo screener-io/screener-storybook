@@ -1,8 +1,13 @@
 # Change Log
 
-## 1.0.0-alpha.12-16, beta.1
+## 1.0.0
 
-- initial support for Storybook feature storyStoreV7
+- Upgrades bluebird and commander dependencies
+- Alpha/Beta verbose logging removed
+
+## 1.0.0-alpha.12, 1.0.0-beta.1
+
+- Supports Storybook feature storyStoreV7
 - Puppeteer upgraded to ^18.2.1
 
 ## 0.24.0
