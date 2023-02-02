@@ -1,11 +1,13 @@
-var semver = require('semver');
+const semver = require('semver');
+const { getStorybookFeatures, isEmpty } = require('./features');
 
-var checkApp = function(app) {
+const checkApp = function(app) {
   try {
     var packagePath = require.resolve(app.path + '/package.json');
     var packageVersion = require(packagePath).version;
     var versionObj = {
       major: semver.major(packageVersion),
+      minor: semver.minor(packageVersion),
       full: packageVersion
     };
     return {
@@ -18,7 +20,9 @@ var checkApp = function(app) {
   }
 };
 
-var storybookCheck = function() {
+//  Pre-storyStoreV7 approach using framework global hook
+//
+const storybookLegacyCheck = function() {
   // look for Storybook module
   var apps = [
     { path: '@storybook/react', name: 'react' },
@@ -39,6 +43,19 @@ var storybookCheck = function() {
     throw new Error('Storybook module not found');
   }
   return result;
+};
+
+//  First look for main.js framework and features.  Fall back to Storybook6- approach.
+//  TODO: this provides 2 optional structures in return
+//
+const storybookCheck = function() {
+  const storybookFeatureConfig = getStorybookFeatures();
+  if (isEmpty(storybookFeatureConfig)) {
+    return storybookLegacyCheck();
+  }
+
+  console.info('screener-storybook sees storybook configuration', storybookFeatureConfig);
+  return storybookFeatureConfig;
 };
 
 module.exports = storybookCheck;

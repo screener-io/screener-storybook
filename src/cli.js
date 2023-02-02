@@ -39,12 +39,19 @@ StorybookRunner.startStorybook(config, program)
     if (program.serverOnly) {
       return new Promise(function() {});
     }
+
     config.storybookPort = server.port;
     config.storybookPreview = server.preview;
     if (program.debug) {
       console.log('DEBUG: config.storybookPort', server.port);
     }
-    config.storybook = StorybookRunner.getStorybook(program);
+
+    // use puppeteer to pull the stories via the hook
+    let stories = StorybookRunner.getStorybook(program);
+    
+    // set stories
+    config.storybook = stories;
+
     if (program.debug) {
       console.log('DEBUG: config.storybook', JSON.stringify(config.storybook, null, 2));
     }

@@ -124,11 +124,54 @@ function getStorySteps(storybook) {
   }
   return storybook;
 }
-
-if (typeof window === 'object') {
-  // eslint-disable-next-line no-undef
-  getStorySteps(window.__screener_storybook__());
+//
+//  Receive raw stories we pull from the storybook server via puppeteer, align them for
+//  legacy steps processing.
+//
+function alignStories(storybook, store) {
+  let alignedStories = [];
+  const storeKeys = Object.keys(storybook);
+  for (let storyID of storeKeys) {
+    /* Important information about the future of storybook (version 7 & 8) */
+    // Due to changes on storybook framework, which is going from systematically
+    // loading all the stories at one to a progressive loading approach (https://storybook.js.org/blog/storybook-6-4/)
+    // loading the each story at once should a future approach when extract (done at storybook.js)
+    // and fromId (right below) gets removed from storybook base code. -- Unable to use at current point (SB6.4)
+    // due to internal exceptions on the storybook framework
+    // const story2 = await store.loadStory({ storyId: story.id });
+    // const ctx = await store.getStoryContext(story);
+    //
+    // Get story from ID on the storybook store
+    const story = store.fromId(storyID);
+    //
+    let objectStory = { name: story.name, render: story.storyFn };
+    alignedStories.push({
+      kind: story.kind,
+      stories: [ objectStory ]
+    });
+  }
+  return alignedStories;
+}
+//
+// declare story steps & align stories inside this scope -- this is fundamentally required
+// so puppeteer dont serialize objects across contexts and loose instance
+// based functions for our stories
+if (typeof this.window === 'object') {
+  // Get store
+  const store = this.window.__STORYBOOK_STORY_STORE__;
+  // Ask for raw stories, but make compatible with V5 if getStoriesJsonData is not
+  // declared on the stories store
+  const storybook = store.getStoriesJsonData ? store.getStoriesJsonData().stories : store.extract();
+  // Get aligned stories
+  const alignedStories = alignStories(storybook, store);
+  // Extract steps by rendering each component in the framework native form
+  // and recursively going through each child and checking it we need a step
+  // interaction for than as well. -- Important to recall, this function is 
+  // called under puppeteer evaluation expression, which returns the value 
+  // returned from the last expression -- similar to a return expression.
+  getStorySteps(alignedStories);
 } else if (typeof module === 'object') {
   // export for testing purposes
-  module.exports = getStorySteps;
+  exports.getStorySteps = getStorySteps;
+  exports.alignStories = alignStories;
 }
