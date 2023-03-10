@@ -80,7 +80,8 @@ declare module 'screener-storybook/src/screener' {
     end(): Step[];
   }
 
-  export interface ScreenerProps {
+  export interface ScreenerProps {    
+    children: ReactNode; 
     /**
      * Steps to run. Build using a `Steps` object and convert to an array using `.end()`.
      * @example new Steps().hover('.foo').snapshot('hovered').end()
