@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.0.1
+- Fix page loading issue inside headless browser
+
 ## 1.0.0
 
 - Upgrades bluebird and commander dependencies

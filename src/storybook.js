@@ -41,6 +41,7 @@ const VALIDPORTS = [
  */
 const getStorybook = async function (page) {
   // asks storybook to extract preview (mdx?) and story store
+  await page.waitForFunction('"__STORYBOOK_PREVIEW__" in window || "__STORYBOOK_STORY_STORE__" in window');
   await page.waitForFunction(`
     (window.__STORYBOOK_PREVIEW__ && window.__STORYBOOK_PREVIEW__.extract && window.__STORYBOOK_PREVIEW__.extract()) ||
     (window.__STORYBOOK_STORY_STORE__ && window.__STORYBOOK_STORY_STORE__.extract && window.__STORYBOOK_STORY_STORE__.extract())
