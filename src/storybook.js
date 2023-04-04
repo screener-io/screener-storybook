@@ -57,7 +57,7 @@ const getStorybook = async function (page) {
 var storybookReady = function(port, options, callback) {
   // wait for storybook server to be ready
   setTimeout(function() {
-    var baseUrl = 'http://localhost:' + port;
+    var baseUrl = 'http://127.0.0.1:' + port;
     var retryStrategy = function(err, response) {
       var networkError = requestRetry.RetryStrategies.HTTPOrNetworkError(err, response);
       var statusCode = response && response.statusCode;
@@ -142,7 +142,7 @@ var staticServer = exports.staticServer = function(config, options, callback) {
       if (err) {
         return callback(new Error('Error starting static server to ' + storybookBuildPath + ': ' + err.toString()));
       }
-      console.log('Started server: http://localhost:' + port);
+      console.log('Started server: http://127.0.0.1:' + port);
       storybookReady(port, options, callback);
     });
   }).catch(callback);
